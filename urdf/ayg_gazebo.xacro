@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:macro name="ros2_control_joint" params="joint_name effort_lim initial_value">
+        <joint name="${joint_name}">
+            <command_interface name="effort">
+                <param name="min">${-effort_lim}</param>
+                <param name="max">${ effort_lim}</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">${initial_value}</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+    </xacro:macro>
+
+
+    <ros2_control name="GazeboSimSystem" type="system">
+        <hardware>
+            <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+        </hardware>
+
+        <xacro:if value="${initial_configuration == 'lying_down'}">
+            <xacro:ros2_control_joint joint_name="LF_HAA" effort_lim="${effort_lim}" initial_value="-0.00"></xacro:ros2_control_joint>
+            <xacro:ros2_control_joint joint_name="LF_HFE" effort_lim="${effort_lim}" initial_value="-0.36"></xacro:ros2_control_joint>
+            <xacro:ros2_control_joint joint_name="LF_KFE" effort_lim="${effort_lim}" initial_value=" 1.09"></xacro:ros2_control_joint>
+            <xacro:ros2_control_joint joint_name="RF_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"></xacro:ros2_control_joint>
+            <xacro:ros2_control_joint joint_name="RF_HFE" effort_lim="${effort_lim}" initial_value="-0.36"></xacro:ros2_control_joint>
+            <xacro:ros2_control_joint joint_name="RF_KFE" effort_lim="${effort_lim}" initial_value=" 1.09"></xacro:ros2_control_joint>
+            <xacro:ros2_control_joint joint_name="LH_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"></xacro:ros2_control_joint>
+            <xacro:ros2_control_joint joint_name="LH_HFE" effort_lim="${effort_lim}" initial_value="-0.48"></xacro:ros2_control_joint>
+            <xacro:ros2_control_joint joint_name="LH_KFE" effort_lim="${effort_lim}" initial_value=" 1.20"></xacro:ros2_control_joint>
+            <xacro:ros2_control_joint joint_name="RH_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"></xacro:ros2_control_joint>
+            <xacro:ros2_control_joint joint_name="RH_HFE" effort_lim="${effort_lim}" initial_value="-0.48"></xacro:ros2_control_joint>
+            <xacro:ros2_control_joint joint_name="RH_KFE" effort_lim="${effort_lim}" initial_value=" 1.20"></xacro:ros2_control_joint>
+        </xacro:if>
+
+        <xacro:if value="${initial_configuration == 'standing'}">
+            <xacro:ros2_control_joint joint_name="LF_HAA" effort_lim="${effort_lim}" initial_value="-0.00"></xacro:ros2_control_joint>
+            <xacro:ros2_control_joint joint_name="LF_HFE" effort_lim="${effort_lim}" initial_value="-0.00"></xacro:ros2_control_joint>
+            <xacro:ros2_control_joint joint_name="LF_KFE" effort_lim="${effort_lim}" initial_value=" 0.00"></xacro:ros2_control_joint>
+            <xacro:ros2_control_joint joint_name="RF_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"></xacro:ros2_control_joint>
+            <xacro:ros2_control_joint joint_name="RF_HFE" effort_lim="${effort_lim}" initial_value="-0.00"></xacro:ros2_control_joint>
+            <xacro:ros2_control_joint joint_name="RF_KFE" effort_lim="${effort_lim}" initial_value=" 0.00"></xacro:ros2_control_joint>
+            <xacro:ros2_control_joint joint_name="LH_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"></xacro:ros2_control_joint>
+            <xacro:ros2_control_joint joint_name="LH_HFE" effort_lim="${effort_lim}" initial_value="-0.00"></xacro:ros2_control_joint>
+            <xacro:ros2_control_joint joint_name="LH_KFE" effort_lim="${effort_lim}" initial_value=" 0.00"></xacro:ros2_control_joint>
+            <xacro:ros2_control_joint joint_name="RH_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"></xacro:ros2_control_joint>
+            <xacro:ros2_control_joint joint_name="RH_HFE" effort_lim="${effort_lim}" initial_value="-0.00"></xacro:ros2_control_joint>
+            <xacro:ros2_control_joint joint_name="RH_KFE" effort_lim="${effort_lim}" initial_value=" 0.00"></xacro:ros2_control_joint>
+        </xacro:if>
+
+        <sensor name="imu_sensor">
+            <state_interface name="orientation.x"/>
+            <state_interface name="orientation.y"/>
+            <state_interface name="orientation.z"/>
+            <state_interface name="orientation.w"/>
+            <state_interface name="angular_velocity.x"/>
+            <state_interface name="angular_velocity.y"/>
+            <state_interface name="angular_velocity.z"/>
+            <state_interface name="linear_acceleration.x"/>
+            <state_interface name="linear_acceleration.y"/>
+            <state_interface name="linear_acceleration.z"/>
+        </sensor>
+    </ros2_control>
+
+    <xacro:if value="${controller == 'default'}">
+        <gazebo>
+            <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+                <parameters>$(find ayg_control)/config/gazebo/ayg_control.yaml</parameters>
+            </plugin>
+        </gazebo>
+    </xacro:if>
+
+    <xacro:if value="${controller == 'ddb'}">
+        <gazebo>
+            <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+                <parameters>$(find robot_control_ddb)/config/gazebo/ayg_control.yaml</parameters>
+            </plugin>
+        </gazebo>
+    </xacro:if>
+
+    <gazebo>
+        <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
+            <odom_frame>Base</odom_frame>
+            <robot_base_frame>Base</robot_base_frame>
+            <odom_publish_frequency>500</odom_publish_frequency>
+            <dimensions>3</dimensions>
+        </plugin>
+    </gazebo>
+
+    <gazebo reference="Base">
+        <sensor name="imu_sensor" type="imu">
+            <always_on>true</always_on>
+            <update_rate>400</update_rate>
+
+            <imu>
+                <angular_velocity>
+                    <x>
+                        <noise type="gaussian">
+                            <mean>0.0</mean>
+                            <stddev>0</stddev>
+                            <bias_mean>0.00000</bias_mean>
+                            <bias_stddev>0.000000</bias_stddev>
+                        </noise>
+                    </x>
+                    <y>
+                        <noise type="gaussian">
+                            <mean>-0.0</mean>
+                            <stddev>0</stddev>
+                            <bias_mean>0.00000</bias_mean>
+                            <bias_stddev>0.000000</bias_stddev>
+                        </noise>
+                    </y>
+                    <z>
+                        <noise type="gaussian">
+                            <mean>0.0</mean>
+                            <stddev>0</stddev>
+                            <bias_mean>0.00000</bias_mean>
+                            <bias_stddev>0.000000</bias_stddev>
+                        </noise>
+                    </z>
+                </angular_velocity>
+                <linear_acceleration>
+                    <x>
+                        <noise type="gaussian">
+                            <mean>0.0</mean>
+                            <stddev>0</stddev>
+                            <bias_mean>0.0</bias_mean>
+                            <bias_stddev>0.00</bias_stddev>
+                        </noise>
+                    </x>
+                    <y>
+                        <noise type="gaussian">
+                            <mean>-0.0</mean>
+                            <stddev>0</stddev>
+                            <bias_mean>0.0</bias_mean>
+                            <bias_stddev>0.00</bias_stddev>
+                        </noise>
+                    </y>
+                    <z>
+                        <noise type="gaussian">
+                            <mean>0.0</mean>
+                            <stddev>0</stddev>
+                            <bias_mean>0.0</bias_mean>
+                            <bias_stddev>0.00</bias_stddev>
+                        </noise>
+                    </z>
+                </linear_acceleration>
+            </imu>
+        </sensor>
+    </gazebo>
+
+</robot>
