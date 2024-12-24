@@ -1,5 +1,7 @@
 # Ayg Robot Description (URDF)
 
+For the USD description, see the [`usd`](https://github.com/ddebenedittis/ayg_description/tree/usd) branch.
+
 ## Overview
 
 This package contains the robot description (URDF) of Ayg developed by [Cyber-Fusion](https://github.com/Cyber-Fusion).
