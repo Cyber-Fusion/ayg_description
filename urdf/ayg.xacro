@@ -1,1119 +1,1119 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot name="ayg" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-	<xacro:arg name="use_gazebo" default="False" />
-	<xacro:property name="use_gazebo" default="$(arg use_gazebo)" />
+  <xacro:arg name="use_gazebo" default="False" />
+  <xacro:property name="use_gazebo" default="$(arg use_gazebo)" />
 
-	<xacro:arg name="initial_configuration" default="lying_down" />
-	<xacro:property name="initial_configuration" value="$(arg initial_configuration)" />
-	<xacro:arg name="controller" default="default" />
-	<xacro:property name="controller" default="$(arg controller)" />
+  <xacro:arg name="initial_configuration" default="lying_down" />
+  <xacro:property name="initial_configuration" value="$(arg initial_configuration)" />
+  <xacro:arg name="controller" default="default" />
+  <xacro:property name="controller" default="$(arg controller)" />
 
-	<xacro:property name="effort_lim" value="50.0" />
-	<xacro:property name="velocity_lim" value="10.0" />
-	<xacro:property name="PI" value="3.1415926535897931" />
+  <xacro:property name="effort_lim" value="50.0" />
+  <xacro:property name="velocity_lim" value="10.0" />
+  <xacro:property name="PI" value="3.1415926535897931" />
 
-	<xacro:if value="${use_gazebo}">
-		<xacro:include filename="$(find ayg_description)/urdf/ayg_gazebo.xacro" />
-	</xacro:if>
+  <xacro:if value="${use_gazebo}">
+    <xacro:include filename="$(find ayg_description)/urdf/ayg_gazebo.xacro" />
+  </xacro:if>
 
-	<link
-		name="Base">
-		<inertial>
-			<origin
-				xyz="-4.4505E-17 9.7011E-18 -0.0030849"
-				rpy="0 0 0" />
-			<mass
-				value="5.6129" />
-			<inertia
-				ixx="0.010298"
-				ixy="-2.8049E-19"
-				ixz="-8.004E-19"
-				iyy="0.015742"
-				iyz="1.5043E-18"
-				izz="0.019645" />
-		</inertial>
-		<visual>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/Base.STL" />
-			</geometry>
-			<material
-				name="">
-				<color
-					rgba="0.69804 0.69804 0.69804 1" />
-			</material>
-		</visual>
-		<collision>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/Base.STL" />
-			</geometry>
-		</collision>
-	</link>
-	<link
-		name="LF_Hip">
-		<inertial>
-			<origin
-				xyz="0.071418 6.5097E-16 0.002654"
-				rpy="0 0 0" />
-			<mass
-				value="1.0061" />
-			<inertia
-				ixx="0.00057848"
-				ixy="-1.7535E-21"
-				ixz="3.7047E-21"
-				iyy="0.00058006"
-				iyz="8.655E-21"
-				izz="0.0010176" />
-		</inertial>
-		<visual>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/LF_Hip.STL" />
-			</geometry>
-			<material
-				name="">
-				<color
-					rgba="0.69804 0.69804 0.69804 1" />
-			</material>
-		</visual>
-		<collision>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/LF_Hip.STL" />
-			</geometry>
-		</collision>
-	</link>
-	<joint
-		name="LF_HAA"
-		type="revolute">
-		<origin
-			xyz="0.15192 0.054 0"
-			rpy="1.5708 0 0" />
-		<parent
-			link="Base" />
-		<child
-			link="LF_Hip" />
-		<axis
-			xyz="1 0 0" />
-		<limit
-			lower="-0.34907"
-			upper="0.17453"
-			effort="${effort_lim}"
-			velocity="${velocity_lim}" />
-	</joint>
-	<link
-		name="LF_Thigh">
-		<inertial>
-			<origin
-				xyz="-0.0079041 -0.006894 -0.04243"
-				rpy="0 0 0" />
-			<mass
-				value="1.1334" />
-			<inertia
-				ixx="0.0008397"
-				ixy="-0.00023737"
-				ixz="-1.4658E-09"
-				iyy="0.00084564"
-				iyz="-1.2252E-06"
-				izz="0.001546" />
-		</inertial>
-		<visual>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/LF_Thigh.STL" />
-			</geometry>
-			<material
-				name="">
-				<color
-					rgba="0.69804 0.69804 0.69804 1" />
-			</material>
-		</visual>
-		<collision>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/LF_Thigh.STL" />
-			</geometry>
-		</collision>
-	</link>
-	<joint
-		name="LF_HFE"
-		type="revolute">
-		<origin
-			xyz="0.077085 0 -0.017"
-			rpy="0 0 0" />
-		<parent
-			link="LF_Hip" />
-		<child
-			link="LF_Thigh" />
-		<axis
-			xyz="0 0 1" />
-		<limit
-			lower="-2.618"
-			upper="0.34907"
-			effort="${effort_lim}"
-			velocity="${velocity_lim}" />
-	</joint>
-	<link
-		name="LF_Shank">
-		<inertial>
-			<origin
-				xyz="0.070616 -0.05127 -0.0201"
-				rpy="0 0 0" />
-			<mass
-				value="0.058285" />
-			<inertia
-				ixx="0.00018414"
-				ixy="0.00018535"
-				ixz="9.8667E-20"
-				iyy="0.00020942"
-				iyz="-9.1978E-20"
-				izz="0.00039291" />
-		</inertial>
-		<visual>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/LF_Shank.STL" />
-			</geometry>
-			<material
-				name="">
-				<color
-					rgba="0.69804 0.69804 0.69804 1" />
-			</material>
-		</visual>
-		<collision>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/LF_Shank.STL" />
-			</geometry>
-		</collision>
-	</link>
-	<joint
-		name="LF_KFE"
-		type="revolute">
-		<origin
-			xyz="-0.1494 -0.16021 -0.0539"
-			rpy="0 0 0" />
-		<parent
-			link="LF_Thigh" />
-		<child
-			link="LF_Shank" />
-		<axis
-			xyz="0 0 1" />
-		<limit
-			lower="-0.43633"
-			upper="1.2217"
-			effort="${effort_lim}"
-			velocity="${velocity_lim}" />
-	</joint>
-	<link
-		name="LF_Foot">
-		<inertial>
-			<origin
-				xyz="0.012 0 -5.5511E-17"
-				rpy="0 0 0" />
-			<mass
-				value="0.088055" />
-			<inertia
-				ixx="4.0957E-05"
-				ixy="6.4789E-21"
-				ixz="1.0527E-20"
-				iyy="2.4705E-05"
-				iyz="-4.2352E-21"
-				izz="2.4705E-05" />
-		</inertial>
-		<visual>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<cylinder length="0.025" radius="0.030" />
-			</geometry>
-			<material
-				name="">
-				<color
-					rgba="0.25098 0.25098 0.25098 1" />
-			</material>
-		</visual>
-		<collision>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<cylinder length="0.025" radius="0.030" />
-			</geometry>
-		</collision>
-	</link>
-	<joint
-		name="LF_Shank_2_Foot"
-		type="fixed">
-		<origin
-			xyz="0.165 -0.151 -0.0201"
-			rpy="0 0 0" />
-		<parent
-			link="LF_Shank" />
-		<child
-			link="LF_Foot" />
-		<axis
-			xyz="0 0 0" />
-	</joint>
-	<link
-		name="RF_Hip">
-		<inertial>
-			<origin
-				xyz="0.0714175198878489 6.86607544823498E-16 0.00265399811396266"
-				rpy="0 0 0" />
-			<mass
-				value="1.00611999358686" />
-			<inertia
-				ixx="0.000578475326629041"
-				ixy="2.38284951842656E-20"
-				ixz="-4.58376353579811E-20"
-				iyy="0.000580062231241837"
-				iyz="-1.65786496242045E-21"
-				izz="0.00101761251741825" />
-		</inertial>
-		<visual>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/RF_Hip.STL" />
-			</geometry>
-			<material
-				name="">
-				<color
-					rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
-			</material>
-		</visual>
-		<collision>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/RF_Hip.STL" />
-			</geometry>
-		</collision>
-	</link>
-	<joint
-		name="RF_HAA"
-		type="revolute">
-		<origin
-			xyz="0.15192 -0.054 0"
-			rpy="-1.5708 0 0" />
-		<parent
-			link="Base" />
-		<child
-			link="RF_Hip" />
-		<axis
-			xyz="1 0 0" />
-		<limit
-			lower="-0.17453"
-			upper="0.34907"
-			effort="${effort_lim}"
-			velocity="${velocity_lim}" />
-	</joint>
-	<link
-		name="RF_Thigh">
-		<inertial>
-			<origin
-				xyz="-0.00790410799025601 -0.00689399183089042 0.0424302203258587"
-				rpy="0 0 0" />
-			<mass
-				value="1.13336000773924" />
-			<inertia
-				ixx="0.000839701004100924"
-				ixy="-0.000237368706450857"
-				ixz="1.4657628001327E-09"
-				iyy="0.000845643609366733"
-				iyz="1.22524486883543E-06"
-				izz="0.00154598364653309" />
-		</inertial>
-		<visual>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/RF_Thigh.STL" />
-			</geometry>
-			<material
-				name="">
-				<color
-					rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
-			</material>
-		</visual>
-		<collision>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/RF_Thigh.STL" />
-			</geometry>
-		</collision>
-	</link>
-	<joint
-		name="RF_HFE"
-		type="revolute">
-		<origin
-			xyz="0.077085 0 -0.017"
-			rpy="3.1416 0 0" />
-		<parent
-			link="RF_Hip" />
-		<child
-			link="RF_Thigh" />
-		<axis
-			xyz="0 0 1" />
-		<limit
-			lower="-0.34907"
-			upper="2.618"
-			effort="${effort_lim}"
-			velocity="${velocity_lim}" />
-	</joint>
-	<link
-		name="RF_Shank">
-		<inertial>
-			<origin
-				xyz="0.0706164468253683 -0.0512701860879585 0.0201"
-				rpy="0 0 0" />
-			<mass
-				value="0.0582850645781695" />
-			<inertia
-				ixx="0.000184137704387635"
-				ixy="0.000185345324259658"
-				ixz="9.86925834343184E-20"
-				iyy="0.000209415860158045"
-				iyz="-9.19218654847845E-20"
-				izz="0.000392913001128619" />
-		</inertial>
-		<visual>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/RF_Shank.STL" />
-			</geometry>
-			<material
-				name="">
-				<color
-					rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
-			</material>
-		</visual>
-		<collision>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/RF_Shank.STL" />
-			</geometry>
-		</collision>
-	</link>
-	<joint
-		name="RF_KFE"
-		type="revolute">
-		<origin
-			xyz="-0.1494 -0.16021 0.0539"
-			rpy="0 0 0" />
-		<parent
-			link="RF_Thigh" />
-		<child
-			link="RF_Shank" />
-		<axis
-			xyz="0 0 1" />
-		<limit
-			lower="-0.43633"
-			upper="1.2217"
-			effort="${effort_lim}"
-			velocity="${velocity_lim}" />
-	</joint>
-	<link
-		name="RF_Foot">
-		<inertial>
-			<origin
-				xyz="0.012 0 -5.55111512312578E-17"
-				rpy="0 0 0" />
-			<mass
-				value="0.0880549275211839" />
-			<inertia
-				ixx="4.09565481632907E-05"
-				ixy="7.74050637373846E-21"
-				ixz="1.15523565073305E-20"
-				iyy="2.47049106026622E-05"
-				iyz="1.27054942088145E-21"
-				izz="2.47049106026622E-05" />
-		</inertial>
-		<visual>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<cylinder length="0.025" radius="0.030" />
-			</geometry>
-			<material
-				name="">
-				<color
-					rgba="0.250980392156863 0.250980392156863 0.250980392156863 1" />
-			</material>
-		</visual>
-		<collision>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<cylinder length="0.025" radius="0.030" />
-			</geometry>
-		</collision>
-	</link>
-	<joint
-		name="RF_Shank_2_Foot"
-		type="fixed">
-		<origin
-			xyz="0.165 -0.151 0.0201"
-			rpy="0 0 0" />
-		<parent
-			link="RF_Shank" />
-		<child
-			link="RF_Foot" />
-		<axis
-			xyz="0 0 0" />
-	</joint>
-	<link
-		name="LH_Hip">
-		<inertial>
-			<origin
-				xyz="0.0714175198878491 5.55977976714811E-16 0.00265399811396268"
-				rpy="0 0 0" />
-			<mass
-				value="1.00611999358686" />
-			<inertia
-				ixx="0.000578475326629041"
-				ixy="9.95877473261809E-21"
-				ixz="-1.33900149136083E-19"
-				iyy="0.000580062231241838"
-				iyz="2.77037259550599E-20"
-				izz="0.00101761251741825" />
-		</inertial>
-		<visual>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/LH_Hip.STL" />
-			</geometry>
-			<material
-				name="">
-				<color
-					rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
-			</material>
-		</visual>
-		<collision>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/LH_Hip.STL" />
-			</geometry>
-		</collision>
-	</link>
-	<joint
-		name="LH_HAA"
-		type="revolute">
-		<origin
-			xyz="-0.15192 0.054 0"
-			rpy="-1.5708 0 3.1416" />
-		<parent
-			link="Base" />
-		<child
-			link="LH_Hip" />
-		<axis
-			xyz="1 0 0" />
-		<limit
-			lower="-0.69813"
-			upper="0.34907"
-			effort="${effort_lim}"
-			velocity="${velocity_lim}" />
-	</joint>
-	<link
-		name="LH_Thigh">
-		<inertial>
-			<origin
-				xyz="-0.00790410798716226 -0.00689399182753629 -0.0424302203260947"
-				rpy="0 0 0" />
-			<mass
-				value="1.13336000771446" />
-			<inertia
-				ixx="0.000839700970185121"
-				ixy="-0.000237368706450856"
-				ixz="-1.46576280007953E-09"
-				iyy="0.000845643643282357"
-				iyz="-1.22524486883534E-06"
-				izz="0.001545983646533" />
-		</inertial>
-		<visual>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/LH_Thigh.STL" />
-			</geometry>
-			<material
-				name="">
-				<color
-					rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
-			</material>
-		</visual>
-		<collision>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/LH_Thigh.STL" />
-			</geometry>
-		</collision>
-	</link>
-	<joint
-		name="LH_HFE"
-		type="revolute">
-		<origin
-			xyz="0.077085 0 -0.017"
-			rpy="0 0 3.1416" />
-		<parent
-			link="LH_Hip" />
-		<child
-			link="LH_Thigh" />
-		<axis
-			xyz="0 0 1" />
-		<limit
-			lower="-0.87266"
-			upper="2.618"
-			effort="${effort_lim}"
-			velocity="${velocity_lim}" />
-	</joint>
-	<link
-		name="LH_Shank">
-		<inertial>
-			<origin
-				xyz="0.0706164468253682 -0.0512701860879584 -0.0201"
-				rpy="0 0 0" />
-			<mass
-				value="0.0582850645781694" />
-			<inertia
-				ixx="0.000184137704387635"
-				ixy="0.000185345324259658"
-				ixz="9.74939143617384E-20"
-				iyy="0.000209415860158045"
-				iyz="-9.16821796223932E-20"
-				izz="0.000392913001128619" />
-		</inertial>
-		<visual>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/LH_Shank.STL" />
-			</geometry>
-			<material
-				name="">
-				<color
-					rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
-			</material>
-		</visual>
-		<collision>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/LH_Shank.STL" />
-			</geometry>
-		</collision>
-	</link>
-	<joint
-		name="LH_KFE"
-		type="revolute">
-		<origin
-			xyz="-0.1494 -0.16021 -0.0539"
-			rpy="0 0 0" />
-		<parent
-			link="LH_Thigh" />
-		<child
-			link="LH_Shank" />
-		<axis
-			xyz="0 0 1" />
-		<limit
-			lower="-0.43633"
-			upper="1.2217"
-			effort="${effort_lim}"
-			velocity="${velocity_lim}" />
-	</joint>
-	<link
-		name="LH_Foot">
-		<inertial>
-			<origin
-				xyz="0.012 0 2.77555756156289E-17"
-				rpy="0 0 0" />
-			<mass
-				value="0.0880549275211839" />
-			<inertia
-				ixx="4.09565481632907E-05"
-				ixy="5.03569687173527E-21"
-				ixz="1.51153653947933E-20"
-				iyy="2.47049106026622E-05"
-				iyz="-8.470329472543E-22"
-				izz="2.47049106026622E-05" />
-		</inertial>
-		<visual>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<cylinder length="0.025" radius="0.030" />
-			</geometry>
-			<material
-				name="">
-				<color
-					rgba="0.250980392156863 0.250980392156863 0.250980392156863 1" />
-			</material>
-		</visual>
-		<collision>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<cylinder length="0.025" radius="0.030" />
-			</geometry>
-		</collision>
-	</link>
-	<joint
-		name="LH_Shank_2_Foot"
-		type="fixed">
-		<origin
-			xyz="0.165 -0.151 -0.0201"
-			rpy="0 0 0" />
-		<parent
-			link="LH_Shank" />
-		<child
-			link="LH_Foot" />
-		<axis
-			xyz="0 0 0" />
-	</joint>
-	<link
-		name="RH_Hip">
-		<inertial>
-			<origin
-				xyz="0.0714175198878491 6.50894967942453E-16 0.00265399811396261"
-				rpy="0 0 0" />
-			<mass
-				value="1.00611999358686" />
-			<inertia
-				ixx="0.00057847532662904"
-				ixy="9.08265953375538E-21"
-				ixz="5.30346033193335E-20"
-				iyy="0.000580062231241837"
-				iyz="-5.65775056165436E-20"
-				izz="0.00101761251741825" />
-		</inertial>
-		<visual>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/RH_Hip.STL" />
-			</geometry>
-			<material
-				name="">
-				<color
-					rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
-			</material>
-		</visual>
-		<collision>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/RH_Hip.STL" />
-			</geometry>
-		</collision>
-	</link>
-	<joint
-		name="RH_HAA"
-		type="revolute">
-		<origin
-			xyz="-0.15192 -0.054 0"
-			rpy="1.5708 0 3.1416" />
-		<parent
-			link="Base" />
-		<child
-			link="RH_Hip" />
-		<axis
-			xyz="1 0 0" />
-		<limit
-			lower="-0.34907"
-			upper="0.69813"
-			effort="${effort_lim}"
-			velocity="${velocity_lim}" />
-	</joint>
-	<link
-		name="RH_Thigh">
-		<inertial>
-			<origin
-				xyz="-0.00790410799025618 -0.00689399183088898 0.0424302203258587"
-				rpy="0 0 0" />
-			<mass
-				value="1.13336000773924" />
-			<inertia
-				ixx="0.000839701004100924"
-				ixy="-0.000237368706450857"
-				ixz="1.4657628001323E-09"
-				iyy="0.000845643609366733"
-				iyz="1.22524486883543E-06"
-				izz="0.00154598364653309" />
-		</inertial>
-		<visual>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/RH_Thigh.STL" />
-			</geometry>
-			<material
-				name="">
-				<color
-					rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
-			</material>
-		</visual>
-		<collision>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/RH_Thigh.STL" />
-			</geometry>
-		</collision>
-	</link>
-	<joint
-		name="RH_HFE"
-		type="revolute">
-		<origin
-			xyz="0.077085 0 -0.017"
-			rpy="3.1416 0 3.1416" />
-		<parent
-			link="RH_Hip" />
-		<child
-			link="RH_Thigh" />
-		<axis
-			xyz="0 0 1" />
-		<limit
-			lower="-2.618"
-			upper="0.87266"
-			effort="${effort_lim}"
-			velocity="${velocity_lim}" />
-	</joint>
-	<link
-		name="RH_Shank">
-		<inertial>
-			<origin
-				xyz="0.0706164468253683 -0.0512701860879584 0.0200999999999999"
-				rpy="0 0 0" />
-			<mass
-				value="0.0582850645781694" />
-			<inertia
-				ixx="0.000184137704387635"
-				ixy="0.000185345324259658"
-				ixz="9.89437646057655E-20"
-				iyy="0.000209415860158044"
-				iyz="-9.19004444413013E-20"
-				izz="0.000392913001128619" />
-		</inertial>
-		<visual>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/RH_Shank.STL" />
-			</geometry>
-			<material
-				name="">
-				<color
-					rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
-			</material>
-		</visual>
-		<collision>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/RH_Shank.STL" />
-			</geometry>
-		</collision>
-	</link>
-	<joint
-		name="RH_KFE"
-		type="revolute">
-		<origin
-			xyz="-0.1494 -0.16021 0.0539"
-			rpy="0 0 0" />
-		<parent
-			link="RH_Thigh" />
-		<child
-			link="RH_Shank" />
-		<axis
-			xyz="0 0 1" />
-		<limit
-			lower="-0.43633"
-			upper="1.2217"
-			effort="${effort_lim}"
-			velocity="${velocity_lim}" />
-	</joint>
-	<link
-		name="RH_Foot">
-		<inertial>
-			<origin
-				xyz="0.012 0 2.77555756156289E-17"
-				rpy="0 0 0" />
-			<mass
-				value="0.0880549275211839" />
-			<inertia
-				ixx="4.09565481632907E-05"
-				ixy="8.97250072622786E-21"
-				ixz="1.03212347294487E-20"
-				iyy="2.47049106026622E-05"
-				iyz="5.73458294683708E-36"
-				izz="2.47049106026622E-05" />
-		</inertial>
-		<visual>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<cylinder length="0.025" radius="0.030" />
-			</geometry>
-			<material
-				name="">
-				<color
-					rgba="0.250980392156863 0.250980392156863 0.250980392156863 1" />
-			</material>
-		</visual>
-		<collision>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<cylinder length="0.025" radius="0.030" />
-			</geometry>
-		</collision>
-	</link>
-	<joint
-		name="RH_Shank_2_Foot"
-		type="fixed">
-		<origin
-			xyz="0.165 -0.151 0.0201"
-			rpy="0 0 0" />
-		<parent
-			link="RH_Shank" />
-		<child
-			link="RH_Foot" />
-		<axis
-			xyz="0 0 0" />
-	</joint>
-	<link
-		name="IMU">
-		<inertial>
-			<origin
-				xyz="1.6269E-17 0.018 0.1665"
-				rpy="0 0 0" />
-			<mass
-				value="0.08" />
-			<inertia
-				ixx="2.1333E-05"
-				ixy="-3.5274E-21"
-				ixz="-5.6334E-21"
-				iyy="2.7333E-05"
-				iyz="1.2895E-21"
-				izz="2.7333E-05" />
-		</inertial>
-		<visual>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/IMU.STL" />
-			</geometry>
-			<material
-				name="">
-				<color
-					rgba="0.79216 0.81961 0.93333 1" />
-			</material>
-		</visual>
-		<collision>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/IMU.STL" />
-			</geometry>
-		</collision>
-	</link>
-	<joint
-		name="Base_2_IMU"
-		type="fixed">
-		<origin
-			xyz="0 0 -0.001"
-			rpy="-1.5708 0 -1.5708" />
-		<parent
-			link="Base" />
-		<child
-			link="IMU" />
-		<axis
-			xyz="0 0 0" />
-	</joint>
-	<link
-		name="Neck">
-		<inertial>
-			<origin
-				xyz="1.5818E-09 0.017658 0.043625"
-				rpy="0 0 0" />
-			<mass
-				value="0.36577" />
-			<inertia
-				ixx="0.00019894"
-				ixy="-2.818E-10"
-				ixz="-2.9521E-10"
-				iyy="0.00050739"
-				iyz="-6.8335E-06"
-				izz="0.00039773" />
-		</inertial>
-		<visual>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/Neck.STL" />
-			</geometry>
-			<material
-				name="">
-				<color
-					rgba="0.69804 0.69804 0.69804 1" />
-			</material>
-		</visual>
-		<collision>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/Neck.STL" />
-			</geometry>
-		</collision>
-	</link>
-	<joint
-		name="Base_2_Neck"
-		type="fixed">
-		<origin
-			xyz="0.2265 0 0.02"
-			rpy="1.5708 0 1.5708" />
-		<parent
-			link="Base" />
-		<child
-			link="Neck" />
-		<axis
-			xyz="0 0 0" />
-	</joint>
-	<link
-		name="Camera">
-		<inertial>
-			<origin
-				xyz="-2.2285E-15 0 0.013"
-				rpy="0 0 0" />
-			<mass
-				value="0.16948" />
-			<inertia
-				ixx="2.085E-05"
-				ixy="5.9002E-20"
-				ixz="-6.1771E-20"
-				iyy="0.00020719"
-				iyz="-3.3881E-21"
-				izz="0.00020895" />
-		</inertial>
-		<visual>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/Camera.STL" />
-			</geometry>
-			<material
-				name="">
-				<color
-					rgba="0.25098 0.25098 0.25098 1" />
-			</material>
-		</visual>
-		<collision>
-			<origin
-				xyz="0 0 0"
-				rpy="0 0 0" />
-			<geometry>
-				<mesh
-					filename="package://ayg_description/meshes/Camera.STL" />
-			</geometry>
-		</collision>
-	</link>
-	<joint
-		name="Neck_2_Camera"
-		type="fixed">
-		<origin
-			xyz="0 0.01666 0.080407"
-			rpy="0.28898 0 0" />
-		<parent
-			link="Neck" />
-		<child
-			link="Camera" />
-		<axis
-			xyz="0 0 0" />
-	</joint>
+  <link
+    name="Base">
+    <inertial>
+      <origin
+        xyz="0.000442764791303709 0.00323410160779704 0.000245694936587104"
+        rpy="0 0 0" />
+      <mass
+        value="8.43904999246817" />
+      <inertia
+        ixx="0.020065303439704"
+        ixy="4.08404656288191E-05"
+        ixz="-2.29078687506071E-14"
+        iyy="0.0384358501598642"
+        iyz="-2.71859452435122E-15"
+        izz="0.0267905011857108" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/Base.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/Base.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="LF_Hip">
+    <inertial>
+      <origin
+        xyz="0.0624625305028617 0.000263588472359728 -0.00241409757946361"
+        rpy="0 0 0" />
+      <mass
+        value="1.00401999005125" />
+      <inertia
+        ixx="0.000584357699669872"
+        ixy="1.71578981310067E-06"
+        ixz="-2.61675027998363E-19"
+        iyy="0.000584539401732687"
+        iyz="-3.57751728713357E-20"
+        izz="0.00102756652010595" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/L_Hip.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/L_Hip.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="LF_HAA"
+    type="revolute">
+    <origin
+      xyz="0.197 0.054 0"
+      rpy="-1.5708 0 0" />
+    <parent
+      link="Base" />
+    <child
+      link="LF_Hip" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-0.5236"
+      upper="0.34907"
+      effort="${effort_lim}"
+      velocity="${velocity_lim}" />
+  </joint>
+  <link
+    name="LF_Thigh">
+    <inertial>
+      <origin
+        xyz="-0.00815740476229621 -0.00912689407030123 -0.0420066354122466"
+        rpy="0 0 0" />
+      <mass
+        value="1.15974999242447" />
+      <inertia
+        ixx="0.000911992879302287"
+        ixy="-0.000310524680951164"
+        ixz="-4.3266057977693E-16"
+        iyy="0.00091897366461706"
+        iyz="-1.93894477964206E-06"
+        izz="0.00169326046596367" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/L_Thigh.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/L_Thigh.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="LF_HFE"
+    type="revolute">
+    <origin
+      xyz="0.0665 0 0.019"
+      rpy="3.1416 0 0" />
+    <parent
+      link="LF_Hip" />
+    <child
+      link="LF_Thigh" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.87266"
+      upper="2.5307"
+      effort="${effort_lim}"
+      velocity="${velocity_lim}" />
+  </joint>
+  <link
+    name="LF_Shank">
+    <inertial>
+      <origin
+        xyz="0.0630329536265654 -0.047817827674744 -0.0185"
+        rpy="0 0 0" />
+      <mass
+        value="0.102570008997248" />
+      <inertia
+        ixx="0.00029767764878727"
+        ixy="0.000296980915761884"
+        ixz="1.63288326545704E-19"
+        iyy="0.000327832614532812"
+        iyz="-1.54063121876522E-19"
+        izz="0.000624546801244392" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/L_Shank.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/L_Shank.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="LF_KFE"
+    type="revolute">
+    <origin
+      xyz="-0.14936 -0.16017 -0.052"
+      rpy="0 0 0" />
+    <parent
+      link="LF_Thigh" />
+    <child
+      link="LF_Shank" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.7854"
+      upper="1.2217"
+      effort="${effort_lim}"
+      velocity="${velocity_lim}" />
+  </joint>
+  <link
+    name="LF_Foot">
+    <inertial>
+      <origin
+        xyz="-2.77555756156289E-17 5.55111512312578E-17 0"
+        rpy="0 ${PI/2} 0" />
+      <mass
+        value="0.088054927521184" />
+      <inertia
+        ixx="4.09565481632907E-05"
+        ixy="-8.61058027358505E-21"
+        ixz="2.27932697045296E-20"
+        iyy="2.47049106026622E-05"
+        iyz="5.04870979341448E-29"
+        izz="2.47049106026622E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.025" radius="0.030" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.250980392156863 0.250980392156863 0.250980392156863 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.025" radius="0.030" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="LF_Shank_2_Foot"
+    type="fixed">
+    <origin
+      xyz="0.165 -0.151 -0.0185"
+      rpy="0 0 0" />
+    <parent
+      link="LF_Shank" />
+    <child
+      link="LF_Foot" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="RF_Hip">
+    <inertial>
+      <origin
+        xyz="0.062462530502862 0.000263588472360484 0.00241409757946365"
+        rpy="0 0 0" />
+      <mass
+        value="1.00401999005125" />
+      <inertia
+        ixx="0.000584357699669871"
+        ixy="1.71578981310067E-06"
+        ixz="-3.08533699148142E-19"
+        iyy="0.000584539401732687"
+        iyz="1.3310433650471E-20"
+        izz="0.00102756652010595" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/R_Hip.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/R_Hip.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="RF_HAA"
+    type="revolute">
+    <origin
+      xyz="0.197 -0.054 0"
+      rpy="-1.5708 0 0" />
+    <parent
+      link="Base" />
+    <child
+      link="RF_Hip" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-0.34907"
+      upper="0.5236"
+      effort="${effort_lim}"
+      velocity="${velocity_lim}" />
+  </joint>
+  <link
+    name="RF_Thigh">
+    <inertial>
+      <origin
+        xyz="-0.00815740475775473 -0.0091268940561607 0.0420066354122466"
+        rpy="0 0 0" />
+      <mass
+        value="1.15974999242447" />
+      <inertia
+        ixx="0.000911992879285499"
+        ixy="-0.000310524680969909"
+        ixz="4.28891709883383E-15"
+        iyy="0.000918973664621895"
+        iyz="1.93894536662709E-06"
+        izz="0.00169326046595172" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/R_Thigh.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/R_Thigh.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="RF_HFE"
+    type="revolute">
+    <origin
+      xyz="0.0665 0 -0.019"
+      rpy="3.1416 0 0" />
+    <parent
+      link="RF_Hip" />
+    <child
+      link="RF_Thigh" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.87266"
+      upper="2.5307"
+      effort="${effort_lim}"
+      velocity="${velocity_lim}" />
+  </joint>
+  <link
+    name="RF_Shank">
+    <inertial>
+      <origin
+        xyz="0.0630329536265653 -0.047817827674744 0.0185"
+        rpy="0 0 0" />
+      <mass
+        value="0.102570008997248" />
+      <inertia
+        ixx="0.000297677648787269"
+        ixy="0.000296980915761884"
+        ixz="1.63489615161778E-19"
+        iyy="0.000327832614532812"
+        iyz="-1.53587053010883E-19"
+        izz="0.000624546801244392" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/R_Shank.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/R_Shank.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="RF_KFE"
+    type="revolute">
+    <origin
+      xyz="-0.14936 -0.16017 0.052"
+      rpy="0 0 0" />
+    <parent
+      link="RF_Thigh" />
+    <child
+      link="RF_Shank" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.7854"
+      upper="1.2217"
+      effort="${effort_lim}"
+      velocity="${velocity_lim}" />
+  </joint>
+  <link
+    name="RF_Foot">
+    <inertial>
+      <origin
+        xyz="0 0 0"
+        rpy="0 ${PI/2} 0" />
+      <mass
+        value="0.088054927521184" />
+      <inertia
+        ixx="4.09565481632907E-05"
+        ixy="-1.1480272825008E-21"
+        ixz="3.01597797886474E-21"
+        iyy="2.47049106026622E-05"
+        iyz="2.27429196641528E-36"
+        izz="2.47049106026622E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.025" radius="0.030" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.250980392156863 0.250980392156863 0.250980392156863 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.025" radius="0.030" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="RF_Shank_2_Foot"
+    type="fixed">
+    <origin
+      xyz="0.165 -0.151 0.0185"
+      rpy="0 0 0" />
+    <parent
+      link="RF_Shank" />
+    <child
+      link="RF_Foot" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="LH_Hip">
+    <inertial>
+      <origin
+        xyz="0.062462530502862 0.000263588472360432 0.0024140975794637"
+        rpy="0 0 0" />
+      <mass
+        value="1.00401999005125" />
+      <inertia
+        ixx="0.000584357699669872"
+        ixy="1.71578981310068E-06"
+        ixz="-9.73688020495738E-20"
+        iyy="0.000584539401732687"
+        iyz="-6.87341316742717E-20"
+        izz="0.00102756652010595" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/L_Hip.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/L_Hip.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="LH_HAA"
+    type="revolute">
+    <origin
+      xyz="-0.197 0.054 0"
+      rpy="-1.5708 0 3.1416" />
+    <parent
+      link="Base" />
+    <child
+      link="LH_Hip" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-0.87266"
+      upper="0.5236"
+      effort="${effort_lim}"
+      velocity="${velocity_lim}" />
+  </joint>
+  <link
+    name="LH_Thigh">
+    <inertial>
+      <origin
+        xyz="-0.00815740476229676 -0.00912689407030209 -0.0420066354122466"
+        rpy="0 0 0" />
+      <mass
+        value="1.15974999242447" />
+      <inertia
+        ixx="0.000911992879302287"
+        ixy="-0.000310524680951163"
+        ixz="-4.32661454108342E-16"
+        iyy="0.00091897366461706"
+        iyz="-1.93894477964206E-06"
+        izz="0.00169326046596367" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/L_Thigh.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/L_Thigh.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="LH_HFE"
+    type="revolute">
+    <origin
+      xyz="0.0665 0 -0.019"
+      rpy="0 0 3.1416" />
+    <parent
+      link="LH_Hip" />
+    <child
+      link="LH_Thigh" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-2.5307"
+      upper="0.87266"
+      effort="${effort_lim}"
+      velocity="${velocity_lim}" />
+  </joint>
+  <link
+    name="LH_Shank">
+    <inertial>
+      <origin
+        xyz="0.0630329536265655 -0.047817827674744 -0.0185"
+        rpy="0 0 0" />
+      <mass
+        value="0.102570008997248" />
+      <inertia
+        ixx="0.00029767764878727"
+        ixy="0.000296980915761884"
+        ixz="1.6307977374754E-19"
+        iyy="0.000327832614532812"
+        iyz="-1.53773408095991E-19"
+        izz="0.000624546801244392" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/L_Shank.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/L_Shank.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="LH_KFE"
+    type="revolute">
+    <origin
+      xyz="-0.14936 -0.16017 -0.052"
+      rpy="0 0 0" />
+    <parent
+      link="LH_Thigh" />
+    <child
+      link="LH_Shank" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.7854"
+      upper="1.2217"
+      effort="${effort_lim}"
+      velocity="${velocity_lim}" />
+  </joint>
+  <link
+    name="LH_Foot">
+    <inertial>
+      <origin
+        xyz="2.77555756156289E-17 0 2.77555756156289E-17"
+        rpy="0 ${PI/2} 0" />
+      <mass
+        value="0.088054927521184" />
+      <inertia
+        ixx="4.09565481632907E-05"
+        ixy="-3.80552124907456E-21"
+        ixz="1.77455513018989E-20"
+        iyy="2.47049106026622E-05"
+        iyz="-2.5462538826706E-36"
+        izz="2.47049106026622E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.025" radius="0.030" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.250980392156863 0.250980392156863 0.250980392156863 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.025" radius="0.030" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="LH_Shank_2_Foot"
+    type="fixed">
+    <origin
+      xyz="0.164999999999998 -0.151000000000002 -0.0185"
+      rpy="0 0 0" />
+    <parent
+      link="LH_Shank" />
+    <child
+      link="LH_Foot" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="RH_Hip">
+    <inertial>
+      <origin
+        xyz="0.0624625305028617 0.000263588472359603 -0.00241409757946362"
+        rpy="0 0 0" />
+      <mass
+        value="1.00401999005125" />
+      <inertia
+        ixx="0.000584357699669872"
+        ixy="1.71578981310067E-06"
+        ixz="-2.64433816563897E-19"
+        iyy="0.000584539401732687"
+        iyz="1.41837396213501E-20"
+        izz="0.00102756652010595" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/R_Hip.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/R_Hip.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="RH_HAA"
+    type="revolute">
+    <origin
+      xyz="-0.197 -0.054 0"
+      rpy="-1.5708 0 3.1416" />
+    <parent
+      link="Base" />
+    <child
+      link="RH_Hip" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-0.5236"
+      upper="0.87266"
+      effort="${effort_lim}"
+      velocity="${velocity_lim}" />
+  </joint>
+  <link
+    name="RH_Thigh">
+    <inertial>
+      <origin
+        xyz="-0.008157404757755 -0.0091268940561601 0.0420066354122466"
+        rpy="0 0 0" />
+      <mass
+        value="1.15974999242447" />
+      <inertia
+        ixx="0.000911992879285499"
+        ixy="-0.000310524680969909"
+        ixz="4.28891985074721E-15"
+        iyy="0.000918973664621895"
+        iyz="1.93894536662708E-06"
+        izz="0.00169326046595172" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/R_Thigh.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/R_Thigh.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="RH_HFE"
+    type="revolute">
+    <origin
+      xyz="0.0665 0 0.019"
+      rpy="0 0 3.1416" />
+    <parent
+      link="RH_Hip" />
+    <child
+      link="RH_Thigh" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-2.5307"
+      upper="0.87266"
+      effort="${effort_lim}"
+      velocity="${velocity_lim}" />
+  </joint>
+  <link
+    name="RH_Shank">
+    <inertial>
+      <origin
+        xyz="0.0630329536265655 -0.0478178276747441 0.0185"
+        rpy="0 0 0" />
+      <mass
+        value="0.102570008997248" />
+      <inertia
+        ixx="0.000297677648787269"
+        ixy="0.000296980915761884"
+        ixz="1.63213831872347E-19"
+        iyy="0.000327832614532812"
+        iyz="-1.5407076956717E-19"
+        izz="0.000624546801244392" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/R_Shank.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/R_Shank.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="RH_KFE"
+    type="revolute">
+    <origin
+      xyz="-0.14936 -0.16017 0.052"
+      rpy="0 0 0" />
+    <parent
+      link="RH_Thigh" />
+    <child
+      link="RH_Shank" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.7854"
+      upper="1.2217"
+      effort="${effort_lim}"
+      velocity="${velocity_lim}" />
+  </joint>
+  <link
+    name="RH_Foot">
+    <inertial>
+      <origin
+        xyz="-2.77555756156289E-17 0 5.55111512312578E-17"
+        rpy="0 ${PI/2} 0" />
+      <mass
+        value="0.088054927521184" />
+      <inertia
+        ixx="4.09565481632907E-05"
+        ixy="-2.85582166835909E-22"
+        ixz="2.0084334722734E-21"
+        iyy="2.47049106026622E-05"
+        iyz="0"
+        izz="2.47049106026622E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.025" radius="0.030" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.250980392156863 0.250980392156863 0.250980392156863 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <cylinder length="0.025" radius="0.030" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="RH_Shank_2_Foot"
+    type="fixed">
+    <origin
+      xyz="0.165 -0.151 0.0185"
+      rpy="0 0 0" />
+    <parent
+      link="RH_Shank" />
+    <child
+      link="RH_Foot" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="IMU">
+    <inertial>
+      <origin
+        xyz="-8.67049396793524E-18 0.02 5.37094698008006E-18"
+        rpy="0 0 0" />
+      <mass
+        value="0.08" />
+      <inertia
+        ixx="2.13333333333333E-05"
+        ixy="-4.34540023236298E-22"
+        ixz="-1.52363539595465E-21"
+        iyy="2.73333333333333E-05"
+        iyz="-2.43977500178881E-21"
+        izz="2.73333333333333E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/IMU.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/IMU.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Base_2_IMU"
+    type="fixed">
+    <origin
+      xyz="0 0 0.006"
+      rpy="-1.5708 0 1.5708" />
+    <parent
+      link="Base" />
+    <child
+      link="IMU" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="Neck">
+    <inertial>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <mass
+        value="0" />
+      <inertia
+        ixx="0"
+        ixy="0"
+        ixz="0"
+        iyy="0"
+        iyz="0"
+        izz="0" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/Neck.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/Neck.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Base_2_Neck"
+    type="fixed">
+    <origin
+      xyz="0.2615 0 0.0249999999999999"
+      rpy="1.5707963267949 0 1.5707963267949" />
+    <parent
+      link="Base" />
+    <child
+      link="Neck" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="Camera">
+    <inertial>
+      <origin
+        xyz="7.0525E-18 -2.7756E-17 0.013"
+        rpy="0 0 0" />
+      <mass
+        value="0.16948" />
+      <inertia
+        ixx="2.085E-05"
+        ixy="5.6809E-20"
+        ixz="-7.2863E-20"
+        iyy="0.00020719"
+        iyz="3.3881E-21"
+        izz="0.00020895" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/Camera.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.25098 0.25098 0.25098 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/Camera.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Neck_2_Camera"
+    type="fixed">
+    <origin
+      xyz="0 0.0166603444360147 0.0804068913666247"
+      rpy="0.288975409992567 0 0" />
+    <parent
+      link="Neck" />
+    <child
+      link="Camera" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
 </robot>
