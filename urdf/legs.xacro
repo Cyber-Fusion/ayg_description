@@ -39,15 +39,26 @@
             rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
         </material>
       </visual>
-      <collision>
-        <origin
-          xyz="0 0 0"
-          rpy="0 0 0" />
-        <geometry>
-          <mesh
-            filename="package://ayg_description/meshes/L_Hip.STL" />
-        </geometry>
-      </collision>
+      <xacro:if value="${FH == 'F'}">
+        <collision>
+          <origin
+            xyz="0.0665 0 ${0.019+0.015}"
+            rpy="0 0 0" />
+          <geometry>
+            <cylinder radius="0.05" length="0.13"/>
+          </geometry>
+        </collision>
+      </xacro:if>
+      <xacro:unless value="${FH == 'F'}">
+        <collision>
+          <origin
+            xyz="0.0665 0 ${-0.019-0.015}"
+            rpy="0 0 0" />
+          <geometry>
+            <cylinder radius="0.05" length="0.13"/>
+          </geometry>
+        </collision>
+      </xacro:unless>
     </link>
     <joint
       name="L${FH}_HAA"
@@ -115,11 +126,10 @@
       </visual>
       <collision>
         <origin
-          xyz="0 0 0"
-          rpy="0 0 0" />
+          xyz="-0.1 -0.075 -0.07"
+          rpy="0 ${PI/2} ${PI/4}" />
         <geometry>
-          <mesh
-            filename="package://ayg_description/meshes/L_Thigh.STL" />
+          <box size="0.025 0.05 0.135"/>
         </geometry>
       </collision>
     </link>
@@ -189,11 +199,18 @@
       </visual>
       <collision>
         <origin
-          xyz="0 0 0"
+          xyz="0 0 -0.02"
           rpy="0 0 0" />
         <geometry>
-          <mesh
-            filename="package://ayg_description/meshes/L_Shank.STL" />
+          <cylinder radius="0.025" length="0.03"/>
+        </geometry>
+      </collision>
+      <collision>
+        <origin
+          xyz="0.08 -0.075 -0.02"
+          rpy="0 0 ${PI/4}" />
+        <geometry>
+          <box size="0.025 0.165 0.0125"/>
         </geometry>
       </collision>
     </link>
@@ -306,15 +323,26 @@
             rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
         </material>
       </visual>
-      <collision>
-        <origin
-          xyz="0 0 0"
-          rpy="0 0 0" />
-        <geometry>
-          <mesh
-            filename="package://ayg_description/meshes/R_Hip.STL" />
-        </geometry>
-      </collision>
+      <xacro:if value="${FH == 'F'}">
+        <collision>
+          <origin
+            xyz="0.0665 0 ${-0.019-0.015}"
+            rpy="0 0 0" />
+          <geometry>
+            <cylinder radius="0.05" length="0.13"/>
+          </geometry>
+        </collision>
+      </xacro:if>
+      <xacro:unless value="${FH == 'F'}">
+        <collision>
+          <origin
+            xyz="0.0665 0 ${+0.019+0.015}"
+            rpy="0 0 0" />
+          <geometry>
+            <cylinder radius="0.05" length="0.13"/>
+          </geometry>
+        </collision>
+      </xacro:unless>
     </link>
     <joint
       name="R${FH}_HAA"
@@ -382,11 +410,10 @@
       </visual>
       <collision>
         <origin
-          xyz="0 0 0"
-          rpy="0 0 0" />
+          xyz="-0.1 -0.075 +0.07"
+          rpy="0 ${PI/2} ${PI/4}" />
         <geometry>
-          <mesh
-            filename="package://ayg_description/meshes/R_Thigh.STL" />
+          <box size="0.025 0.05 0.135"/>
         </geometry>
       </collision>
     </link>
@@ -456,11 +483,18 @@
       </visual>
       <collision>
         <origin
-          xyz="0 0 0"
+          xyz="0 0 +0.02"
           rpy="0 0 0" />
         <geometry>
-          <mesh
-            filename="package://ayg_description/meshes/R_Shank.STL" />
+          <cylinder radius="0.025" length="0.03"/>
+        </geometry>
+      </collision>
+      <collision>
+        <origin
+          xyz="0.08 -0.075 +0.02"
+          rpy="0 0 ${PI/4}" />
+        <geometry>
+          <box size="0.025 0.165 0.0125"/>
         </geometry>
       </collision>
     </link>

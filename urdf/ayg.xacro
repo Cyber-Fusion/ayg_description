@@ -133,15 +133,6 @@
           rgba="1 1 1 1" />
       </material>
     </visual>
-    <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://ayg_description/meshes/Neck.STL" />
-      </geometry>
-    </collision>
   </link>
   <joint
     name="Base_2_Neck"
@@ -188,11 +179,10 @@
     </visual>
     <collision>
       <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+        xyz="0 -0.0025 0"
+        rpy="-0.288975409992567 0 0" />
       <geometry>
-        <mesh
-          filename="package://ayg_description/meshes/Camera.STL" />
+        <box size="0.13 0.035 0.05"/>
       </geometry>
     </collision>
   </link>
