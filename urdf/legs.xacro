@@ -1,0 +1,542 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="L_Leg" params="FH">
+    <link
+      name="L${FH}_Hip">
+      <inertial>
+        <xacro:if value="${FH == 'F'}">
+          <origin
+            xyz="0.0624625305028617 0.000263588472359728 -0.00241409757946361"
+            rpy="0 0 0" />
+        </xacro:if>
+        <xacro:unless value="${FH == 'F'}">
+          <origin
+            xyz="0.062462530502862 0.000263588472360432 0.0024140975794637"
+            rpy="0 0 0" />
+        </xacro:unless>
+        <mass
+          value="1.00401999005125" />
+        <inertia
+          ixx="0.000584357699669872"
+          ixy="1.71578981310067E-06"
+          ixz="-2.61675027998363E-19"
+          iyy="0.000584539401732687"
+          iyz="-3.57751728713357E-20"
+          izz="0.00102756652010595" />
+      </inertial>
+      <visual>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="package://ayg_description/meshes/L_Hip.STL" />
+        </geometry>
+        <material
+          name="">
+          <color
+            rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="package://ayg_description/meshes/L_Hip.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <joint
+      name="L${FH}_HAA"
+      type="revolute">
+      <xacro:if value="${FH == 'F'}">
+        <origin
+          xyz="0.197 0.054 0"
+          rpy="-1.5708 0 0" />
+      </xacro:if>
+      <xacro:unless value="${FH == 'F'}">
+        <origin
+          xyz="-0.197 0.054 0"
+          rpy="-1.5708 0 3.1416" />
+      </xacro:unless>
+      <parent
+        link="Base" />
+      <child
+        link="L${FH}_Hip" />
+      <axis
+        xyz="1 0 0" />
+      <xacro:if value="${FH == 'F'}">
+        <limit
+          lower="-0.5236"
+          upper="0.34907"
+          effort="${effort_lim}"
+          velocity="${velocity_lim}" />
+      </xacro:if>
+      <xacro:unless value="${FH == 'F'}">
+        <limit
+          lower="-0.87266"
+          upper="0.5236"
+          effort="${effort_lim}"
+          velocity="${velocity_lim}" />
+      </xacro:unless>
+    </joint>
+    <link
+      name="L${FH}_Thigh">
+      <inertial>
+        <origin
+          xyz="-0.00815740476229621 -0.00912689407030123 -0.0420066354122466"
+          rpy="0 0 0" />
+        <mass
+          value="1.15974999242447" />
+        <inertia
+          ixx="0.000911992879302287"
+          ixy="-0.000310524680951164"
+          ixz="-4.3266057977693E-16"
+          iyy="0.00091897366461706"
+          iyz="-1.93894477964206E-06"
+          izz="0.00169326046596367" />
+      </inertial>
+      <visual>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="package://ayg_description/meshes/L_Thigh.STL" />
+        </geometry>
+        <material
+          name="">
+          <color
+            rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="package://ayg_description/meshes/L_Thigh.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <joint
+      name="L${FH}_HFE"
+      type="revolute">
+      <xacro:if value="${FH == 'F'}">
+        <origin
+          xyz="0.0665 0 0.019"
+          rpy="3.1416 0 0" />
+      </xacro:if>
+      <xacro:unless value="${FH == 'F'}">
+        <origin
+          xyz="0.0665 0 -0.019"
+          rpy="0 0 3.1416" />
+      </xacro:unless>
+      <parent
+        link="L${FH}_Hip" />
+      <child
+        link="L${FH}_Thigh" />
+      <axis
+        xyz="0 0 1" />
+      <xacro:if value="${FH == 'F'}">
+        <limit
+          lower="-0.87266"
+          upper="2.5307"
+          effort="${effort_lim}"
+          velocity="${velocity_lim}" />
+      </xacro:if>
+      <xacro:unless value="${FH == 'F'}">
+        <limit
+          lower="-2.5307"
+          upper="0.87266"
+          effort="${effort_lim}"
+          velocity="${velocity_lim}" />
+      </xacro:unless>
+    </joint>
+    <link
+      name="L${FH}_Shank">
+      <inertial>
+        <origin
+          xyz="0.0630329536265654 -0.047817827674744 -0.0185"
+          rpy="0 0 0" />
+        <mass
+          value="0.102570008997248" />
+        <inertia
+          ixx="0.00029767764878727"
+          ixy="0.000296980915761884"
+          ixz="1.63288326545704E-19"
+          iyy="0.000327832614532812"
+          iyz="-1.54063121876522E-19"
+          izz="0.000624546801244392" />
+      </inertial>
+      <visual>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="package://ayg_description/meshes/L_Shank.STL" />
+        </geometry>
+        <material
+          name="">
+          <color
+            rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="package://ayg_description/meshes/L_Shank.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <joint
+      name="L${FH}_KFE"
+      type="revolute">
+      <origin
+        xyz="-0.14936 -0.16017 -0.052"
+        rpy="0 0 0" />
+      <parent
+        link="L${FH}_Thigh" />
+      <child
+        link="L${FH}_Shank" />
+      <axis
+        xyz="0 0 1" />
+      <limit
+        lower="-0.7854"
+        upper="1.2217"
+        effort="${effort_lim}"
+        velocity="${velocity_lim}" />
+    </joint>
+    <link
+      name="L${FH}_Foot">
+      <inertial>
+        <origin
+          xyz="-2.77555756156289E-17 5.55111512312578E-17 0"
+          rpy="0 ${PI/2} 0" />
+        <mass
+          value="0.088054927521184" />
+        <inertia
+          ixx="4.09565481632907E-05"
+          ixy="-8.61058027358505E-21"
+          ixz="2.27932697045296E-20"
+          iyy="2.47049106026622E-05"
+          iyz="5.04870979341448E-29"
+          izz="2.47049106026622E-05" />
+      </inertial>
+      <visual>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <cylinder length="0.025" radius="0.030" />
+        </geometry>
+        <material
+          name="">
+          <color
+            rgba="0.250980392156863 0.250980392156863 0.250980392156863 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <cylinder length="0.025" radius="0.030" />
+        </geometry>
+      </collision>
+    </link>
+    <joint
+      name="L${FH}_Shank_2_Foot"
+      type="fixed">
+      <origin
+        xyz="0.165 -0.151 -0.0185"
+        rpy="0 0 0" />
+      <parent
+        link="L${FH}_Shank" />
+      <child
+        link="L${FH}_Foot" />
+      <axis
+        xyz="0 0 0" />
+    </joint>
+  </xacro:macro>
+
+  <xacro:macro name="R_Leg" params="FH">
+    <link
+      name="R${FH}_Hip">
+      <inertial>
+        <xacro:if value="${FH == 'F'}">
+          <origin
+            xyz="0.062462530502862 0.000263588472360484 0.00241409757946365"
+            rpy="0 0 0" />
+        </xacro:if>
+        <xacro:unless value="${FH == 'F'}">
+          <origin
+            xyz="0.0624625305028617 0.000263588472359603 -0.00241409757946362"
+            rpy="0 0 0" />
+        </xacro:unless>
+        <mass
+          value="1.00401999005125" />
+        <inertia
+          ixx="0.000584357699669871"
+          ixy="1.71578981310067E-06"
+          ixz="-3.08533699148142E-19"
+          iyy="0.000584539401732687"
+          iyz="1.3310433650471E-20"
+          izz="0.00102756652010595" />
+      </inertial>
+      <visual>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="package://ayg_description/meshes/R_Hip.STL" />
+        </geometry>
+        <material
+          name="">
+          <color
+            rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="package://ayg_description/meshes/R_Hip.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <joint
+      name="R${FH}_HAA"
+      type="revolute">
+      <xacro:if value="${FH == 'F'}">
+        <origin
+          xyz="0.197 -0.054 0"
+          rpy="-1.5708 0 0" />
+      </xacro:if>
+      <xacro:unless value="${FH == 'F'}">
+        <origin
+          xyz="-0.197 -0.054 0"
+          rpy="-1.5708 0 3.1416" />
+      </xacro:unless>
+      <parent
+        link="Base" />
+      <child
+        link="R${FH}_Hip" />
+      <axis
+        xyz="1 0 0" />
+      <xacro:if value="${FH == 'F'}">
+        <limit
+          lower="-0.34907"
+          upper="0.5236"
+          effort="${effort_lim}"
+          velocity="${velocity_lim}" />
+      </xacro:if>
+      <xacro:unless value="${FH == 'F'}">
+        <limit
+          lower="-0.5236"
+          upper="0.87266"
+          effort="${effort_lim}"
+          velocity="${velocity_lim}" />
+      </xacro:unless>
+    </joint>
+    <link
+      name="R${FH}_Thigh">
+      <inertial>
+        <origin
+          xyz="-0.00815740475775473 -0.0091268940561607 0.0420066354122466"
+          rpy="0 0 0" />
+        <mass
+          value="1.15974999242447" />
+        <inertia
+          ixx="0.000911992879285499"
+          ixy="-0.000310524680969909"
+          ixz="4.28891709883383E-15"
+          iyy="0.000918973664621895"
+          iyz="1.93894536662709E-06"
+          izz="0.00169326046595172" />
+      </inertial>
+      <visual>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="package://ayg_description/meshes/R_Thigh.STL" />
+        </geometry>
+        <material
+          name="">
+          <color
+            rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="package://ayg_description/meshes/R_Thigh.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <joint
+      name="R${FH}_HFE"
+      type="revolute">
+      <xacro:if value="${FH == 'F'}">
+        <origin
+          xyz="0.0665 0 -0.019"
+          rpy="3.1416 0 0" />
+      </xacro:if>
+      <xacro:unless value="${FH == 'F'}">
+        <origin
+          xyz="0.0665 0 0.019"
+          rpy="0 0 3.1416" />
+      </xacro:unless>
+      <parent
+        link="R${FH}_Hip" />
+      <child
+        link="R${FH}_Thigh" />
+      <axis
+        xyz="0 0 1" />
+      <xacro:if value="${FH == 'F'}">
+        <limit
+          lower="-0.87266"
+          upper="2.5307"
+          effort="${effort_lim}"
+          velocity="${velocity_lim}" />
+      </xacro:if>
+      <xacro:unless value="${FH == 'F'}">
+        <limit
+          lower="-2.5307"
+          upper="0.87266"
+          effort="${effort_lim}"
+          velocity="${velocity_lim}" />
+      </xacro:unless>
+    </joint>
+    <link
+      name="R${FH}_Shank">
+      <inertial>
+        <origin
+          xyz="0.0630329536265653 -0.047817827674744 0.0185"
+          rpy="0 0 0" />
+        <mass
+          value="0.102570008997248" />
+        <inertia
+          ixx="0.000297677648787269"
+          ixy="0.000296980915761884"
+          ixz="1.63489615161778E-19"
+          iyy="0.000327832614532812"
+          iyz="-1.53587053010883E-19"
+          izz="0.000624546801244392" />
+      </inertial>
+      <visual>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="package://ayg_description/meshes/R_Shank.STL" />
+        </geometry>
+        <material
+          name="">
+          <color
+            rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <mesh
+            filename="package://ayg_description/meshes/R_Shank.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <joint
+      name="R${FH}_KFE"
+      type="revolute">
+      <origin
+        xyz="-0.14936 -0.16017 0.052"
+        rpy="0 0 0" />
+      <parent
+        link="R${FH}_Thigh" />
+      <child
+        link="R${FH}_Shank" />
+      <axis
+        xyz="0 0 1" />
+      <limit
+        lower="-0.7854"
+        upper="1.2217"
+        effort="${effort_lim}"
+        velocity="${velocity_lim}" />
+    </joint>
+    <link
+      name="R${FH}_Foot">
+      <inertial>
+        <origin
+          xyz="0 0 0"
+          rpy="0 ${PI/2} 0" />
+        <mass
+          value="0.088054927521184" />
+        <inertia
+          ixx="4.09565481632907E-05"
+          ixy="-1.1480272825008E-21"
+          ixz="3.01597797886474E-21"
+          iyy="2.47049106026622E-05"
+          iyz="2.27429196641528E-36"
+          izz="2.47049106026622E-05" />
+      </inertial>
+      <visual>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <cylinder length="0.025" radius="0.030" />
+        </geometry>
+        <material
+          name="">
+          <color
+            rgba="0.250980392156863 0.250980392156863 0.250980392156863 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <geometry>
+          <cylinder length="0.025" radius="0.030" />
+        </geometry>
+      </collision>
+    </link>
+    <joint
+      name="R${FH}_Shank_2_Foot"
+      type="fixed">
+      <origin
+        xyz="0.165 -0.151 0.0185"
+        rpy="0 0 0" />
+      <parent
+        link="R${FH}_Shank" />
+      <child
+        link="R${FH}_Foot" />
+      <axis
+        xyz="0 0 0" />
+    </joint>
+  </xacro:macro>
+
+  <xacro:L_Leg FH="F" />
+  <xacro:R_Leg FH="F" />
+  <xacro:L_Leg FH="H" />
+  <xacro:R_Leg FH="H" />
+  </robot>
