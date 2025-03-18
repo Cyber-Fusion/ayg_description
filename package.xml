@@ -4,11 +4,14 @@
     <name>ayg_description</name>
     <version>0.0.0</version>
     <description>Ayg description package</description>
-    <maintainer email="contact@surenatoyan.com">Suren Atoyan</maintainer>
     <maintainer email="davide.debenedittis@gmail.com">Davide De Benedittis</maintainer>
-    <license>TODO: License declaration</license>
+    <maintainer email="daniel.kurghinyan@gmail.com">Daniel Kurghinyan</maintainer>
+    <maintainer email="contact@surenatoyan.com">Suren Atoyan</maintainer>
+    <license>BSD-3</license>
 
-    <author email="contact@surenatoyan.com">Suren Atoyan</author>
+    <author email="davide.debenedittis@gmail.com">Davide De Benedittis</author>
+    <author email="daniel.kurghinyan@gmail.com">Daniel Kurghinyan</author>
+    <author email="contact@surenatoyan.com">Suren Atoyan</author>    
 
     <buildtool_depend>ament_cmake</buildtool_depend>
 
