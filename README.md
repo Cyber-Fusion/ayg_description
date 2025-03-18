@@ -1,6 +1,6 @@
 # Ayg Robot Description (USD)
 
-For the URDF description, see the [`ros2`](https://github.com/ddebenedittis/ayg_description/tree/ros2) branch.
+For the URDF description, see the [`ros2`](https://github.com/Cyber-Fusion/ayg_description/tree/ros2) branch.
 
 ## Overview
 
@@ -22,7 +22,8 @@ Can be generated from the `urdf` with the following script:
     --joint-target-type none \
     --headless
 ```
+after adjusting the input (URDF) and output (USD) paths as needed.
 
 ## License
 
-TODO
+This software is released under a [BSD-3-Clause license](LICENSE).
