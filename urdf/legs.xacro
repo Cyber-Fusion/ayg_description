@@ -30,6 +30,14 @@
           xyz="0 0 0"
           rpy="0 0 0" />
         <geometry>
+          <xacro:if value="${FH == 'F'}">
+            <mesh
+              filename="package://ayg_description/meshes/L_Hip.STL" />
+          </xacro:if>
+          <xacro:unless value="${FH == 'F'}">
+            <mesh
+              filename="package://ayg_description/meshes/R_Hip.STL" />
+          </xacro:unless>
           <mesh
             filename="package://ayg_description/meshes/L_Hip.STL" />
         </geometry>
@@ -314,8 +322,14 @@
           xyz="0 0 0"
           rpy="0 0 0" />
         <geometry>
-          <mesh
-            filename="package://ayg_description/meshes/R_Hip.STL" />
+          <xacro:if value="${FH == 'F'}">
+            <mesh
+              filename="package://ayg_description/meshes/R_Hip.STL" />
+          </xacro:if>
+          <xacro:unless value="${FH == 'F'}">
+            <mesh
+              filename="package://ayg_description/meshes/L_Hip.STL" />
+          </xacro:unless>
         </geometry>
         <material
           name="">
