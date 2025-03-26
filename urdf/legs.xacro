@@ -38,8 +38,6 @@
             <mesh
               filename="package://ayg_description/meshes/R_Hip.STL" />
           </xacro:unless>
-          <mesh
-            filename="package://ayg_description/meshes/L_Hip.STL" />
         </geometry>
         <material
           name="">
