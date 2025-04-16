@@ -90,10 +90,17 @@
         </plugin>
     </gazebo>
 
+    <gazebo>
+        <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu">
+        </plugin>
+    </gazebo>
+
     <gazebo reference="Base">
         <sensor name="imu_sensor" type="imu">
             <always_on>true</always_on>
             <update_rate>400</update_rate>
+            <visualize>true</visualize>
+            <topic>imu</topic>
 
             <imu>
                 <angular_velocity>
