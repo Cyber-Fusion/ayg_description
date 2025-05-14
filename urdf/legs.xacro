@@ -83,9 +83,9 @@
         link="Base" />
       <child
         link="L${FH}_Hip" />
-      <axis
-        xyz="1 0 0" />
       <xacro:if value="${FH == 'F'}">
+        <axis
+        xyz="1 0 0" />
         <limit
           lower="-0.5236"
           upper="0.34907"
@@ -93,6 +93,8 @@
           velocity="${velocity_lim}" />
       </xacro:if>
       <xacro:unless value="${FH == 'F'}">
+        <axis
+        xyz="-1 0 0" />
         <limit
           lower="-0.87266"
           upper="0.5236"
@@ -373,9 +375,9 @@
         link="Base" />
       <child
         link="R${FH}_Hip" />
-      <axis
-        xyz="1 0 0" />
       <xacro:if value="${FH == 'F'}">
+        <axis
+        xyz="1 0 0" />
         <limit
           lower="-0.34907"
           upper="0.5236"
@@ -383,6 +385,8 @@
           velocity="${velocity_lim}" />
       </xacro:if>
       <xacro:unless value="${FH == 'F'}">
+        <axis
+        xyz="-1 0 0" />
         <limit
           lower="-0.5236"
           upper="0.87266"
