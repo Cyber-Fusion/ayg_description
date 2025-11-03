@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <link
+    name="Neck">
+    <inertial>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <mass
+        value="0" />
+      <inertia
+        ixx="0"
+        ixy="0"
+        ixz="0"
+        iyy="0"
+        iyz="0"
+        izz="0" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/Neck.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.69804 0.69804 0.69804 1" />
+      </material>
+    </visual>
+  </link>
+  <joint
+    name="Base_2_Neck"
+    type="fixed">
+    <origin
+      xyz="0.2615 0 0.0249999999999999"
+      rpy="1.5707963267949 0 1.5707963267949" />
+    <parent
+      link="Base" />
+    <child
+      link="Neck" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="Camera">
+    <inertial>
+      <origin
+        xyz="7.0525E-18 -2.7756E-17 0.013"
+        rpy="0 0 0" />
+      <mass
+        value="0.16948" />
+      <inertia
+        ixx="2.085E-05"
+        ixy="5.6809E-20"
+        ixz="-7.2863E-20"
+        iyy="0.00020719"
+        iyz="3.3881E-21"
+        izz="0.00020895" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/Camera.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.25098 0.25098 0.25098 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 -0.0025 0"
+        rpy="-0.288975409992567 0 0" />
+      <geometry>
+        <box size="0.13 0.035 0.05"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Neck_2_Camera"
+    type="fixed">
+    <origin
+      xyz="0 0.0166603444360147 0.0804068913666247"
+      rpy="0.288975409992567 0 0" />
+    <parent
+      link="Neck" />
+    <child
+      link="Camera" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+</robot>

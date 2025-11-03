@@ -4,6 +4,9 @@
   <xacro:arg name="use_gazebo" default="False" />
   <xacro:property name="use_gazebo" default="$(arg use_gazebo)" />
 
+  <xacro:arg name="has_camera" default="False" />
+  <xacro:property name="has_camera" default="$(arg has_camera)" />
+
   <xacro:arg name="initial_configuration" default="lying_down" />
   <xacro:property name="initial_configuration" value="$(arg initial_configuration)" />
   <xacro:arg name="controller" default="default" />
@@ -21,17 +24,17 @@
     name="Base">
     <inertial>
       <origin
-        xyz="0.000442764791303709 0.00323410160779704 0.000245694936587104"
+        xyz="0.00057686 -0.00018498 0.0026529"
         rpy="0 0 0" />
       <mass
-        value="8.43904999246817" />
+        value="9.1298" />
       <inertia
-        ixx="0.020065303439704"
-        ixy="4.08404656288191E-05"
-        ixz="-2.29078687506071E-14"
-        iyy="0.0384358501598642"
-        iyz="-2.71859452435122E-15"
-        izz="0.0267905011857108" />
+        ixx="0.022082"
+        ixy="3.2369E-07"
+        ixz="6.8653E-05"
+        iyy="0.031986"
+        iyz="2.8565E-07"
+        izz="0.040389" />
     </inertial>
     <visual>
       <origin
@@ -44,7 +47,7 @@
       <material
         name="">
         <color
-          rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+          rgba="0.69804 0.69804 0.69804 1" />
       </material>
     </visual>
     <collision>
@@ -56,24 +59,22 @@
       </geometry>
     </collision>
   </link>
-  
-  <xacro:include filename="$(find ayg_description)/urdf/legs.xacro" />
 
   <link
     name="IMU">
     <inertial>
       <origin
-        xyz="-8.67049396793524E-18 0.02 5.37094698008006E-18"
+        xyz="-1.26817788945405E-05 -3.05893593341006E-06 0.00502425421604302"
         rpy="0 0 0" />
       <mass
-        value="0.08" />
+        value="0.0181381899874512" />
       <inertia
-        ixx="2.13333333333333E-05"
-        ixy="-4.34540023236298E-22"
-        ixz="-1.52363539595465E-21"
-        iyy="2.73333333333333E-05"
-        iyz="-2.43977500178881E-21"
-        izz="2.73333333333333E-05" />
+        ixx="4.80017459218422E-06"
+        ixy="-6.17315963282016E-11"
+        ixz="-1.66852937330168E-09"
+        iyy="3.40477341509462E-06"
+        iyz="-3.279931989329E-11"
+        izz="7.92679226862755E-06" />
     </inertial>
     <visual>
       <origin
@@ -90,12 +91,13 @@
       </material>
     </visual>
   </link>
+
   <joint
     name="Base_2_IMU"
     type="fixed">
     <origin
-      xyz="0 0 0.006"
-      rpy="-1.5708 0 1.5708" />
+      xyz="-3.79309829856879E-05 0 -0.0172341687059438"
+      rpy="0 0 0" />
     <parent
       link="Base" />
     <child
@@ -103,100 +105,10 @@
     <axis
       xyz="0 0 0" />
   </joint>
-  <link
-    name="Neck">
-    <inertial>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <mass
-        value="0" />
-      <inertia
-        ixx="0"
-        ixy="0"
-        ixz="0"
-        iyy="0"
-        iyz="0"
-        izz="0" />
-    </inertial>
-    <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://ayg_description/meshes/Neck.STL" />
-      </geometry>
-      <material
-        name="">
-        <color
-          rgba="1 1 1 1" />
-      </material>
-    </visual>
-  </link>
-  <joint
-    name="Base_2_Neck"
-    type="fixed">
-    <origin
-      xyz="0.2615 0 0.0249999999999999"
-      rpy="1.5707963267949 0 1.5707963267949" />
-    <parent
-      link="Base" />
-    <child
-      link="Neck" />
-    <axis
-      xyz="0 0 0" />
-  </joint>
-  <link
-    name="Camera">
-    <inertial>
-      <origin
-        xyz="7.0525E-18 -2.7756E-17 0.013"
-        rpy="0 0 0" />
-      <mass
-        value="0.16948" />
-      <inertia
-        ixx="2.085E-05"
-        ixy="5.6809E-20"
-        ixz="-7.2863E-20"
-        iyy="0.00020719"
-        iyz="3.3881E-21"
-        izz="0.00020895" />
-    </inertial>
-    <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
-      <geometry>
-        <mesh
-          filename="package://ayg_description/meshes/Camera.STL" />
-      </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.25098 0.25098 0.25098 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin
-        xyz="0 -0.0025 0"
-        rpy="-0.288975409992567 0 0" />
-      <geometry>
-        <box size="0.13 0.035 0.05"/>
-      </geometry>
-    </collision>
-  </link>
-  <joint
-    name="Neck_2_Camera"
-    type="fixed">
-    <origin
-      xyz="0 0.0166603444360147 0.0804068913666247"
-      rpy="0.288975409992567 0 0" />
-    <parent
-      link="Neck" />
-    <child
-      link="Camera" />
-    <axis
-      xyz="0 0 0" />
-  </joint>
+
+  <xacro:include filename="$(find ayg_description)/urdf/legs.xacro" />
+
+  <xacro:if value="${has_camera}">
+    <xacro:include filename="$(find ayg_description)/urdf/camera.xacro" />
+  </xacro:if>
 </robot>

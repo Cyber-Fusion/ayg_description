@@ -7,23 +7,23 @@
       <inertial>
         <xacro:if value="${FH == 'F'}">
           <origin
-            xyz="0.0624625305028617 0.000263588472359728 -0.00241409757946361"
+            xyz="0.063065 -0.0051556 -5.3332E-05"
             rpy="0 0 0" />
         </xacro:if>
         <xacro:unless value="${FH == 'F'}">
           <origin
-            xyz="0.062462530502862 0.000263588472360432 0.0024140975794637"
+            xyz="0.063077 0.0051556 -6.5344E-05"
             rpy="0 0 0" />
         </xacro:unless>
         <mass
-          value="1.00401999005125" />
+          value="1.0709" />
         <inertia
-          ixx="0.000584357699669872"
-          ixy="1.71578981310067E-06"
-          ixz="-2.61675027998363E-19"
-          iyy="0.000584539401732687"
-          iyz="-3.57751728713357E-20"
-          izz="0.00102756652010595" />
+          ixx="0.00078713"
+          ixy="-7.2738E-08"
+          ixz="-1.6354E-06"
+          iyy="0.0013471"
+          iyz="-2.2108E-07"
+          izz="0.00073074" />
       </inertial>
       <visual>
         <origin
@@ -42,14 +42,14 @@
         <material
           name="">
           <color
-            rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+            rgba="0.69804 0.69804 0.69804 1" />
         </material>
       </visual>
       <xacro:if value="${FH == 'F'}">
         <collision>
           <origin
-            xyz="0.0665 0 ${0.019+0.015}"
-            rpy="0 0 0" />
+            xyz="0.0665 0.034 0"
+            rpy="${PI/2} 0 0" />
           <geometry>
             <cylinder radius="0.05" length="0.13"/>
           </geometry>
@@ -58,8 +58,8 @@
       <xacro:unless value="${FH == 'F'}">
         <collision>
           <origin
-            xyz="0.0665 0 ${-0.019-0.015}"
-            rpy="0 0 0" />
+            xyz="0.0665 0.034 0"
+            rpy="${PI/2} 0 0" />
           <geometry>
             <cylinder radius="0.05" length="0.13"/>
           </geometry>
@@ -71,13 +71,13 @@
       type="revolute">
       <xacro:if value="${FH == 'F'}">
         <origin
-          xyz="0.197 0.054 0"
-          rpy="-1.5708 0 0" />
+          xyz="0.2021 0.054 0"
+          rpy="0 0 0" />
       </xacro:if>
       <xacro:unless value="${FH == 'F'}">
         <origin
-          xyz="-0.197 0.054 0"
-          rpy="-1.5708 0 3.1416" />
+          xyz="-0.2021 0.054 0"
+          rpy="0 0 3.1416" />
       </xacro:unless>
       <parent
         link="Base" />
@@ -88,7 +88,7 @@
         xyz="1 0 0" />
         <limit
           lower="-0.5236"
-          upper="0.34907"
+          upper="0.43633"
           effort="${effort_lim}"
           velocity="${velocity_lim}" />
       </xacro:if>
@@ -96,8 +96,8 @@
         <axis
         xyz="-1 0 0" />
         <limit
-          lower="-0.87266"
-          upper="0.5236"
+          lower="-0.5236"
+          upper="0.83776"
           effort="${effort_lim}"
           velocity="${velocity_lim}" />
       </xacro:unless>
@@ -106,17 +106,17 @@
       name="L${FH}_Thigh">
       <inertial>
         <origin
-          xyz="-0.00815740476229621 -0.00912689407030123 -0.0420066354122466"
+          xyz="-0.0095261 0.047418 -0.010869"
           rpy="0 0 0" />
         <mass
-          value="1.15974999242447" />
+          value="1.361" />
         <inertia
-          ixx="0.000911992879302287"
-          ixy="-0.000310524680951164"
-          ixz="-4.3266057977693E-16"
-          iyy="0.00091897366461706"
-          iyz="-1.93894477964206E-06"
-          izz="0.00169326046596367" />
+          ixx="0.0012156"
+          ixy="1.025E-06"
+          ixz="-0.00042254"
+          iyy="0.0022368"
+          iyz="-1.3825E-06"
+          izz="0.0012227" />
       </inertial>
       <visual>
         <origin
@@ -129,13 +129,13 @@
         <material
           name="">
           <color
-            rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+            rgba="0.69804 0.69804 0.69804 1" />
         </material>
       </visual>
       <collision>
         <origin
-          xyz="-0.0975 -0.075 -0.07"
-          rpy="0 ${PI/2} ${PI/4}" />
+          xyz="-0.0975 +0.08 -0.07"
+          rpy="${PI/4} 0 ${PI/2}" />
         <geometry>
           <box size="0.025 0.05 0.14"/>
         </geometry>
@@ -146,12 +146,12 @@
       type="revolute">
       <xacro:if value="${FH == 'F'}">
         <origin
-          xyz="0.0665 0 0.019"
-          rpy="3.1416 0 0" />
+          xyz="0.0679 0.01985 0"
+          rpy="0 0 0" />
       </xacro:if>
       <xacro:unless value="${FH == 'F'}">
         <origin
-          xyz="0.0665 0 -0.019"
+          xyz="0.0679 0.01985 0"
           rpy="0 0 3.1416" />
       </xacro:unless>
       <parent
@@ -159,18 +159,18 @@
       <child
         link="L${FH}_Thigh" />
       <axis
-        xyz="0 0 1" />
+        xyz="0 -1 0" />
       <xacro:if value="${FH == 'F'}">
         <limit
-          lower="-0.87266"
-          upper="2.5307"
+          lower="-1.6668"
+          upper="3.2376"
           effort="${effort_lim}"
           velocity="${velocity_lim}" />
       </xacro:if>
       <xacro:unless value="${FH == 'F'}">
         <limit
-          lower="-2.5307"
-          upper="0.87266"
+          lower="-2.4522"
+          upper="2.4522"
           effort="${effort_lim}"
           velocity="${velocity_lim}" />
       </xacro:unless>
@@ -179,17 +179,17 @@
       name="L${FH}_Shank">
       <inertial>
         <origin
-          xyz="0.0630329536265654 -0.047817827674744 -0.0185"
+          xyz="0.059297 0.0205 -0.044894"
           rpy="0 0 0" />
         <mass
-          value="0.102570008997248" />
+          value="0.19753" />
         <inertia
-          ixx="0.00029767764878727"
-          ixy="0.000296980915761884"
-          ixz="1.63288326545704E-19"
-          iyy="0.000327832614532812"
-          iyz="-1.54063121876522E-19"
-          izz="0.000624546801244392" />
+          ixx="0.00059399"
+          ixy="-3.3081E-19"
+          ixz="0.00058611"
+          iyy="0.0012346"
+          iyz="3.1645E-19"
+          izz="0.00065333" />
       </inertial>
       <visual>
         <origin
@@ -202,21 +202,21 @@
         <material
           name="">
           <color
-            rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+            rgba="0.69804 0.69804 0.69804 1" />
         </material>
       </visual>
       <collision>
         <origin
-          xyz="0 0 -0.02"
-          rpy="0 0 0" />
+          xyz="0 0.02 0"
+          rpy="${PI/2} 0 0" />
         <geometry>
           <cylinder radius="0.025" length="0.03"/>
         </geometry>
       </collision>
       <collision>
         <origin
-          xyz="0.08 -0.075 -0.02"
-          rpy="0 0 ${PI/4}" />
+          xyz="0.08 0.02 -0.075"
+          rpy="${PI/2} ${-PI/4} 0" />
         <geometry>
           <box size="0.025 0.165 0.0125"/>
         </geometry>
@@ -226,17 +226,17 @@
       name="L${FH}_KFE"
       type="revolute">
       <origin
-        xyz="-0.14936 -0.16017 -0.052"
+        xyz="-0.14936 0.058 -0.16017"
         rpy="0 0 0" />
       <parent
         link="L${FH}_Thigh" />
       <child
         link="L${FH}_Shank" />
       <axis
-        xyz="0 0 1" />
+        xyz="0 -1 0" />
       <limit
-        lower="-0.7854"
-        upper="1.2217"
+        lower="-0.74002"
+        upper="1.1868"
         effort="${effort_lim}"
         velocity="${velocity_lim}" />
     </joint>
@@ -245,34 +245,34 @@
       <inertial>
         <origin
           xyz="-2.77555756156289E-17 5.55111512312578E-17 0"
-          rpy="0 ${PI/2} 0" />
+          rpy="0 0 0" />
         <mass
-          value="0.088054927521184" />
+          value="0.0701295110066971" />
         <inertia
-          ixx="4.09565481632907E-05"
-          ixy="-8.61058027358505E-21"
-          ixz="2.27932697045296E-20"
-          iyy="2.47049106026622E-05"
-          iyz="5.04870979341448E-29"
-          izz="2.47049106026622E-05" />
+          ixx="1.91783738418569E-05"
+          ixy="4.42768620674145E-20"
+          ixz="8.0334719824878E-35"
+          iyy="3.14806687325575E-05"
+          iyz="2.23148962310519E-20"
+          izz="1.91783738418569E-05" />
       </inertial>
       <visual>
         <origin
           xyz="0 0 0"
-          rpy="0 0 0" />
+          rpy="${PI/2} 0 0" />
         <geometry>
           <cylinder length="0.025" radius="0.030" />
         </geometry>
         <material
           name="">
           <color
-            rgba="0.250980392156863 0.250980392156863 0.250980392156863 1" />
+            rgba="0.29804 0.29804 0.29804 1" />
         </material>
       </visual>
       <collision>
         <origin
           xyz="0 0 0"
-          rpy="0 0 0" />
+          rpy="${PI/2} 0 0" />
         <geometry>
           <cylinder length="0.025" radius="0.030" />
         </geometry>
@@ -282,7 +282,7 @@
       name="L${FH}_Shank_2_Foot"
       type="fixed">
       <origin
-        xyz="0.165 -0.151 -0.0185"
+        xyz="0.165 0.0205 -0.151"
         rpy="0 0 0" />
       <parent
         link="L${FH}_Shank" />
@@ -299,23 +299,23 @@
       <inertial>
         <xacro:if value="${FH == 'F'}">
           <origin
-            xyz="0.062462530502862 0.000263588472360484 0.00241409757946365"
+            xyz="0.063077 0.0051556 -6.5344E-05"
             rpy="0 0 0" />
         </xacro:if>
         <xacro:unless value="${FH == 'F'}">
           <origin
-            xyz="0.0624625305028617 0.000263588472359603 -0.00241409757946362"
+            xyz="-0.063065 0.0051556 -5.3332E-05"
             rpy="0 0 0" />
         </xacro:unless>
         <mass
-          value="1.00401999005125" />
+          value="1.071" />
         <inertia
-          ixx="0.000584357699669871"
-          ixy="1.71578981310067E-06"
-          ixz="-3.08533699148142E-19"
-          iyy="0.000584539401732687"
-          iyz="1.3310433650471E-20"
-          izz="0.00102756652010595" />
+          ixx="0.00078713"
+          ixy="7.2742E-08"
+          ixz="-1.6354E-06"
+          iyy="0.0013471"
+          iyz="2.2108E-07"
+          izz="0.00073074" />
       </inertial>
       <visual>
         <origin
@@ -334,14 +334,14 @@
         <material
           name="">
           <color
-            rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+            rgba="0.69804 0.69804 0.69804 1" />
         </material>
       </visual>
       <xacro:if value="${FH == 'F'}">
         <collision>
           <origin
-            xyz="0.0665 0 ${-0.019-0.015}"
-            rpy="0 0 0" />
+            xyz="0.0665 -0.034 0"
+            rpy="${PI/2} 0 0" />
           <geometry>
             <cylinder radius="0.05" length="0.13"/>
           </geometry>
@@ -350,8 +350,8 @@
       <xacro:unless value="${FH == 'F'}">
         <collision>
           <origin
-            xyz="0.0665 0 ${+0.019+0.015}"
-            rpy="0 0 0" />
+            xyz="0.0665 -0.034 0"
+            rpy="${PI/2} 0 0" />
           <geometry>
             <cylinder radius="0.05" length="0.13"/>
           </geometry>
@@ -363,13 +363,13 @@
       type="revolute">
       <xacro:if value="${FH == 'F'}">
         <origin
-          xyz="0.197 -0.054 0"
-          rpy="-1.5708 0 0" />
+          xyz="0.2021 -0.054 0"
+          rpy="0 0 0" />
       </xacro:if>
       <xacro:unless value="${FH == 'F'}">
         <origin
-          xyz="-0.197 -0.054 0"
-          rpy="-1.5708 0 3.1416" />
+          xyz="-0.2021 -0.054 0"
+          rpy="0 0 3.1416" />
       </xacro:unless>
       <parent
         link="Base" />
@@ -379,7 +379,7 @@
         <axis
         xyz="1 0 0" />
         <limit
-          lower="-0.34907"
+          lower="-0.43633"
           upper="0.5236"
           effort="${effort_lim}"
           velocity="${velocity_lim}" />
@@ -388,8 +388,8 @@
         <axis
         xyz="-1 0 0" />
         <limit
-          lower="-0.5236"
-          upper="0.87266"
+          lower="-0.83776"
+          upper="0.5236"
           effort="${effort_lim}"
           velocity="${velocity_lim}" />
       </xacro:unless>
@@ -398,17 +398,17 @@
       name="R${FH}_Thigh">
       <inertial>
         <origin
-          xyz="-0.00815740475775473 -0.0091268940561607 0.0420066354122466"
+          xyz="-0.0090964 -0.047418 -0.010862"
           rpy="0 0 0" />
         <mass
-          value="1.15974999242447" />
+          value="1.361" />
         <inertia
-          ixx="0.000911992879285499"
-          ixy="-0.000310524680969909"
-          ixz="4.28891709883383E-15"
-          iyy="0.000918973664621895"
-          iyz="1.93894536662709E-06"
-          izz="0.00169326046595172" />
+          ixx="0.0012156"
+          ixy="-1.025E-06"
+          ixz="-0.00041957"
+          iyy="0.0022368"
+          iyz="1.3825E-06"
+          izz="0.0012226" />
       </inertial>
       <visual>
         <origin
@@ -421,13 +421,13 @@
         <material
           name="">
           <color
-            rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+            rgba="0.69804 0.69804 0.69804 1" />
         </material>
       </visual>
       <collision>
         <origin
-          xyz="-0.0975 -0.075 +0.07"
-          rpy="0 ${PI/2} ${PI/4}" />
+          xyz="-0.0975 -0.08 -0.07"
+          rpy="${PI/4} 0 ${PI/2}" />
         <geometry>
           <box size="0.025 0.05 0.14"/>
         </geometry>
@@ -438,12 +438,12 @@
       type="revolute">
       <xacro:if value="${FH == 'F'}">
         <origin
-          xyz="0.0665 0 -0.019"
-          rpy="3.1416 0 0" />
+          xyz="0.0679 -0.01985 0"
+          rpy="0 0 0" />
       </xacro:if>
       <xacro:unless value="${FH == 'F'}">
         <origin
-          xyz="0.0665 0 0.019"
+          xyz="0.0665 -0.01985 0"
           rpy="0 0 3.1416" />
       </xacro:unless>
       <parent
@@ -451,18 +451,18 @@
       <child
         link="R${FH}_Thigh" />
       <axis
-        xyz="0 0 1" />
+        xyz="0 -1 0" />
       <xacro:if value="${FH == 'F'}">
         <limit
-          lower="-0.87266"
-          upper="2.5307"
+          lower="-1.6668"
+          upper="3.2376"
           effort="${effort_lim}"
           velocity="${velocity_lim}" />
       </xacro:if>
       <xacro:unless value="${FH == 'F'}">
         <limit
-          lower="-2.5307"
-          upper="0.87266"
+          lower="-2.4522"
+          upper="2.4522"
           effort="${effort_lim}"
           velocity="${velocity_lim}" />
       </xacro:unless>
@@ -471,17 +471,17 @@
       name="R${FH}_Shank">
       <inertial>
         <origin
-          xyz="0.0630329536265653 -0.047817827674744 0.0185"
+          xyz="0.059297 -0.0205 -0.044894"
           rpy="0 0 0" />
         <mass
-          value="0.102570008997248" />
+          value="0.19753" />
         <inertia
-          ixx="0.000297677648787269"
-          ixy="0.000296980915761884"
-          ixz="1.63489615161778E-19"
-          iyy="0.000327832614532812"
-          iyz="-1.53587053010883E-19"
-          izz="0.000624546801244392" />
+          ixx="0.00059399"
+          ixy="-3.307E-19"
+          ixz="0.00058611"
+          iyy="0.0012346"
+          iyz="3.1617E-19"
+          izz="0.00065333" />
       </inertial>
       <visual>
         <origin
@@ -494,21 +494,21 @@
         <material
           name="">
           <color
-            rgba="0.698039215686274 0.698039215686274 0.698039215686274 1" />
+            rgba="0.69804 0.69804 0.69804 1" />
         </material>
       </visual>
       <collision>
         <origin
-          xyz="0 0 +0.02"
-          rpy="0 0 0" />
+          xyz="0 -0.02 0"
+          rpy="${PI/2} 0 0" />
         <geometry>
           <cylinder radius="0.025" length="0.03"/>
         </geometry>
       </collision>
       <collision>
         <origin
-          xyz="0.08 -0.075 +0.02"
-          rpy="0 0 ${PI/4}" />
+          xyz="0.08 -0.02 -0.075"
+          rpy="${PI/2} ${-PI/4} 0" />
         <geometry>
           <box size="0.025 0.165 0.0125"/>
         </geometry>
@@ -518,17 +518,17 @@
       name="R${FH}_KFE"
       type="revolute">
       <origin
-        xyz="-0.14936 -0.16017 0.052"
+        xyz="-0.14936 -0.058 -0.16017"
         rpy="0 0 0" />
       <parent
         link="R${FH}_Thigh" />
       <child
         link="R${FH}_Shank" />
       <axis
-        xyz="0 0 1" />
+        xyz="0 -1 0" />
       <limit
-        lower="-0.7854"
-        upper="1.2217"
+        lower="-0.74002"
+        upper="1.1868"
         effort="${effort_lim}"
         velocity="${velocity_lim}" />
     </joint>
@@ -537,34 +537,34 @@
       <inertial>
         <origin
           xyz="0 0 0"
-          rpy="0 ${PI/2} 0" />
+          rpy="0 0 0" />
         <mass
-          value="0.088054927521184" />
+          value="0.07013" />
         <inertia
-          ixx="4.09565481632907E-05"
-          ixy="-1.1480272825008E-21"
-          ixz="3.01597797886474E-21"
-          iyy="2.47049106026622E-05"
-          iyz="2.27429196641528E-36"
-          izz="2.47049106026622E-05" />
+          ixx="1.9178E-05"
+          ixy="-3.5293E-22"
+          ixz="2.1771E-38"
+          iyy="3.1481E-05"
+          iyz="3.5306E-38"
+          izz="1.9178E-05" />
       </inertial>
       <visual>
         <origin
           xyz="0 0 0"
-          rpy="0 0 0" />
+          rpy="${PI/2} 0 0" />
         <geometry>
           <cylinder length="0.025" radius="0.030" />
         </geometry>
         <material
           name="">
           <color
-            rgba="0.250980392156863 0.250980392156863 0.250980392156863 1" />
+            rgba="0.29804 0.29804 0.29804 1" />
         </material>
       </visual>
       <collision>
         <origin
           xyz="0 0 0"
-          rpy="0 0 0" />
+          rpy="${PI/2} 0 0" />
         <geometry>
           <cylinder length="0.025" radius="0.030" />
         </geometry>
@@ -574,7 +574,7 @@
       name="R${FH}_Shank_2_Foot"
       type="fixed">
       <origin
-        xyz="0.165 -0.151 0.0185"
+        xyz="0.165 -0.0205 -0.151"
         rpy="0 0 0" />
       <parent
         link="R${FH}_Shank" />
@@ -589,4 +589,4 @@
   <xacro:R_Leg FH="F" />
   <xacro:L_Leg FH="H" />
   <xacro:R_Leg FH="H" />
-  </robot>
+</robot>
