@@ -4,8 +4,8 @@
   <xacro:arg name="use_gazebo" default="False" />
   <xacro:property name="use_gazebo" default="$(arg use_gazebo)" />
 
-  <xacro:arg name="has_camera" default="False" />
-  <xacro:property name="has_camera" default="$(arg has_camera)" />
+  <xacro:arg name="camera" default="False" />
+  <xacro:property name="camera" default="$(arg camera)" />
 
   <xacro:arg name="initial_configuration" default="lying_down" />
   <xacro:property name="initial_configuration" value="$(arg initial_configuration)" />
@@ -108,7 +108,7 @@
 
   <xacro:include filename="$(find ayg_description)/urdf/legs.xacro" />
 
-  <xacro:if value="${has_camera}">
+  <xacro:if value="${camera}">
     <xacro:include filename="$(find ayg_description)/urdf/camera.xacro" />
   </xacro:if>
 </robot>

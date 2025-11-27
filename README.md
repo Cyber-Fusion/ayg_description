@@ -13,7 +13,7 @@ This software is released under a [BSD-3-Clause license](LICENSE).
 ## Usage
 
 The `.xacro` file accepts the following arguments:
-- `has_camera`: `Bool` (default: `False`). If `True`, the robot has also the camera link.
+- `camera`: `Bool` (default: `False`). If `True`, the robot has also the camera link.
 - `use_gazebo`: `Bool` (default: `False`). If `True`, the URDF is augmented with Gazebo (not Gazebo Classic) tags for the robot's sensors and actuators.
 - `initial_configuration`: {`lying_down`, `standing_up`} (default: `lying_down`). Sets the initial configuration of the robot in Gazebo (requires `use_gazebo` to be `True`).
 - `controller`: {`default`, `ddb`} (default: `default`). Sets the controller to be used in Gazebo (requires `use_gazebo` to be `True`). These controllers are from the [main repo](https://github.com/Cyber-Fusion/Ayg).
