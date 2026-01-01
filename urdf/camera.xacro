@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <link
+    name="Camera">
+    <inertial>
+      <origin
+        xyz="0.027539 -0.0054988 -1.4524E-08"
+        rpy="0 0 0" />
+      <mass
+        value="0.3912" />
+      <inertia
+        ixx="0.00080723"
+        ixy="4.4453E-06"
+        ixz="-1.7833E-09"
+        iyy="0.00082275"
+        iyz="2.4795E-09"
+        izz="0.00010329" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/Camera.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.69804 0.69804 0.69804 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ayg_description/meshes/Camera.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Base_2_Camera"
+    type="fixed">
+    <origin
+      xyz="0.2475 0 0.095"
+      rpy="1.5708 0 0" />
+    <parent
+      link="Base" />
+    <child
+      link="Camera" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+</robot>
