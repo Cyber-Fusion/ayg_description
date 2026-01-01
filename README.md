@@ -6,7 +6,7 @@ For the URDF description, see the [`ros2`](https://github.com/Cyber-Fusion/ayg_d
 
 This package contains the robot description (USD) of Ayg developed by [Cyber-Fusion](https://github.com/Cyber-Fusion).
 
-Updated to the URDF version dated March 1st, 2024.
+Updated to the URDF version dated January 1st, 2025.
 
 ![](.thumbs/256x256/ayg.usd.png)
 
@@ -23,6 +23,8 @@ Can be generated from the `urdf` with the following script:
     --headless
 ```
 after adjusting the input (URDF) and output (USD) paths as needed.
+
+To generate this USD file the lower and the upper limits of all the joints have been removed. For, currently, unknown reasons this helps the training.
 
 ## License
 
