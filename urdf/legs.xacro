@@ -48,20 +48,20 @@
       <xacro:if value="${FH == 'F'}">
         <collision>
           <origin
-            xyz="0.0665 0.034 0"
+            xyz="0.0665 0.04 0"
             rpy="${PI/2} 0 0" />
           <geometry>
-            <cylinder radius="0.05" length="0.13"/>
+            <cylinder radius="0.05" length="0.148"/>
           </geometry>
         </collision>
       </xacro:if>
       <xacro:unless value="${FH == 'F'}">
         <collision>
           <origin
-            xyz="0.0665 0.034 0"
+            xyz="0.0665 -0.04 0"
             rpy="${PI/2} 0 0" />
           <geometry>
-            <cylinder radius="0.05" length="0.13"/>
+            <cylinder radius="0.05" length="0.148"/>
           </geometry>
         </collision>
       </xacro:unless>
@@ -151,7 +151,7 @@
       </xacro:if>
       <xacro:unless value="${FH == 'F'}">
         <origin
-          xyz="0.0679 0.01985 0"
+          xyz="0.0679 -0.01985 0"
           rpy="0 0 3.1416" />
       </xacro:unless>
       <parent
@@ -340,20 +340,20 @@
       <xacro:if value="${FH == 'F'}">
         <collision>
           <origin
-            xyz="0.0665 -0.034 0"
+            xyz="0.0665 -0.04 0"
             rpy="${PI/2} 0 0" />
           <geometry>
-            <cylinder radius="0.05" length="0.13"/>
+            <cylinder radius="0.05" length="0.148"/>
           </geometry>
         </collision>
       </xacro:if>
       <xacro:unless value="${FH == 'F'}">
         <collision>
           <origin
-            xyz="0.0665 -0.034 0"
+            xyz="0.0665 0.04 0"
             rpy="${PI/2} 0 0" />
           <geometry>
-            <cylinder radius="0.05" length="0.13"/>
+            <cylinder radius="0.05" length="0.148"/>
           </geometry>
         </collision>
       </xacro:unless>
@@ -443,7 +443,7 @@
       </xacro:if>
       <xacro:unless value="${FH == 'F'}">
         <origin
-          xyz="0.0665 -0.01985 0"
+          xyz="0.0665 0.01985 0"
           rpy="0 0 3.1416" />
       </xacro:unless>
       <parent

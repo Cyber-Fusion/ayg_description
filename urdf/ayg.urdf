@@ -64,9 +64,9 @@
       </material>
     </visual>
     <collision>
-      <origin rpy="1.5707963267948966 0 0" xyz="0.0665 0.034 0"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0.0665 0.04 0"/>
       <geometry>
-        <cylinder length="0.13" radius="0.05"/>
+        <cylinder length="0.148" radius="0.05"/>
       </geometry>
     </collision>
   </link>
@@ -185,9 +185,9 @@
       </material>
     </visual>
     <collision>
-      <origin rpy="1.5707963267948966 0 0" xyz="0.0665 -0.034 0"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0.0665 -0.04 0"/>
       <geometry>
-        <cylinder length="0.13" radius="0.05"/>
+        <cylinder length="0.148" radius="0.05"/>
       </geometry>
     </collision>
   </link>
@@ -306,9 +306,9 @@
       </material>
     </visual>
     <collision>
-      <origin rpy="1.5707963267948966 0 0" xyz="0.0665 0.034 0"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0.0665 -0.04 0"/>
       <geometry>
-        <cylinder length="0.13" radius="0.05"/>
+        <cylinder length="0.148" radius="0.05"/>
       </geometry>
     </collision>
   </link>
@@ -342,7 +342,7 @@
     </collision>
   </link>
   <joint name="LH_HFE" type="revolute">
-    <origin rpy="0 0 3.1416" xyz="0.0679 0.01985 0"/>
+    <origin rpy="0 0 3.1416" xyz="0.0679 -0.01985 0"/>
     <parent link="LH_Hip"/>
     <child link="LH_Thigh"/>
     <axis xyz="0 -1 0"/>
@@ -427,9 +427,9 @@
       </material>
     </visual>
     <collision>
-      <origin rpy="1.5707963267948966 0 0" xyz="0.0665 -0.034 0"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0.0665 0.04 0"/>
       <geometry>
-        <cylinder length="0.13" radius="0.05"/>
+        <cylinder length="0.148" radius="0.05"/>
       </geometry>
     </collision>
   </link>
@@ -463,7 +463,7 @@
     </collision>
   </link>
   <joint name="RH_HFE" type="revolute">
-    <origin rpy="0 0 3.1416" xyz="0.0665 -0.01985 0"/>
+    <origin rpy="0 0 3.1416" xyz="0.0665 0.01985 0"/>
     <parent link="RH_Hip"/>
     <child link="RH_Thigh"/>
     <axis xyz="0 -1 0"/>
