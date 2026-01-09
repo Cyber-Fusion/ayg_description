@@ -1,0 +1,1 @@
+"""Ayg robot description package."""
