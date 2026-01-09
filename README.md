@@ -31,6 +31,13 @@ To visualize the robot model in RViz, run
 ros2 launch ayg_description rviz.launch.py
 ```
 
+To launch the robot description with mesh server for Cyber Fusion Studio, run
+```shell
+ros2 launch ayg_description ayg_description_for_studio.launch.py
+```
+
+This launch file starts the robot state publisher, joint state publisher GUI, and an HTTP server for serving mesh files.
+
 ### Spawn the Robot in Gazebo
 
 Example script to spawn the robot in Gazebo:
