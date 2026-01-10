@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """
 Simple HTTP server for serving robot mesh files.
 This allows client applications to access mesh files via HTTP URLs.
@@ -7,7 +8,7 @@ This allows client applications to access mesh files via HTTP URLs.
 import os
 import http.server
 import socketserver
-from pathlib import Path
+from urllib.parse import unquote
 
 from ament_index_python.packages import get_package_share_directory
 
@@ -25,6 +26,34 @@ class MeshHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
                 mesh_base_path = None
         self.mesh_base_path = mesh_base_path
         super().__init__(*args, **kwargs)
+        
+    def _resolve_mesh_path(self, path: str) -> tuple[bool, str | None, str | None]:
+        """
+        Resolve the absolute path and prevent path traversal attacks.
+
+        Args:
+            path (str): The requested URL path.
+
+        Returns:
+            tuple[bool, str | None, str | None]: A tuple containing an error flag,
+            the resolved absolute mesh path, and the relative mesh file path.
+        """
+        
+        if not self.mesh_base_path:
+            self.send_error(404, "Mesh base path not configured")
+            return
+            
+        mesh_file = unquote(path[len("/meshes/"):])  # decode %2e etc.
+        mesh_file = mesh_file.lstrip("/")            # avoid absolute paths
+
+        base = os.path.realpath(self.mesh_base_path)
+        mesh_path = os.path.realpath(os.path.join(base, mesh_file))
+
+        if not mesh_path.startswith(base + os.sep):
+            self.send_error(403, "Forbidden")
+            return True, None, None
+
+        return False, mesh_path, mesh_file
     
     def do_GET(self):
         """Handle GET requests."""
@@ -33,12 +62,9 @@ class MeshHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         
         # If path starts with '/meshes/', serve it from mesh_base_path
         if path.startswith('/meshes/'):
-            if not self.mesh_base_path:
-                self.send_error(404, "Mesh base path not configured")
+            error, mesh_path, mesh_file = self._resolve_mesh_path(path)
+            if error:
                 return
-            
-            mesh_file = path.replace('/meshes/', '')
-            mesh_path = os.path.join(self.mesh_base_path, mesh_file)
             
             # If we found the file, serve it
             if os.path.exists(mesh_path):
