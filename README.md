@@ -4,7 +4,7 @@ For the USD description, see the [`usd`](https://github.com/Cyber-Fusion/ayg_des
 
 ## Overview
 
-This package contains the robot description (URDF) of Ayg developed by [Cyber-Fusion](https://github.com/Cyber-Fusion).
+This package contains Ayg's robot description (URDF) developed by [Cyber-Fusion](https://github.com/Cyber-Fusion).
 
 ## License
 
@@ -31,87 +31,9 @@ To visualize the robot model in RViz, run
 ros2 launch ayg_description rviz.launch.py
 ```
 
-### Spawn the Robot in Gazebo
-
-Example script to spawn the robot in Gazebo:
-```python
-import os
-
-from ament_index_python.packages import get_package_share_path
-from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
-from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import Command
-from launch_ros.actions import Node
-from launch_ros.parameter_descriptions import ParameterValue
-
-def generate_launch_description():
-    urdf_path = os.path.join(
-        get_package_share_path('ayg_description'),
-        'urdf',
-        'ayg.xacro',
-    )
-
-    ayg_description = ParameterValue(
-        Command([
-            'xacro ', urdf_path,
-            ' use_gazebo:=True',
-            ' initial_configuration:=lying_down',
-            ' controller:=default',
-        ]),
-        value_type=str,
-    )
-
-    ayg_world_path = '/your/path/to/the/world/file/if/any'
-
-    ros_gz_sim_path = os.path.join(
-        get_package_share_path('ros_gz_sim'), 'launch', 'gz_sim.launch.py'
-    )
-
-    # ======================================================================= #
-
-    gz = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(ros_gz_sim_path),
-        launch_arguments={'gz_args': ayg_world_path}.items(),
-    )
-
-    robot_state_publisher_node = Node(
-        package="robot_state_publisher",
-        executable="robot_state_publisher",
-        parameters=[
-            {'robot_description': ayg_description},
-            {'use_sim_time': True}
-        ],
-    )
-
-    spawn_ayg = Node(
-        package="ros_gz_sim",
-        executable='create',
-        arguments=[
-            "-topic", '/robot_description',
-            '-name', 'ayg',
-            '-x', '0',
-            '-y', '0',
-            '-z', '0.13',
-        ],
-        output='screen',
-    )
-
-    spawn_joint_state_broadcaster = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=[
-            'joint_state_broadcaster',
-            '--controller-manager', '/controller_manager',
-        ],
-        parameters=[{'use_sim_time': True}],
-        output='screen',
-    )
-
-    return LaunchDescription([
-        gz,
-        robot_state_publisher_node,
-        spawn_ayg,
-        spawn_joint_state_broadcaster,
-    ])
+To launch the robot description with mesh server for [Cyber Fusion Studio](https://github.com/Cyber-Fusion/Studio), run
+```shell
+ros2 launch ayg_description ayg_description_for_studio.launch.py
 ```
+
+This launch file starts the robot state publisher, joint state publisher GUI, and an HTTP server for serving mesh files.
