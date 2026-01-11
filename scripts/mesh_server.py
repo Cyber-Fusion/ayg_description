@@ -6,6 +6,7 @@ This allows client applications to access mesh files via HTTP URLs.
 """
 
 import os
+import sys
 import http.server
 import socketserver
 from urllib.parse import unquote
@@ -41,20 +42,57 @@ class MeshHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         
         if not self.mesh_base_path:
             self.send_error(404, "Mesh base path not configured")
-            return
+            return True, None, None
             
         mesh_file = unquote(path[len("/meshes/"):])  # decode %2e etc.
         mesh_file = mesh_file.lstrip("/")            # avoid absolute paths
+        mesh_file = mesh_file.replace("\\", "/")     # normalize win-style separators
 
-        base = os.path.realpath(self.mesh_base_path)
-        mesh_path = os.path.realpath(os.path.join(base, mesh_file))
+        # NOTE: avoid `realpath()` here: in `--symlink-install` builds, the files under
+        # `install/.../share/.../meshes` are symlinks into `src/...`, and resolving
+        # symlinks would incorrectly look like "path traversal".
+        base = os.path.abspath(self.mesh_base_path)
+        if not os.path.isdir(base):
+            self.send_error(500, f"Mesh base path is not a directory: {base}")
+            return True, None, None
 
-        if not mesh_path.startswith(base + os.sep):
+        mesh_path = os.path.abspath(os.path.join(base, mesh_file))
+
+        # Prevent traversal: mesh_path must stay within base.
+        # `commonpath` is more robust than string-prefix checks.
+        try:
+            common = os.path.commonpath([base, mesh_path])
+        except ValueError:
+            common = None
+
+        if common != base:
+            print(
+                f"Forbidden path traversal attempt: req={path!r} "
+                f"base={base!r} resolved={mesh_path!r}",
+                flush=True,
+            )
             self.send_error(403, "Forbidden")
             return True, None, None
 
         return False, mesh_path, mesh_file
-    
+
+    def log_message(self, format: str, *args) -> None:
+        """
+        Override BaseHTTPRequestHandler's default logging.
+
+        Default format is: `IP - - [date] "GET ..." 200 -`
+        We want:            `IP "GET ..." 200`
+        """
+        try:
+            msg = format % args
+        except Exception:
+            msg = format
+        print(f"{self.client_address[0]} {msg}", flush=True)
+
+    def log_request(self, code: int | str = "-", size: int | str = "-") -> None:
+        # Only log request line + status code (drop the trailing `-` size field).
+        self.log_message('"%s" %s', self.requestline, str(code))
+
     def do_GET(self):
         """Handle GET requests."""
         # Parse the path
@@ -136,14 +174,14 @@ def create_mesh_server(port=8080, mesh_base_path=None):
         raise
 
     with httpd:
-        print(f"Mesh server started on port {port}")
+        print(f"Mesh server is up and running on port {port}", flush=True)
         if mesh_base_path:
-            print(f"Serving meshes from: {mesh_base_path}")
-        print("Press Ctrl+C to stop the server")
+            print(f"Serving meshes from: {mesh_base_path}", flush=True)
+        print("Press Ctrl+C to stop the server", flush=True)
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
-            print("\nShutting down mesh server...")
+            print("\nShutting down mesh server...", flush=True)
 
 
 def main():
@@ -159,6 +197,9 @@ def main():
     # This script isn't a ROS node, so tolerate and ignore unknown args.
     args, _unknown = parser.parse_known_args()
     
+    # Log startup message to stderr for better visibility in ROS 2 launch
+    print(f"Starting mesh server on port {args.port}", flush=True)
+
     create_mesh_server(port=args.port, mesh_base_path=args.mesh_path)
 
 

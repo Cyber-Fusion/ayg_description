@@ -42,6 +42,8 @@ def generate_launch_description():
         package="ayg_description",
         executable="mesh_server",
         arguments=['--port', LaunchConfiguration('mesh_server_port')],
+        output='screen',
+        emulate_tty=True,
     )
 
     return LaunchDescription([
