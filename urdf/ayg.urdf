@@ -159,11 +159,11 @@
     <collision>
       <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
       <geometry>
-        <cylinder length="0.025" radius="0.030"/>
+        <sphere radius="0.030"/>
       </geometry>
     </collision>
   </link>
-  <joint name="LF_Shank_2_Foot" type="fixed">
+  <joint name="LF_Shank_2_Foot" type="fixed" dont_collapse="true">
     <origin rpy="0 0 0" xyz="0.165 0.0205 -0.151"/>
     <parent link="LF_Shank"/>
     <child link="LF_Foot"/>
@@ -280,11 +280,11 @@
     <collision>
       <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
       <geometry>
-        <cylinder length="0.025" radius="0.030"/>
+        <sphere radius="0.030"/>
       </geometry>
     </collision>
   </link>
-  <joint name="RF_Shank_2_Foot" type="fixed">
+  <joint name="RF_Shank_2_Foot" type="fixed" dont_collapse="true">
     <origin rpy="0 0 0" xyz="0.165 -0.0205 -0.151"/>
     <parent link="RF_Shank"/>
     <child link="RF_Foot"/>
@@ -401,11 +401,11 @@
     <collision>
       <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
       <geometry>
-        <cylinder length="0.025" radius="0.030"/>
+        <sphere radius="0.030"/>
       </geometry>
     </collision>
   </link>
-  <joint name="LH_Shank_2_Foot" type="fixed">
+  <joint name="LH_Shank_2_Foot" type="fixed" dont_collapse="true">
     <origin rpy="0 0 0" xyz="0.165 0.0205 -0.151"/>
     <parent link="LH_Shank"/>
     <child link="LH_Foot"/>
@@ -522,11 +522,11 @@
     <collision>
       <origin rpy="1.5707963267948966 0 0" xyz="0 0 0"/>
       <geometry>
-        <cylinder length="0.025" radius="0.030"/>
+        <sphere radius="0.030"/>
       </geometry>
     </collision>
   </link>
-  <joint name="RH_Shank_2_Foot" type="fixed">
+  <joint name="RH_Shank_2_Foot" type="fixed" dont_collapse="true">
     <origin rpy="0 0 0" xyz="0.165 -0.0205 -0.151"/>
     <parent link="RH_Shank"/>
     <child link="RH_Foot"/>
