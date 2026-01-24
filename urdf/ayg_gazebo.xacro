@@ -68,7 +68,7 @@
     <xacro:if value="${controller == 'default'}">
         <gazebo>
             <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-                <parameters>$(find ayg_control)/config/gazebo/ayg_control.yaml</parameters>
+                <parameters>$(find ayg_control)/config/gazebo/ayg_sw_controllers.yaml</parameters>
             </plugin>
         </gazebo>
     </xacro:if>
