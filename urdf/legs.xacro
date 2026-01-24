@@ -261,7 +261,7 @@
           xyz="0 0 0"
           rpy="${PI/2} 0 0" />
         <geometry>
-          <sphere radius="0.030"/>
+          <cylinder length="0.025" radius="0.030"/>
         </geometry>
         <material
           name="">
@@ -553,7 +553,7 @@
           xyz="0 0 0"
           rpy="${PI/2} 0 0" />
         <geometry>
-          <sphere radius="0.030"/>
+          <cylinder length="0.025" radius="0.030"/>
         </geometry>
         <material
           name="">
