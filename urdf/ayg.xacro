@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot name="ayg" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:arg name="use_gazebo" default="False" />
-  <xacro:property name="use_gazebo" default="$(arg use_gazebo)" />
+  <xacro:arg name="sim" default="False" />
+  <xacro:property name="sim" default="$(arg sim)" />
 
   <xacro:arg name="camera" default="False" />
   <xacro:property name="camera" default="$(arg camera)" />
@@ -16,9 +16,19 @@
   <xacro:property name="velocity_lim" value="10.0" />
   <xacro:property name="PI" value="3.1415926535897931" />
 
-  <xacro:if value="${use_gazebo}">
+  <xacro:if value="${sim}">
     <xacro:include filename="$(find ayg_description)/urdf/ayg_gazebo.xacro" />
   </xacro:if>
+
+  <xacro:unless value="${sim}">
+    <xacro:include filename="$(find robstride_hardware)/urdf/robstride_ros2_control.xacro"/>
+    <xacro:robstride_ros2_control
+      can_interface="can0"
+      actuator_type="3"
+      default_kp="40.0"
+      default_kd="1.0"
+    />
+  </xacro:unless>
 
   <link
     name="Base">
