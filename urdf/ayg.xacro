@@ -27,6 +27,7 @@
       actuator_type="3"
       default_kp="40.0"
       default_kd="1.0"
+      calibration_file="$(find robstride_hardware)/calibration/joint_calibration.yaml"
     />
   </xacro:unless>
 
