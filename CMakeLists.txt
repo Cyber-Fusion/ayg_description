@@ -28,14 +28,6 @@ find_package(ament_cmake_python REQUIRED)
 
 install(DIRECTORY config launch meshes urdf DESTINATION share/${PROJECT_NAME})
 
-# Install the mesh server as a ROS 2 executable (libexec) so `launch_ros.actions.Node`
-# can run it as `executable="mesh_server"`.
-install(
-  PROGRAMS scripts/mesh_server.py
-  DESTINATION lib/${PROJECT_NAME}
-  RENAME mesh_server
-)
-
 # ==============================================================================
 
 ament_package()

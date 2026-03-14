@@ -14,8 +14,6 @@ setup(
     license='BSD-3',
     tests_require=['pytest'],
     entry_points={
-        'console_scripts': [
-            'mesh_server = scripts.mesh_server:main',
-        ],
+        'console_scripts': [],
     },
 )
