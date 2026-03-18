@@ -26,7 +26,7 @@ find_package(ament_cmake_python REQUIRED)
 
 # ================================== Install ===================================
 
-install(DIRECTORY config launch meshes urdf DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY config launch meshes mujoco urdf DESTINATION share/${PROJECT_NAME})
 
 # ==============================================================================
 
