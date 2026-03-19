@@ -4,6 +4,9 @@
   <xacro:arg name="sim" default="False" />
   <xacro:property name="sim" default="$(arg sim)" />
 
+  <xacro:arg name="sim_backend" default="gazebo" />
+  <xacro:property name="sim_backend" value="$(arg sim_backend)" />
+
   <xacro:arg name="camera" default="False" />
   <xacro:property name="camera" default="$(arg camera)" />
 
@@ -16,8 +19,16 @@
   <xacro:property name="velocity_lim" value="10.0" />
   <xacro:property name="PI" value="3.1415926535897931" />
 
-  <xacro:if value="${sim}">
+  <xacro:if value="${sim and sim_backend == 'gazebo'}">
     <xacro:include filename="$(find ayg_description)/urdf/ayg_gazebo.xacro" />
+  </xacro:if>
+
+  <xacro:if value="${sim and sim_backend == 'mujoco'}">
+    <xacro:include filename="$(find ayg_mujoco)/urdf/ayg_mujoco_ros2_control.xacro" />
+    <xacro:ayg_mujoco_ros2_control
+      mujoco_model_path="$(find ayg_description)/mujoco/ayg.xml"
+      use_viewer="true"
+    />
   </xacro:if>
 
   <xacro:unless value="${sim}">
