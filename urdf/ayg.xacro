@@ -23,7 +23,10 @@
   <xacro:unless value="${sim}">
     <xacro:include filename="$(find robstride_hardware)/urdf/robstride_ros2_control.xacro"/>
     <xacro:robstride_ros2_control
-      can_interface="can0"
+      lf_can_interface="can0"
+      rf_can_interface="can1"
+      lh_can_interface="can2"
+      rh_can_interface="can3"
       actuator_type="3"
       default_kp="40.0"
       default_kd="1.0"
