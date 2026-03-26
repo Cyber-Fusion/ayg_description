@@ -12,6 +12,8 @@
   <xacro:arg name="controller" default="default" />
   <xacro:property name="controller" default="$(arg controller)" />
 
+  <xacro:arg name="use_csp" default="false" />
+
   <xacro:property name="effort_lim" value="50.0" />
   <xacro:property name="velocity_lim" value="10.0" />
   <xacro:property name="PI" value="3.1415926535897931" />
@@ -30,6 +32,7 @@
       actuator_type="3"
       default_kp="40.0"
       default_kd="1.0"
+      use_csp="$(arg use_csp)"
       calibration_file="$(find robstride_hardware)/calibration/joint_calibration.yaml"
     />
   </xacro:unless>
