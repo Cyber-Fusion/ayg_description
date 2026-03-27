@@ -25,10 +25,7 @@
 
   <xacro:if value="${sim and sim_backend == 'mujoco'}">
     <xacro:include filename="$(find ayg_mujoco)/urdf/ayg_mujoco_ros2_control.xacro" />
-    <xacro:ayg_mujoco_ros2_control
-      mujoco_model_path="$(find ayg_description)/mujoco/ayg.xml"
-      use_viewer="true"
-    />
+    <xacro:ayg_mujoco_ros2_control mujoco_model_path="$(find ayg_description)/mujoco/ayg.xml"/>
   </xacro:if>
 
   <xacro:unless value="${sim}">
