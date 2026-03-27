@@ -89,7 +89,7 @@
               <geom name="LF_Foot_visual" type="cylinder" size="0.03 0.0125"
                     quat="0.707107 0.707107 0 0" rgba="0.29804 0.29804 0.29804 1"
                     contype="0" conaffinity="0" group="1"/>
-              <geom name="LF_Foot_collision" type="cylinder" size="0.03 0.005" quat="0.707107 0.707107 0 0" friction="2.0 0.01 0.001" group="3"/>
+              <geom name="LF_Foot_collision" type="cylinder" size="0.03 0.0125" quat="0.707107 0.707107 0 0" friction="2.0 0.01 0.001" group="3"/>
               <site name="LF_Foot_contact" pos="0 0 0" size="0.001" rgba="1 0 0 1"/>
             </body>
           </body>
@@ -133,7 +133,7 @@
               <geom name="RF_Foot_visual" type="cylinder" size="0.03 0.0125"
                     quat="0.707107 0.707107 0 0" rgba="0.29804 0.29804 0.29804 1"
                     contype="0" conaffinity="0" group="1"/>
-              <geom name="RF_Foot_collision" type="cylinder" size="0.03 0.005" quat="0.707107 0.707107 0 0" friction="2.0 0.01 0.001" group="3"/>
+              <geom name="RF_Foot_collision" type="cylinder" size="0.03 0.0125" quat="0.707107 0.707107 0 0" friction="2.0 0.01 0.001" group="3"/>
               <site name="RF_Foot_contact" pos="0 0 0" size="0.001" rgba="1 0 0 1"/>
             </body>
           </body>
@@ -177,7 +177,7 @@
               <geom name="LH_Foot_visual" type="cylinder" size="0.03 0.0125"
                     quat="0.707107 0.707107 0 0" rgba="0.29804 0.29804 0.29804 1"
                     contype="0" conaffinity="0" group="1"/>
-              <geom name="LH_Foot_collision" type="cylinder" size="0.03 0.005" quat="0.707107 0.707107 0 0" friction="2.0 0.01 0.001" group="3"/>
+              <geom name="LH_Foot_collision" type="cylinder" size="0.03 0.0125" quat="0.707107 0.707107 0 0" friction="2.0 0.01 0.001" group="3"/>
               <site name="LH_Foot_contact" pos="0 0 0" size="0.001" rgba="1 0 0 1"/>
             </body>
           </body>
@@ -221,7 +221,7 @@
               <geom name="RH_Foot_visual" type="cylinder" size="0.03 0.0125"
                     quat="0.707107 0.707107 0 0" rgba="0.29804 0.29804 0.29804 1"
                     contype="0" conaffinity="0" group="1"/>
-              <geom name="RH_Foot_collision" type="cylinder" size="0.03 0.005" quat="0.707107 0.707107 0 0" friction="2.0 0.01 0.001" group="3"/>
+              <geom name="RH_Foot_collision" type="cylinder" size="0.03 0.0125" quat="0.707107 0.707107 0 0" friction="2.0 0.01 0.001" group="3"/>
               <site name="RH_Foot_contact" pos="0 0 0" size="0.001" rgba="1 0 0 1"/>
             </body>
           </body>
