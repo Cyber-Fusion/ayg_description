@@ -4,6 +4,9 @@
   <xacro:arg name="sim" default="False" />
   <xacro:property name="sim" default="$(arg sim)" />
 
+  <xacro:arg name="sim_backend" default="gazebo" />
+  <xacro:property name="sim_backend" value="$(arg sim_backend)" />
+
   <xacro:arg name="camera" default="False" />
   <xacro:property name="camera" default="$(arg camera)" />
 
@@ -19,7 +22,7 @@
   <xacro:property name="PI" value="3.1415926535897931" />
 
   <xacro:if value="${sim}">
-    <xacro:include filename="$(find ayg_description)/urdf/ayg_gazebo.xacro" />
+    <xacro:include filename="$(find ayg_description)/urdf/ayg_sim_ros2_control.xacro" />
   </xacro:if>
 
   <xacro:unless value="${sim}">
