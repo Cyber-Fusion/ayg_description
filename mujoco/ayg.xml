@@ -53,18 +53,18 @@
             contype="0" conaffinity="0" group="1"/>
 
       <!-- ==================== Batteries (front-to-back, under top hatches) ==================== -->
-      <body name="Battery_Front" pos="0.10 0 0">
-        <inertial pos="0 0 0" mass="1.6"
-                  fullinertia="0.005406 0.002061 0.005009 0 0 0"/>
+      <body name="Battery_Front" pos="0.10070 0 -0.00900">
+        <inertial pos="-0.00002 -0.00421 0.04143" mass="1.6"
+                  fullinertia="0.0044576 0.0076771 0.0044479 -4.1873e-06 -5.2038e-06 -0.00026672"/>
         <geom name="Battery_Front_visual" type="box" size="0.0395 0.0885 0.048"
               rgba="0.2 0.2 0.3 1" contype="0" conaffinity="0" group="1"/>
         <geom name="Battery_Front_collision" type="box" size="0.0395 0.0885 0.048"
               group="3"/>
       </body>
 
-      <body name="Battery_Rear" pos="-0.10 0 0">
-        <inertial pos="0 0 0" mass="1.6"
-                  fullinertia="0.005406 0.002061 0.005009 0 0 0"/>
+      <body name="Battery_Rear" pos="-0.10070 0 -0.00900">
+        <inertial pos="-0.00002 -0.00421 0.04143" mass="1.6"
+                  fullinertia="0.0044576 0.0076771 0.0044479 -4.1873e-06 -5.2038e-06 -0.00026672"/>
         <geom name="Battery_Rear_visual" type="box" size="0.0395 0.0885 0.048"
               rgba="0.2 0.2 0.3 1" contype="0" conaffinity="0" group="1"/>
         <geom name="Battery_Rear_collision" type="box" size="0.0395 0.0885 0.048"
