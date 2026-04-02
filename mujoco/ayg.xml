@@ -52,22 +52,22 @@
             quat="0.707107 0.707107 0 0" rgba="0.69804 0.69804 0.69804 1"
             contype="0" conaffinity="0" group="1"/>
 
-      <!-- ==================== Batteries ==================== -->
-      <body name="Battery_Left" pos="0 0.075 0">
+      <!-- ==================== Batteries (front-to-back, under top hatches) ==================== -->
+      <body name="Battery_Front" pos="0.10 0 0">
         <inertial pos="0 0 0" mass="1.6"
-                  fullinertia="0.002061 0.005406 0.005009 0 0 0"/>
-        <geom name="Battery_Left_visual" type="box" size="0.0885 0.0395 0.048"
+                  fullinertia="0.005406 0.002061 0.005009 0 0 0"/>
+        <geom name="Battery_Front_visual" type="box" size="0.0395 0.0885 0.048"
               rgba="0.2 0.2 0.3 1" contype="0" conaffinity="0" group="1"/>
-        <geom name="Battery_Left_collision" type="box" size="0.0885 0.0395 0.048"
+        <geom name="Battery_Front_collision" type="box" size="0.0395 0.0885 0.048"
               group="3"/>
       </body>
 
-      <body name="Battery_Right" pos="0 -0.075 0">
+      <body name="Battery_Rear" pos="-0.10 0 0">
         <inertial pos="0 0 0" mass="1.6"
-                  fullinertia="0.002061 0.005406 0.005009 0 0 0"/>
-        <geom name="Battery_Right_visual" type="box" size="0.0885 0.0395 0.048"
+                  fullinertia="0.005406 0.002061 0.005009 0 0 0"/>
+        <geom name="Battery_Rear_visual" type="box" size="0.0395 0.0885 0.048"
               rgba="0.2 0.2 0.3 1" contype="0" conaffinity="0" group="1"/>
-        <geom name="Battery_Right_collision" type="box" size="0.0885 0.0395 0.048"
+        <geom name="Battery_Rear_collision" type="box" size="0.0395 0.0885 0.048"
               group="3"/>
       </body>
 
