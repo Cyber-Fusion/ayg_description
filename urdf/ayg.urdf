@@ -7,7 +7,7 @@
   <link name="Base">
     <inertial>
       <origin rpy="0 0 0" xyz="0.00057686 -0.00018498 0.0026529"/>
-      <mass value="9.1298"/>
+      <mass value="9.148"/>
       <inertia ixx="0.022082" ixy="3.2369E-07" ixz="6.8653E-05" iyy="0.031986" iyz="2.8565E-07" izz="0.040389"/>
     </inertial>
     <visual>
@@ -46,6 +46,63 @@
     <origin rpy="0 0 0" xyz="-3.79309829856879E-05 0 -0.0172341687059438"/>
     <parent link="Base"/>
     <child link="IMU"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+  <!-- Batteries (2x, front-to-back inside body cavity, under top hatches) -->
+  <link name="Battery_Front">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.00002 -0.00421 0.04143"/>
+      <mass value="1.6"/>
+      <inertia ixx="0.0044576" ixy="-4.1873E-06" ixz="-5.2038E-06" iyy="0.0076771" iyz="-0.00026672" izz="0.0044479"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.079 0.177 0.096"/>
+      </geometry>
+      <material name="battery_color">
+        <color rgba="0.2 0.2 0.3 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.079 0.177 0.096"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="Base_2_Battery_Front" type="fixed">
+    <origin rpy="0 0 0" xyz="0.10070 0 -0.00900"/>
+    <parent link="Base"/>
+    <child link="Battery_Front"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+  <link name="Battery_Rear">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.00002 -0.00421 0.04143"/>
+      <mass value="1.6"/>
+      <inertia ixx="0.0044576" ixy="-4.1873E-06" ixz="-5.2038E-06" iyy="0.0076771" iyz="-0.00026672" izz="0.0044479"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.079 0.177 0.096"/>
+      </geometry>
+      <material name="battery_color">
+        <color rgba="0.2 0.2 0.3 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.079 0.177 0.096"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="Base_2_Battery_Rear" type="fixed">
+    <origin rpy="0 0 0" xyz="-0.10070 0 -0.00900"/>
+    <parent link="Base"/>
+    <child link="Battery_Rear"/>
     <axis xyz="0 0 0"/>
   </joint>
   <link name="LF_Hip">

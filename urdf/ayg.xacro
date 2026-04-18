@@ -21,6 +21,29 @@
   <xacro:property name="velocity_lim" value="10.0" />
   <xacro:property name="PI" value="3.1415926535897931" />
 
+  <!-- Battery inertial properties (CAD export → URDF frame)
+       CAD frame: X=forward, Y=up, Z=left  |  URDF frame: X=forward, Y=left, Z=up
+       Mapping: (URDF_x, URDF_y, URDF_z) = (CAD_x, CAD_z, CAD_y)
+       CAD mass: 1.55217 kg  |  Weighed: 1.6 kg each  |  Housing mass is in Base -->
+  <xacro:property name="battery_cad_mass" value="1.55217" />
+  <xacro:property name="battery_real_mass" value="1.6" />
+  <xacro:property name="battery_inertia_scale" value="${battery_real_mass / battery_cad_mass}" />
+  <!-- CoM in battery link frame (URDF, meters) -->
+  <xacro:property name="battery_com_x" value="-0.00002" />
+  <xacro:property name="battery_com_y" value="-0.00421" />
+  <xacro:property name="battery_com_z" value="0.04143" />
+  <!-- Inertia at CoM, at CAD mass, URDF frame (kg·m²) -->
+  <xacro:property name="battery_cad_ixx" value="0.0043243903" />
+  <xacro:property name="battery_cad_ixy" value="-0.0000040621" />
+  <xacro:property name="battery_cad_ixz" value="-0.0000050483" />
+  <xacro:property name="battery_cad_iyy" value="0.0074475647" />
+  <xacro:property name="battery_cad_iyz" value="-0.0002587481" />
+  <xacro:property name="battery_cad_izz" value="0.0043149743" />
+  <!-- Battery positions relative to Base (URDF, meters) -->
+  <xacro:property name="battery_front_x" value="0.10070" />
+  <xacro:property name="battery_rear_x" value="-0.10070" />
+  <xacro:property name="battery_pos_z" value="-0.00900" />
+
   <xacro:if value="${sim}">
     <xacro:include filename="$(find ayg_description)/urdf/ayg_sim_ros2_control.xacro" />
   </xacro:if>
@@ -46,8 +69,9 @@
       <origin
         xyz="0.00057686 -0.00018498 0.0026529"
         rpy="0 0 0" />
+      <!-- Measured: 9.148 kg (CAD: 9.1298 kg) -->
       <mass
-        value="9.1298" />
+        value="9.148" />
       <inertia
         ixx="0.022082"
         ixy="3.2369E-07"
@@ -125,6 +149,47 @@
     <axis
       xyz="0 0 0" />
   </joint>
+
+  <!-- Battery macro (2x identical packs, front and rear) -->
+  <xacro:macro name="battery" params="name pos_x">
+    <link name="Battery_${name}">
+      <inertial>
+        <origin xyz="${battery_com_x} ${battery_com_y} ${battery_com_z}" rpy="0 0 0" />
+        <mass value="${battery_real_mass}" />
+        <inertia
+          ixx="${battery_cad_ixx * battery_inertia_scale}"
+          ixy="${battery_cad_ixy * battery_inertia_scale}"
+          ixz="${battery_cad_ixz * battery_inertia_scale}"
+          iyy="${battery_cad_iyy * battery_inertia_scale}"
+          iyz="${battery_cad_iyz * battery_inertia_scale}"
+          izz="${battery_cad_izz * battery_inertia_scale}" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.079 0.177 0.096" />
+        </geometry>
+        <material name="battery_color">
+          <color rgba="0.2 0.2 0.3 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.079 0.177 0.096" />
+        </geometry>
+      </collision>
+    </link>
+    <joint name="Base_2_Battery_${name}" type="fixed">
+      <origin xyz="${pos_x} 0 ${battery_pos_z}" rpy="0 0 0" />
+      <parent link="Base" />
+      <child link="Battery_${name}" />
+      <axis xyz="0 0 0" />
+    </joint>
+  </xacro:macro>
+
+  <xacro:battery name="Front" pos_x="${battery_front_x}" />
+  <xacro:battery name="Rear"  pos_x="${battery_rear_x}" />
 
   <xacro:include filename="$(find ayg_description)/urdf/legs.xacro" />
 
