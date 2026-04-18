@@ -33,6 +33,7 @@
 
     <body name="Base" pos="0 0 0.18">
       <freejoint name="float_base"/>
+      <!-- Base mass — Measured: 9.148 kg (CAD: 9.1298 kg) -->
       <inertial pos="0.00057686 -0.00018498 0.0026529" mass="9.148"
                 fullinertia="0.022082 0.031986 0.040389 3.2369e-07 6.8653e-05 2.8565e-07"/>
       <geom name="Base_visual" type="mesh" mesh="Base" rgba="0.69804 0.69804 0.69804 1"

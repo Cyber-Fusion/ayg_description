@@ -69,6 +69,7 @@
       <origin
         xyz="0.00057686 -0.00018498 0.0026529"
         rpy="0 0 0" />
+      <!-- Measured: 9.148 kg (CAD: 9.1298 kg) -->
       <mass
         value="9.148" />
       <inertia
@@ -149,78 +150,46 @@
       xyz="0 0 0" />
   </joint>
 
-  <!-- Batteries (2x, front-to-back inside body cavity, under top hatches) -->
-  <link name="Battery_Front">
-    <inertial>
-      <origin xyz="${battery_com_x} ${battery_com_y} ${battery_com_z}" rpy="0 0 0" />
-      <mass value="${battery_real_mass}" />
-      <inertia
-        ixx="${battery_cad_ixx * battery_inertia_scale}"
-        ixy="${battery_cad_ixy * battery_inertia_scale}"
-        ixz="${battery_cad_ixz * battery_inertia_scale}"
-        iyy="${battery_cad_iyy * battery_inertia_scale}"
-        iyz="${battery_cad_iyz * battery_inertia_scale}"
-        izz="${battery_cad_izz * battery_inertia_scale}" />
-    </inertial>
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry>
-        <box size="0.079 0.177 0.096" />
-      </geometry>
-      <material name="battery_color">
-        <color rgba="0.2 0.2 0.3 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry>
-        <box size="0.079 0.177 0.096" />
-      </geometry>
-    </collision>
-  </link>
+  <!-- Battery macro (2x identical packs, front and rear) -->
+  <xacro:macro name="battery" params="name pos_x">
+    <link name="Battery_${name}">
+      <inertial>
+        <origin xyz="${battery_com_x} ${battery_com_y} ${battery_com_z}" rpy="0 0 0" />
+        <mass value="${battery_real_mass}" />
+        <inertia
+          ixx="${battery_cad_ixx * battery_inertia_scale}"
+          ixy="${battery_cad_ixy * battery_inertia_scale}"
+          ixz="${battery_cad_ixz * battery_inertia_scale}"
+          iyy="${battery_cad_iyy * battery_inertia_scale}"
+          iyz="${battery_cad_iyz * battery_inertia_scale}"
+          izz="${battery_cad_izz * battery_inertia_scale}" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.079 0.177 0.096" />
+        </geometry>
+        <material name="battery_color">
+          <color rgba="0.2 0.2 0.3 1" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="0.079 0.177 0.096" />
+        </geometry>
+      </collision>
+    </link>
+    <joint name="Base_2_Battery_${name}" type="fixed">
+      <origin xyz="${pos_x} 0 ${battery_pos_z}" rpy="0 0 0" />
+      <parent link="Base" />
+      <child link="Battery_${name}" />
+      <axis xyz="0 0 0" />
+    </joint>
+  </xacro:macro>
 
-  <joint name="Base_2_Battery_Front" type="fixed">
-    <origin xyz="${battery_front_x} 0 ${battery_pos_z}" rpy="0 0 0" />
-    <parent link="Base" />
-    <child link="Battery_Front" />
-    <axis xyz="0 0 0" />
-  </joint>
-
-  <link name="Battery_Rear">
-    <inertial>
-      <origin xyz="${battery_com_x} ${battery_com_y} ${battery_com_z}" rpy="0 0 0" />
-      <mass value="${battery_real_mass}" />
-      <inertia
-        ixx="${battery_cad_ixx * battery_inertia_scale}"
-        ixy="${battery_cad_ixy * battery_inertia_scale}"
-        ixz="${battery_cad_ixz * battery_inertia_scale}"
-        iyy="${battery_cad_iyy * battery_inertia_scale}"
-        iyz="${battery_cad_iyz * battery_inertia_scale}"
-        izz="${battery_cad_izz * battery_inertia_scale}" />
-    </inertial>
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry>
-        <box size="0.079 0.177 0.096" />
-      </geometry>
-      <material name="battery_color">
-        <color rgba="0.2 0.2 0.3 1" />
-      </material>
-    </visual>
-    <collision>
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry>
-        <box size="0.079 0.177 0.096" />
-      </geometry>
-    </collision>
-  </link>
-
-  <joint name="Base_2_Battery_Rear" type="fixed">
-    <origin xyz="${battery_rear_x} 0 ${battery_pos_z}" rpy="0 0 0" />
-    <parent link="Base" />
-    <child link="Battery_Rear" />
-    <axis xyz="0 0 0" />
-  </joint>
+  <xacro:battery name="Front" pos_x="${battery_front_x}" />
+  <xacro:battery name="Rear"  pos_x="${battery_rear_x}" />
 
   <xacro:include filename="$(find ayg_description)/urdf/legs.xacro" />
 
