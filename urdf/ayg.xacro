@@ -7,6 +7,9 @@
   <xacro:arg name="sim_backend" default="gazebo" />
   <xacro:property name="sim_backend" value="$(arg sim_backend)" />
 
+  <xacro:arg name="gazebo_version" default="fortress" />
+  <xacro:property name="gazebo_version" value="$(arg gazebo_version)" />
+
   <xacro:arg name="camera" default="False" />
   <xacro:property name="camera" default="$(arg camera)" />
 
