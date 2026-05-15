@@ -1,56 +1,190 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <link
-    name="Camera">
+
+  <!--
+    Intel RealSense D555 (RGB-D + IMU, D450 optical module, PoE).
+    Housing: 167 x 42 x 48 mm, baseline 95 mm, weight 337 g (D555 datasheet v1.1).
+    Sensor-internal extrinsics are nominal D450-module values taken from
+    realsense2_description/urdf/_d585.urdf.xacro (same optical module).
+    realsense2_camera publishes per-unit calibrated TFs at runtime that
+    supersede these nominal values.
+  -->
+  <xacro:property name="M_PI" value="3.1415926535897931"/>
+  <xacro:property name="d555_depth_to_infra1_offset" value="0.0"/>
+  <xacro:property name="d555_depth_to_infra2_offset" value="-0.095"/>
+  <xacro:property name="d555_depth_to_color_offset"  value="-0.0475"/>
+  <xacro:property name="d555_imu_px" value="0.0114"/>
+  <xacro:property name="d555_imu_py" value="-0.0195"/>
+  <xacro:property name="d555_imu_pz" value="0.0"/>
+
+  <!-- Physical Camera body (mesh + inertials from SolidWorks export). -->
+  <link name="Camera">
     <inertial>
-      <origin
-        xyz="0.027539 -0.0054988 -1.4524E-08"
-        rpy="0 0 0" />
-      <mass
-        value="0.3912" />
-      <inertia
-        ixx="0.00080723"
-        ixy="4.4453E-06"
-        ixz="-1.7833E-09"
-        iyy="0.00082275"
-        iyz="2.4795E-09"
-        izz="0.00010329" />
+      <origin xyz="0.027539 -0.0054988 -1.4524E-08" rpy="0 0 0"/>
+      <mass value="0.3912"/>
+      <inertia ixx="0.00080723" ixy="4.4453E-06" ixz="-1.7833E-09"
+               iyy="0.00082275" iyz="2.4795E-09" izz="0.00010329"/>
     </inertial>
     <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <mesh
-          filename="package://ayg_description/meshes/Camera.STL" />
+        <mesh filename="package://ayg_description/meshes/Camera.STL"/>
       </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.69804 0.69804 0.69804 1" />
+      <material name="">
+        <color rgba="0.69804 0.69804 0.69804 1"/>
       </material>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <mesh
-          filename="package://ayg_description/meshes/Camera.STL" />
+        <mesh filename="package://ayg_description/meshes/Camera.STL"/>
       </geometry>
     </collision>
   </link>
-  <joint
-    name="Base_2_Camera"
-    type="fixed">
-    <origin
-      xyz="0.2475 0 0.095"
-      rpy="1.5708 0 0" />
-    <parent
-      link="Base" />
-    <child
-      link="Camera" />
-    <axis
-      xyz="0 0 0" />
+
+  <joint name="Base_2_Camera" type="fixed">
+    <origin xyz="0.2475 0 0.095" rpy="1.5708 0 0"/>
+    <parent link="Base"/>
+    <child link="Camera"/>
+    <axis xyz="0 0 0"/>
   </joint>
+
+  <!--
+    Camera frame post-Base_2_Camera is (X-fwd, Y-up, Z-right) due to the
+    90 deg roll in the parent joint. Camera_body undoes that roll so the
+    RealSense optical-frame convention (rpy="-pi/2 0 -pi/2" => Z-fwd) works
+    as in realsense2_description.
+  -->
+  <link name="Camera_body"/>
+  <joint name="Camera_body_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="${-M_PI/2} 0 0"/>
+    <parent link="Camera"/>
+    <child link="Camera_body"/>
+  </joint>
+
+  <!-- Depth (left IR is depth origin in D450 module). -->
+  <link name="Camera_depth_frame"/>
+  <joint name="Camera_depth_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="Camera_body"/>
+    <child link="Camera_depth_frame"/>
+  </joint>
+
+  <link name="Camera_depth_optical_frame"/>
+  <joint name="Camera_depth_optical_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="${-M_PI/2} 0 ${-M_PI/2}"/>
+    <parent link="Camera_depth_frame"/>
+    <child link="Camera_depth_optical_frame"/>
+  </joint>
+
+  <!-- Left IR imager (coincident with depth origin). -->
+  <link name="Camera_infra1_frame"/>
+  <joint name="Camera_infra1_joint" type="fixed">
+    <origin xyz="0 ${d555_depth_to_infra1_offset} 0" rpy="0 0 0"/>
+    <parent link="Camera_body"/>
+    <child link="Camera_infra1_frame"/>
+  </joint>
+
+  <link name="Camera_infra1_optical_frame"/>
+  <joint name="Camera_infra1_optical_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="${-M_PI/2} 0 ${-M_PI/2}"/>
+    <parent link="Camera_infra1_frame"/>
+    <child link="Camera_infra1_optical_frame"/>
+  </joint>
+
+  <!-- Right IR imager (95 mm baseline; sign per D555 datasheet + D585 xacro). -->
+  <link name="Camera_infra2_frame"/>
+  <joint name="Camera_infra2_joint" type="fixed">
+    <origin xyz="0 ${d555_depth_to_infra2_offset} 0" rpy="0 0 0"/>
+    <parent link="Camera_body"/>
+    <child link="Camera_infra2_frame"/>
+  </joint>
+
+  <link name="Camera_infra2_optical_frame"/>
+  <joint name="Camera_infra2_optical_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="${-M_PI/2} 0 ${-M_PI/2}"/>
+    <parent link="Camera_infra2_frame"/>
+    <child link="Camera_infra2_optical_frame"/>
+  </joint>
+
+  <!-- RGB sensor. -->
+  <link name="Camera_color_frame"/>
+  <joint name="Camera_color_joint" type="fixed">
+    <origin xyz="0 ${d555_depth_to_color_offset} 0" rpy="0 0 0"/>
+    <parent link="Camera_body"/>
+    <child link="Camera_color_frame"/>
+  </joint>
+
+  <link name="Camera_color_optical_frame"/>
+  <joint name="Camera_color_optical_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="${-M_PI/2} 0 ${-M_PI/2}"/>
+    <parent link="Camera_color_frame"/>
+    <child link="Camera_color_optical_frame"/>
+  </joint>
+
+  <!-- IMU (accel + gyro share the same physical position on D450 module). -->
+  <link name="Camera_accel_frame"/>
+  <joint name="Camera_accel_joint" type="fixed">
+    <origin xyz="${d555_imu_px} ${d555_imu_py} ${d555_imu_pz}" rpy="0 0 0"/>
+    <parent link="Camera_body"/>
+    <child link="Camera_accel_frame"/>
+  </joint>
+
+  <link name="Camera_accel_optical_frame"/>
+  <joint name="Camera_accel_optical_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="${-M_PI/2} 0 ${-M_PI/2}"/>
+    <parent link="Camera_accel_frame"/>
+    <child link="Camera_accel_optical_frame"/>
+  </joint>
+
+  <link name="Camera_gyro_frame"/>
+  <joint name="Camera_gyro_joint" type="fixed">
+    <origin xyz="${d555_imu_px} ${d555_imu_py} ${d555_imu_pz}" rpy="0 0 0"/>
+    <parent link="Camera_body"/>
+    <child link="Camera_gyro_frame"/>
+  </joint>
+
+  <link name="Camera_gyro_optical_frame"/>
+  <joint name="Camera_gyro_optical_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="${-M_PI/2} 0 ${-M_PI/2}"/>
+    <parent link="Camera_gyro_frame"/>
+    <child link="Camera_gyro_optical_frame"/>
+  </joint>
+
+  <link name="Camera_imu_optical_frame"/>
+  <joint name="Camera_imu_optical_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="Camera_gyro_optical_frame"/>
+    <child link="Camera_imu_optical_frame"/>
+  </joint>
+
+  <!--
+    Gazebo Ignition (Fortress) depth sensor.
+    Renders along Camera_depth_frame's +X axis (forward in robot body).
+    Topic and frame_id are chosen to match real-hardware realsense2_camera
+    when launched with camera_name=Camera (see ayg_bringup/launch/ayg.launch.py).
+    Resolution + FoV + clip range mirror D555 datasheet v1.1 depth specs.
+  -->
+  <gazebo reference="Camera_depth_frame">
+    <sensor name="d555_depth" type="depth_camera">
+      <update_rate>30</update_rate>
+      <topic>camera/Camera/depth/image_rect_raw</topic>
+      <gz_frame_id>Camera_depth_optical_frame</gz_frame_id>
+      <camera>
+        <horizontal_fov>1.5184</horizontal_fov>  <!-- 87 deg -->
+        <image>
+          <width>640</width>
+          <height>360</height>
+          <format>R_FLOAT32</format>
+        </image>
+        <clip>
+          <near>0.26</near>  <!-- D555 Min-Z at VGA -->
+          <far>9.0</far>     <!-- D555 ideal range upper bound -->
+        </clip>
+      </camera>
+      <always_on>1</always_on>
+      <visualize>false</visualize>
+    </sensor>
+  </gazebo>
+
 </robot>

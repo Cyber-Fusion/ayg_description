@@ -10,7 +10,7 @@
   <xacro:arg name="gazebo_version" default="fortress" />
   <xacro:property name="gazebo_version" value="$(arg gazebo_version)" />
 
-  <xacro:arg name="camera" default="False" />
+  <xacro:arg name="camera" default="True" />
   <xacro:property name="camera" default="$(arg camera)" />
 
   <xacro:arg name="initial_configuration" default="lying_down" />
