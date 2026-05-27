@@ -17,6 +17,25 @@
   <xacro:property name="d555_imu_py" value="-0.0195"/>
   <xacro:property name="d555_imu_pz" value="0.0"/>
 
+  <!--
+    Massless reference frame for TF purposes only (depth/color/infra/IMU
+    optical frames). An explicit epsilon-mass inertial is required because
+    physics simulators (Isaac Sim, Gazebo) silently assign a 1.0 kg default
+    to any link without <inertial>. Across 14 D555 reference frames that
+    silently injected +14 kg of phantom mass rigid-fixed to Base — enough
+    to faceplant the AYG locomotion policy in Isaac Lab. Real hardware /
+    robot_state_publisher are unaffected (TF-only consumers ignore inertia).
+  -->
+  <xacro:macro name="massless_frame" params="name">
+    <link name="${name}">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="1e-6"/>
+        <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
+      </inertial>
+    </link>
+  </xacro:macro>
+
   <!-- Physical Camera body (mesh + inertials from SolidWorks export). -->
   <link name="Camera">
     <inertial>
@@ -55,7 +74,7 @@
     RealSense optical-frame convention (rpy="-pi/2 0 -pi/2" => Z-fwd) works
     as in realsense2_description.
   -->
-  <link name="Camera_body"/>
+  <xacro:massless_frame name="Camera_body"/>
   <joint name="Camera_body_joint" type="fixed">
     <origin xyz="0 0 0" rpy="${-M_PI/2} 0 0"/>
     <parent link="Camera"/>
@@ -63,14 +82,14 @@
   </joint>
 
   <!-- Depth (left IR is depth origin in D450 module). -->
-  <link name="Camera_depth_frame"/>
+  <xacro:massless_frame name="Camera_depth_frame"/>
   <joint name="Camera_depth_joint" type="fixed">
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <parent link="Camera_body"/>
     <child link="Camera_depth_frame"/>
   </joint>
 
-  <link name="Camera_depth_optical_frame"/>
+  <xacro:massless_frame name="Camera_depth_optical_frame"/>
   <joint name="Camera_depth_optical_joint" type="fixed">
     <origin xyz="0 0 0" rpy="${-M_PI/2} 0 ${-M_PI/2}"/>
     <parent link="Camera_depth_frame"/>
@@ -78,14 +97,14 @@
   </joint>
 
   <!-- Left IR imager (coincident with depth origin). -->
-  <link name="Camera_infra1_frame"/>
+  <xacro:massless_frame name="Camera_infra1_frame"/>
   <joint name="Camera_infra1_joint" type="fixed">
     <origin xyz="0 ${d555_depth_to_infra1_offset} 0" rpy="0 0 0"/>
     <parent link="Camera_body"/>
     <child link="Camera_infra1_frame"/>
   </joint>
 
-  <link name="Camera_infra1_optical_frame"/>
+  <xacro:massless_frame name="Camera_infra1_optical_frame"/>
   <joint name="Camera_infra1_optical_joint" type="fixed">
     <origin xyz="0 0 0" rpy="${-M_PI/2} 0 ${-M_PI/2}"/>
     <parent link="Camera_infra1_frame"/>
@@ -93,14 +112,14 @@
   </joint>
 
   <!-- Right IR imager (95 mm baseline; sign per D555 datasheet + D585 xacro). -->
-  <link name="Camera_infra2_frame"/>
+  <xacro:massless_frame name="Camera_infra2_frame"/>
   <joint name="Camera_infra2_joint" type="fixed">
     <origin xyz="0 ${d555_depth_to_infra2_offset} 0" rpy="0 0 0"/>
     <parent link="Camera_body"/>
     <child link="Camera_infra2_frame"/>
   </joint>
 
-  <link name="Camera_infra2_optical_frame"/>
+  <xacro:massless_frame name="Camera_infra2_optical_frame"/>
   <joint name="Camera_infra2_optical_joint" type="fixed">
     <origin xyz="0 0 0" rpy="${-M_PI/2} 0 ${-M_PI/2}"/>
     <parent link="Camera_infra2_frame"/>
@@ -108,14 +127,14 @@
   </joint>
 
   <!-- RGB sensor. -->
-  <link name="Camera_color_frame"/>
+  <xacro:massless_frame name="Camera_color_frame"/>
   <joint name="Camera_color_joint" type="fixed">
     <origin xyz="0 ${d555_depth_to_color_offset} 0" rpy="0 0 0"/>
     <parent link="Camera_body"/>
     <child link="Camera_color_frame"/>
   </joint>
 
-  <link name="Camera_color_optical_frame"/>
+  <xacro:massless_frame name="Camera_color_optical_frame"/>
   <joint name="Camera_color_optical_joint" type="fixed">
     <origin xyz="0 0 0" rpy="${-M_PI/2} 0 ${-M_PI/2}"/>
     <parent link="Camera_color_frame"/>
@@ -123,35 +142,35 @@
   </joint>
 
   <!-- IMU (accel + gyro share the same physical position on D450 module). -->
-  <link name="Camera_accel_frame"/>
+  <xacro:massless_frame name="Camera_accel_frame"/>
   <joint name="Camera_accel_joint" type="fixed">
     <origin xyz="${d555_imu_px} ${d555_imu_py} ${d555_imu_pz}" rpy="0 0 0"/>
     <parent link="Camera_body"/>
     <child link="Camera_accel_frame"/>
   </joint>
 
-  <link name="Camera_accel_optical_frame"/>
+  <xacro:massless_frame name="Camera_accel_optical_frame"/>
   <joint name="Camera_accel_optical_joint" type="fixed">
     <origin xyz="0 0 0" rpy="${-M_PI/2} 0 ${-M_PI/2}"/>
     <parent link="Camera_accel_frame"/>
     <child link="Camera_accel_optical_frame"/>
   </joint>
 
-  <link name="Camera_gyro_frame"/>
+  <xacro:massless_frame name="Camera_gyro_frame"/>
   <joint name="Camera_gyro_joint" type="fixed">
     <origin xyz="${d555_imu_px} ${d555_imu_py} ${d555_imu_pz}" rpy="0 0 0"/>
     <parent link="Camera_body"/>
     <child link="Camera_gyro_frame"/>
   </joint>
 
-  <link name="Camera_gyro_optical_frame"/>
+  <xacro:massless_frame name="Camera_gyro_optical_frame"/>
   <joint name="Camera_gyro_optical_joint" type="fixed">
     <origin xyz="0 0 0" rpy="${-M_PI/2} 0 ${-M_PI/2}"/>
     <parent link="Camera_gyro_frame"/>
     <child link="Camera_gyro_optical_frame"/>
   </joint>
 
-  <link name="Camera_imu_optical_frame"/>
+  <xacro:massless_frame name="Camera_imu_optical_frame"/>
   <joint name="Camera_imu_optical_joint" type="fixed">
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <parent link="Camera_gyro_optical_frame"/>

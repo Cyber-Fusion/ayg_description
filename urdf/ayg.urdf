@@ -851,90 +851,174 @@
     RealSense optical-frame convention (rpy="-pi/2 0 -pi/2" => Z-fwd) works
     as in realsense2_description.
   -->
-  <link name="Camera_body"/>
+  <link name="Camera_body">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-6"/>
+      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
+    </inertial>
+  </link>
   <joint name="Camera_body_joint" type="fixed">
     <origin rpy="-1.5707963267948966 0 0" xyz="0 0 0"/>
     <parent link="Camera"/>
     <child link="Camera_body"/>
   </joint>
   <!-- Depth (left IR is depth origin in D450 module). -->
-  <link name="Camera_depth_frame"/>
+  <link name="Camera_depth_frame">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-6"/>
+      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
+    </inertial>
+  </link>
   <joint name="Camera_depth_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="Camera_body"/>
     <child link="Camera_depth_frame"/>
   </joint>
-  <link name="Camera_depth_optical_frame"/>
+  <link name="Camera_depth_optical_frame">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-6"/>
+      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
+    </inertial>
+  </link>
   <joint name="Camera_depth_optical_joint" type="fixed">
     <origin rpy="-1.5707963267948966 0 -1.5707963267948966" xyz="0 0 0"/>
     <parent link="Camera_depth_frame"/>
     <child link="Camera_depth_optical_frame"/>
   </joint>
   <!-- Left IR imager (coincident with depth origin). -->
-  <link name="Camera_infra1_frame"/>
+  <link name="Camera_infra1_frame">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-6"/>
+      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
+    </inertial>
+  </link>
   <joint name="Camera_infra1_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0 0.0 0"/>
     <parent link="Camera_body"/>
     <child link="Camera_infra1_frame"/>
   </joint>
-  <link name="Camera_infra1_optical_frame"/>
+  <link name="Camera_infra1_optical_frame">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-6"/>
+      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
+    </inertial>
+  </link>
   <joint name="Camera_infra1_optical_joint" type="fixed">
     <origin rpy="-1.5707963267948966 0 -1.5707963267948966" xyz="0 0 0"/>
     <parent link="Camera_infra1_frame"/>
     <child link="Camera_infra1_optical_frame"/>
   </joint>
   <!-- Right IR imager (95 mm baseline; sign per D555 datasheet + D585 xacro). -->
-  <link name="Camera_infra2_frame"/>
+  <link name="Camera_infra2_frame">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-6"/>
+      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
+    </inertial>
+  </link>
   <joint name="Camera_infra2_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0 -0.095 0"/>
     <parent link="Camera_body"/>
     <child link="Camera_infra2_frame"/>
   </joint>
-  <link name="Camera_infra2_optical_frame"/>
+  <link name="Camera_infra2_optical_frame">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-6"/>
+      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
+    </inertial>
+  </link>
   <joint name="Camera_infra2_optical_joint" type="fixed">
     <origin rpy="-1.5707963267948966 0 -1.5707963267948966" xyz="0 0 0"/>
     <parent link="Camera_infra2_frame"/>
     <child link="Camera_infra2_optical_frame"/>
   </joint>
   <!-- RGB sensor. -->
-  <link name="Camera_color_frame"/>
+  <link name="Camera_color_frame">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-6"/>
+      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
+    </inertial>
+  </link>
   <joint name="Camera_color_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0 -0.0475 0"/>
     <parent link="Camera_body"/>
     <child link="Camera_color_frame"/>
   </joint>
-  <link name="Camera_color_optical_frame"/>
+  <link name="Camera_color_optical_frame">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-6"/>
+      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
+    </inertial>
+  </link>
   <joint name="Camera_color_optical_joint" type="fixed">
     <origin rpy="-1.5707963267948966 0 -1.5707963267948966" xyz="0 0 0"/>
     <parent link="Camera_color_frame"/>
     <child link="Camera_color_optical_frame"/>
   </joint>
   <!-- IMU (accel + gyro share the same physical position on D450 module). -->
-  <link name="Camera_accel_frame"/>
+  <link name="Camera_accel_frame">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-6"/>
+      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
+    </inertial>
+  </link>
   <joint name="Camera_accel_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0.0114 -0.0195 0.0"/>
     <parent link="Camera_body"/>
     <child link="Camera_accel_frame"/>
   </joint>
-  <link name="Camera_accel_optical_frame"/>
+  <link name="Camera_accel_optical_frame">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-6"/>
+      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
+    </inertial>
+  </link>
   <joint name="Camera_accel_optical_joint" type="fixed">
     <origin rpy="-1.5707963267948966 0 -1.5707963267948966" xyz="0 0 0"/>
     <parent link="Camera_accel_frame"/>
     <child link="Camera_accel_optical_frame"/>
   </joint>
-  <link name="Camera_gyro_frame"/>
+  <link name="Camera_gyro_frame">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-6"/>
+      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
+    </inertial>
+  </link>
   <joint name="Camera_gyro_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0.0114 -0.0195 0.0"/>
     <parent link="Camera_body"/>
     <child link="Camera_gyro_frame"/>
   </joint>
-  <link name="Camera_gyro_optical_frame"/>
+  <link name="Camera_gyro_optical_frame">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-6"/>
+      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
+    </inertial>
+  </link>
   <joint name="Camera_gyro_optical_joint" type="fixed">
     <origin rpy="-1.5707963267948966 0 -1.5707963267948966" xyz="0 0 0"/>
     <parent link="Camera_gyro_frame"/>
     <child link="Camera_gyro_optical_frame"/>
   </joint>
-  <link name="Camera_imu_optical_frame"/>
+  <link name="Camera_imu_optical_frame">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-6"/>
+      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
+    </inertial>
+  </link>
   <joint name="Camera_imu_optical_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <parent link="Camera_gyro_optical_frame"/>
