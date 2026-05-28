@@ -62,7 +62,7 @@
   </link>
 
   <joint name="Base_2_Camera" type="fixed">
-    <origin xyz="0.2475 0 0.095" rpy="1.5708 0 0"/>
+    <origin xyz="0.2475 0 0.105" rpy="1.5708 0 0"/>
     <parent link="Base"/>
     <child link="Camera"/>
     <axis xyz="0 0 0"/>
@@ -73,10 +73,20 @@
     90 deg roll in the parent joint. Camera_body undoes that roll so the
     RealSense optical-frame convention (rpy="-pi/2 0 -pi/2" => Z-fwd) works
     as in realsense2_description.
+
+    The xyz=(0.0527 -0.024 0) translation here places Camera_body at the
+    D450 optical-module reference point inside the housing: +5.27 cm forward
+    and -2.4 cm vertical (down) from the Camera link origin in robot body
+    convention. Camera link's local Y axis is Base +Z (up) due to the 90 deg
+    roll above, so -0.024 along local Y = 2.4 cm down in body frame; local Z
+    is Base -Y, so 0 leaves the optical module on the body centerline. Depth,
+    color, IR1/IR2 baselines and IMU offsets all inherit from this corrected
+    Camera_body position so the whole D555 sensor stack sits where it
+    physically does on the robot.
   -->
   <xacro:massless_frame name="Camera_body"/>
   <joint name="Camera_body_joint" type="fixed">
-    <origin xyz="0 0 0" rpy="${-M_PI/2} 0 0"/>
+    <origin xyz="0.0527 -0.024 0" rpy="${-M_PI/2} 0 0"/>
     <parent link="Camera"/>
     <child link="Camera_body"/>
   </joint>
