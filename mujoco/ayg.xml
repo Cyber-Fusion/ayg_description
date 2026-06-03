@@ -49,13 +49,13 @@
 
 
       <!-- Intel RealSense D555 housing (fixed to Base, rotated 90deg around X). -->
-      <geom name="Camera_visual" type="mesh" mesh="Camera" pos="0.2475 0 0.095"
+      <geom name="Camera_visual" type="mesh" mesh="Camera" pos="0.2475 0 0.105"
             quat="0.707107 0.707107 0 0" rgba="0.69804 0.69804 0.69804 1"
             contype="0" conaffinity="0" group="1"/>
       <!-- Forward-looking color camera at the D555 mounting point.
            xyaxes maps MuJoCo camera (-z fwd) to Base (+x fwd, +z up).
            fovy=65 matches D555 RGB vertical FoV. -->
-      <camera name="Camera_color" pos="0.2475 0 0.095" xyaxes="0 -1 0 0 0 1" fovy="65"/>
+      <camera name="Camera_color" pos="0.2475 0 0.105" xyaxes="0 -1 0 0 0 1" fovy="65"/>
 
       <!-- ==================== Batteries (front-to-back, under top hatches) ==================== -->
       <body name="Battery_Front" pos="0.10070 0 -0.00900">
