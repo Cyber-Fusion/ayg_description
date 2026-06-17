@@ -48,7 +48,7 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument(
             'camera',
-            default_value='false',
+            default_value='true',
             description='Whether to include the camera in the robot model',
         ),
         robot_state_publisher_node,
