@@ -832,10 +832,17 @@
         <color rgba="0.69804 0.69804 0.69804 1"/>
       </material>
     </visual>
+    <!--
+      Collision simplified from the full Camera.STL to a primitive box sized
+      to the bare D555 housing (mesh housing extent 0.0571 x 0.0443 x 0.1670 m,
+      centered at 0.0286 -0.0070 0 in the Camera link frame). The thin rear
+      mounting tab (-0.035 m in X) is intentionally excluded. A box is far
+      cheaper for the physics broadphase/narrowphase than a 1978-triangle mesh.
+    -->
     <collision>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0.0286 -0.007 0"/>
       <geometry>
-        <mesh filename="package://ayg_description/meshes/Camera.STL"/>
+        <box size="0.0571 0.0443 0.167"/>
       </geometry>
     </collision>
   </link>
@@ -845,18 +852,13 @@
     <child link="Camera"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <link name="Camera_body">
-    <inertial>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <mass value="1e-6"/>
-      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
-    </inertial>
-  </link>
-  <joint name="Camera_body_joint" type="fixed">
-    <origin rpy="-1.5707963267948966 0 0" xyz="0.0527 -0.024 0"/>
-    <parent link="Camera"/>
-    <child link="Camera_body"/>
-  </joint>
+  <!--
+    Camera_depth_frame undoes the 90 deg roll of Base_2_Camera and doubles as
+    the D450 optical-module reference (formerly the separate Camera_body). Only
+    depth + color frames are modeled; the infra/accel/gyro/imu frames declared
+    by realsense2_description are omitted (unused in sim; the realsense2_camera
+    node republishes its own calibrated TF tree on hardware). See camera.xacro.
+  -->
   <link name="Camera_depth_frame">
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -865,8 +867,8 @@
     </inertial>
   </link>
   <joint name="Camera_depth_joint" type="fixed">
-    <origin rpy="0 0 0" xyz="0 0 0"/>
-    <parent link="Camera_body"/>
+    <origin rpy="-1.5707963267948966 0 0" xyz="0.0527 -0.024 0"/>
+    <parent link="Camera"/>
     <child link="Camera_depth_frame"/>
   </joint>
   <link name="Camera_depth_optical_frame">
@@ -881,54 +883,6 @@
     <parent link="Camera_depth_frame"/>
     <child link="Camera_depth_optical_frame"/>
   </joint>
-  <link name="Camera_infra1_frame">
-    <inertial>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <mass value="1e-6"/>
-      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
-    </inertial>
-  </link>
-  <joint name="Camera_infra1_joint" type="fixed">
-    <origin rpy="0 0 0" xyz="0 0.0 0"/>
-    <parent link="Camera_body"/>
-    <child link="Camera_infra1_frame"/>
-  </joint>
-  <link name="Camera_infra1_optical_frame">
-    <inertial>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <mass value="1e-6"/>
-      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
-    </inertial>
-  </link>
-  <joint name="Camera_infra1_optical_joint" type="fixed">
-    <origin rpy="-1.5707963267948966 0 -1.5707963267948966" xyz="0 0 0"/>
-    <parent link="Camera_infra1_frame"/>
-    <child link="Camera_infra1_optical_frame"/>
-  </joint>
-  <link name="Camera_infra2_frame">
-    <inertial>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <mass value="1e-6"/>
-      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
-    </inertial>
-  </link>
-  <joint name="Camera_infra2_joint" type="fixed">
-    <origin rpy="0 0 0" xyz="0 -0.095 0"/>
-    <parent link="Camera_body"/>
-    <child link="Camera_infra2_frame"/>
-  </joint>
-  <link name="Camera_infra2_optical_frame">
-    <inertial>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <mass value="1e-6"/>
-      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
-    </inertial>
-  </link>
-  <joint name="Camera_infra2_optical_joint" type="fixed">
-    <origin rpy="-1.5707963267948966 0 -1.5707963267948966" xyz="0 0 0"/>
-    <parent link="Camera_infra2_frame"/>
-    <child link="Camera_infra2_optical_frame"/>
-  </joint>
   <link name="Camera_color_frame">
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -938,7 +892,7 @@
   </link>
   <joint name="Camera_color_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0 -0.0475 0"/>
-    <parent link="Camera_body"/>
+    <parent link="Camera_depth_frame"/>
     <child link="Camera_color_frame"/>
   </joint>
   <link name="Camera_color_optical_frame">
@@ -952,66 +906,6 @@
     <origin rpy="-1.5707963267948966 0 -1.5707963267948966" xyz="0 0 0"/>
     <parent link="Camera_color_frame"/>
     <child link="Camera_color_optical_frame"/>
-  </joint>
-  <link name="Camera_accel_frame">
-    <inertial>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <mass value="1e-6"/>
-      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
-    </inertial>
-  </link>
-  <joint name="Camera_accel_joint" type="fixed">
-    <origin rpy="0 0 0" xyz="0.0114 -0.0195 0.0"/>
-    <parent link="Camera_body"/>
-    <child link="Camera_accel_frame"/>
-  </joint>
-  <link name="Camera_accel_optical_frame">
-    <inertial>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <mass value="1e-6"/>
-      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
-    </inertial>
-  </link>
-  <joint name="Camera_accel_optical_joint" type="fixed">
-    <origin rpy="-1.5707963267948966 0 -1.5707963267948966" xyz="0 0 0"/>
-    <parent link="Camera_accel_frame"/>
-    <child link="Camera_accel_optical_frame"/>
-  </joint>
-  <link name="Camera_gyro_frame">
-    <inertial>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <mass value="1e-6"/>
-      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
-    </inertial>
-  </link>
-  <joint name="Camera_gyro_joint" type="fixed">
-    <origin rpy="0 0 0" xyz="0.0114 -0.0195 0.0"/>
-    <parent link="Camera_body"/>
-    <child link="Camera_gyro_frame"/>
-  </joint>
-  <link name="Camera_gyro_optical_frame">
-    <inertial>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <mass value="1e-6"/>
-      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
-    </inertial>
-  </link>
-  <joint name="Camera_gyro_optical_joint" type="fixed">
-    <origin rpy="-1.5707963267948966 0 -1.5707963267948966" xyz="0 0 0"/>
-    <parent link="Camera_gyro_frame"/>
-    <child link="Camera_gyro_optical_frame"/>
-  </joint>
-  <link name="Camera_imu_optical_frame">
-    <inertial>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
-      <mass value="1e-6"/>
-      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
-    </inertial>
-  </link>
-  <joint name="Camera_imu_optical_joint" type="fixed">
-    <origin rpy="0 0 0" xyz="0 0 0"/>
-    <parent link="Camera_gyro_optical_frame"/>
-    <child link="Camera_imu_optical_frame"/>
   </joint>
   <!--
     Gazebo Ignition (Fortress) depth sensor.
