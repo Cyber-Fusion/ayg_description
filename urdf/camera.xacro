@@ -122,6 +122,15 @@
   </joint>
 
   <!--
+    The two Gazebo sensor blocks below are simulation-only, so they are gated
+    on ${sim}. With sim:=False the pure URDF (consumed by robot_state_publisher
+    and kinematics/dynamics tools such as Pinocchio on real hardware) stays free
+    of Gazebo-specific elements; on hardware realsense2_camera produces these
+    image topics. Mirrors how ayg_sim_ros2_control.xacro is gated in ayg.xacro.
+  -->
+  <xacro:if value="${sim}">
+
+  <!--
     Gazebo Ignition (Fortress) depth sensor.
     Renders along Camera_depth_frame's +X axis (forward in robot body).
     Topic and frame_id are chosen to match real-hardware realsense2_camera
@@ -203,5 +212,7 @@
       <visualize>false</visualize>
     </sensor>
   </gazebo>
+
+  </xacro:if>
 
 </robot>
