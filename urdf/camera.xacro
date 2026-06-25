@@ -64,7 +64,7 @@
   </link>
 
   <joint name="Base_2_Camera" type="fixed">
-    <origin xyz="0.2475 0 0.105" rpy="1.5708 0 0"/>
+    <origin xyz="0.2475 0 0.095" rpy="1.5708 0 0"/>
     <parent link="Base"/>
     <child link="Camera"/>
     <axis xyz="0 0 0"/>
@@ -79,10 +79,11 @@
 
     The xyz=(0.0527 -0.024 0) translation places the depth origin at the
     optical-module reference inside the housing: +5.27 cm forward and -2.4 cm
-    vertical (down) from the Camera link origin in robot body convention.
-    Camera link's local Y axis is Base +Z (up) due to the 90 deg roll above,
-    so -0.024 along local Y = 2.4 cm down in body frame; local Z is Base -Y,
-    so 0 leaves the optical module on the body centerline.
+    vertical (down) from the Camera link origin in robot body convention (CAD
+    values for the 30 deg mount tilt). Camera link's local Y axis is Base +Z
+    (up) due to the 90 deg roll above, so -0.024 along local Y = 2.4 cm down
+    in body frame; local Z is Base -Y, so 0 leaves the optical module on the
+    body centerline.
 
     Only the depth and color frames are modeled here (the two Gazebo sensors
     below reference Camera_depth_frame / Camera_color_frame and publish in the
