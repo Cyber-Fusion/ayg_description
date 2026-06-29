@@ -160,4 +160,28 @@
         </sensor>
     </gazebo>
 
+    <!-- Contact friction: the robot collisions had NO friction spec, so during RL fall-recovery
+         the body/legs slid on the floor instead of gripping to push upright. Set ~1.0 to match the
+         Isaac training ground friction (static_friction=1.0). Covers the links that contact the
+         ground during a belly-up flip (body, thighs, shanks, feet). -->
+    <xacro:macro name="ground_friction" params="link">
+        <gazebo reference="${link}">
+            <mu1>1.0</mu1>
+            <mu2>1.0</mu2>
+        </gazebo>
+    </xacro:macro>
+    <xacro:ground_friction link="Base"/>
+    <xacro:ground_friction link="LF_Foot"/>
+    <xacro:ground_friction link="LH_Foot"/>
+    <xacro:ground_friction link="RF_Foot"/>
+    <xacro:ground_friction link="RH_Foot"/>
+    <xacro:ground_friction link="LF_Shank"/>
+    <xacro:ground_friction link="LH_Shank"/>
+    <xacro:ground_friction link="RF_Shank"/>
+    <xacro:ground_friction link="RH_Shank"/>
+    <xacro:ground_friction link="LF_Thigh"/>
+    <xacro:ground_friction link="LH_Thigh"/>
+    <xacro:ground_friction link="RF_Thigh"/>
+    <xacro:ground_friction link="RH_Thigh"/>
+
 </robot>

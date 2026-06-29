@@ -12,8 +12,8 @@
   <xacro:arg name="controller" default="default" />
   <xacro:property name="controller" default="$(arg controller)" />
 
-  <xacro:property name="effort_lim" value="50.0" />
-  <xacro:property name="velocity_lim" value="10.0" />
+  <xacro:property name="effort_lim" value="30.0" />
+  <xacro:property name="velocity_lim" value="18.849" />
   <xacro:property name="PI" value="3.1415926535897931" />
 
   <xacro:if value="${sim}">
@@ -69,6 +69,40 @@
       </geometry>
     </collision>
   </link>
+
+  <!-- Battery packs (fixed to Base). Present in the cf_lab training model but were
+       missing here, leaving the Gazebo/real base ~3.2 kg light (~35% of base-body mass)
+       with ~half the pitch inertia, which broke RL fall-recovery transfer. Inertial-only
+       (no visual/collision: they sit inside the Base collision box). -->
+  <link name="Battery_Front">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.00002 -0.00421 0.04143" />
+      <mass value="1.6" />
+      <inertia ixx="0.0044576" ixy="-4.1873E-06" ixz="-5.2038E-06"
+               iyy="0.0076771" iyz="-0.00026672" izz="0.0044479" />
+    </inertial>
+  </link>
+  <joint name="Base_2_Battery_Front" type="fixed">
+    <origin rpy="0 0 0" xyz="0.10070 0 -0.00900" />
+    <parent link="Base" />
+    <child link="Battery_Front" />
+    <axis xyz="0 0 0" />
+  </joint>
+
+  <link name="Battery_Rear">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.00002 -0.00421 0.04143" />
+      <mass value="1.6" />
+      <inertia ixx="0.0044576" ixy="-4.1873E-06" ixz="-5.2038E-06"
+               iyy="0.0076771" iyz="-0.00026672" izz="0.0044479" />
+    </inertial>
+  </link>
+  <joint name="Base_2_Battery_Rear" type="fixed">
+    <origin rpy="0 0 0" xyz="-0.10070 0 -0.00900" />
+    <parent link="Base" />
+    <child link="Battery_Rear" />
+    <axis xyz="0 0 0" />
+  </joint>
 
   <link
     name="IMU">

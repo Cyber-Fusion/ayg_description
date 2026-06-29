@@ -101,6 +101,7 @@
           effort="${effort_lim}"
           velocity="${velocity_lim}" />
       </xacro:unless>
+      <dynamics damping="0.0" friction="0.2"/>
     </joint>
     <link
       name="L${FH}_Thigh">
@@ -174,6 +175,7 @@
           effort="${effort_lim}"
           velocity="${velocity_lim}" />
       </xacro:unless>
+      <dynamics damping="0.0" friction="0.2"/>
     </joint>
     <link
       name="L${FH}_Shank">
@@ -239,6 +241,7 @@
         upper="1.1868"
         effort="${effort_lim}"
         velocity="${velocity_lim}" />
+      <dynamics damping="0.0" friction="0.2"/>
     </joint>
     <link
       name="L${FH}_Foot">
@@ -393,6 +396,7 @@
           effort="${effort_lim}"
           velocity="${velocity_lim}" />
       </xacro:unless>
+      <dynamics damping="0.0" friction="0.2"/>
     </joint>
     <link
       name="R${FH}_Thigh">
@@ -466,6 +470,7 @@
           effort="${effort_lim}"
           velocity="${velocity_lim}" />
       </xacro:unless>
+      <dynamics damping="0.0" friction="0.2"/>
     </joint>
     <link
       name="R${FH}_Shank">
@@ -531,6 +536,7 @@
         upper="1.1868"
         effort="${effort_lim}"
         velocity="${velocity_lim}" />
+      <dynamics damping="0.0" friction="0.2"/>
     </joint>
     <link
       name="R${FH}_Foot">
