@@ -81,6 +81,14 @@
         </gazebo>
     </xacro:if>
 
+    <xacro:if value="${controller == 'recovery'}">
+        <gazebo>
+            <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+                <parameters>$(find ayg_control)/config/gazebo/ayg_sw_controllers_recovery.yaml</parameters>
+            </plugin>
+        </gazebo>
+    </xacro:if>
+
     <gazebo>
         <plugin filename="ignition-gazebo-odometry-publisher-system"
                 name="ignition::gazebo::systems::OdometryPublisher">
