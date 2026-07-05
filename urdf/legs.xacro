@@ -43,10 +43,18 @@
           <color rgba="0.69804 0.69804 0.69804 1" />
         </material>
       </visual>
+      <!-- Hip: cylinder about the Y axis (the HFE motor barrel), wrapping the
+           disc-shaped hip housing. y-offset tracks the HFE side (front vs hind
+           use mirrored hip meshes: F -> L_Hip, H -> R_Hip). -->
       <collision>
-        <origin xyz="0.055 0 0" rpy="0 0 0" />
+        <xacro:if value="${FH == 'F'}">
+          <origin xyz="0.065 0.0375 0" rpy="1.5708 0 0" />
+        </xacro:if>
+        <xacro:unless value="${FH == 'F'}">
+          <origin xyz="0.065 -0.0375 0" rpy="1.5708 0 0" />
+        </xacro:unless>
         <geometry>
-          <box size="0.11 0.07 0.11" />
+          <cylinder radius="0.055" length="0.14" />
         </geometry>
       </collision>
     </link>
@@ -84,10 +92,12 @@
           <color rgba="0.69804 0.69804 0.69804 1" />
         </material>
       </visual>
+      <!-- Thigh: slim box along the leg, rotated only about the Y swing axis
+           (single pitch, no roll/yaw twist), shortened at both ends for gaps. -->
       <collision>
-        <origin xyz="-0.0786 0.0285 -0.1004" rpy="0 2.4474 2.7935" />
+        <origin xyz="-0.105 0.0734 -0.1" rpy="0 -2.4776 0" />
         <geometry>
-          <box size="0.06 0.06 0.24" />
+          <box size="0.05 0.014 0.16" />
         </geometry>
       </collision>
     </link>
@@ -120,10 +130,21 @@
           <color rgba="0.69804 0.69804 0.69804 1" />
         </material>
       </visual>
+      <!-- Shank: slim box along the leg, rotated only about the Y swing axis
+           (single pitch, no roll/yaw twist), shortened to leave gaps. -->
       <collision>
-        <origin xyz="0.0852 0.0078 -0.0948" rpy="0 2.4073 0.0911" />
+        <origin xyz="0.0867 0.0155 -0.0965" rpy="0 2.4093 0" />
         <geometry>
-          <box size="0.05 0.05 0.24" />
+          <box size="0.02 0.017 0.18" />
+        </geometry>
+      </collision>
+      <!-- Knee joint filler: cylinder coaxial with the KFE (y) axis at the
+           joint. Coaxial => invariant under knee bend => bridges the thigh/shank
+           gap for external contacts without ever self-colliding with either. -->
+      <collision>
+        <origin xyz="0 0.0155 0" rpy="1.5708 0 0" />
+        <geometry>
+          <cylinder radius="0.03" length="0.031" />
         </geometry>
       </collision>
     </link>
@@ -142,9 +163,11 @@
                  iyy="2.048E-05" iyz="0" izz="1.3443E-05" />
       </inertial>
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0" />
+        <!-- Foot: cylinder about the Y axis, replicating the Foot.STL mesh
+             (radius 0.032, length 0.031 spanning y = ±0.0155). -->
+        <origin xyz="0 0 0" rpy="1.5708 0 0" />
         <geometry>
-          <mesh filename="package://ayg_description/meshes/Foot.STL" />
+          <cylinder radius="0.032" length="0.031" />
         </geometry>
         <material name="">
           <color rgba="0.29804 0.29804 0.29804 1" />
@@ -195,10 +218,18 @@
           <color rgba="0.69804 0.69804 0.69804 1" />
         </material>
       </visual>
+      <!-- Hip: cylinder about the Y axis (the HFE motor barrel), wrapping the
+           disc-shaped hip housing. y-offset tracks the HFE side (front vs hind
+           use mirrored hip meshes: F -> R_Hip, H -> L_Hip). Mirror of L_Leg. -->
       <collision>
-        <origin xyz="0.055 0 0" rpy="0 0 0" />
+        <xacro:if value="${FH == 'F'}">
+          <origin xyz="0.065 -0.0375 0" rpy="1.5708 0 0" />
+        </xacro:if>
+        <xacro:unless value="${FH == 'F'}">
+          <origin xyz="0.065 0.0375 0" rpy="1.5708 0 0" />
+        </xacro:unless>
         <geometry>
-          <box size="0.11 0.07 0.11" />
+          <cylinder radius="0.055" length="0.14" />
         </geometry>
       </collision>
     </link>
@@ -236,10 +267,12 @@
           <color rgba="0.69804 0.69804 0.69804 1" />
         </material>
       </visual>
+      <!-- Thigh: slim box along the leg, rotated only about the Y swing axis
+           (single pitch, no roll/yaw twist), shortened at both ends for gaps. -->
       <collision>
-        <origin xyz="-0.0786 -0.0285 -0.1004" rpy="0 2.4474 -2.7935" />
+        <origin xyz="-0.105 -0.0734 -0.1" rpy="0 -2.4776 0" />
         <geometry>
-          <box size="0.06 0.06 0.24" />
+          <box size="0.05 0.014 0.16" />
         </geometry>
       </collision>
     </link>
@@ -272,10 +305,21 @@
           <color rgba="0.69804 0.69804 0.69804 1" />
         </material>
       </visual>
+      <!-- Shank: slim box along the leg, rotated only about the Y swing axis
+           (single pitch, no roll/yaw twist), shortened to leave gaps. -->
       <collision>
-        <origin xyz="0.0852 -0.0078 -0.0948" rpy="0 2.4073 -0.0911" />
+        <origin xyz="0.0867 -0.0155 -0.0965" rpy="0 2.4093 0" />
         <geometry>
-          <box size="0.05 0.05 0.24" />
+          <box size="0.02 0.017 0.18" />
+        </geometry>
+      </collision>
+      <!-- Knee joint filler: cylinder coaxial with the KFE (y) axis at the
+           joint. Coaxial => invariant under knee bend => bridges the thigh/shank
+           gap for external contacts without ever self-colliding with either. -->
+      <collision>
+        <origin xyz="0 -0.0155 0" rpy="1.5708 0 0" />
+        <geometry>
+          <cylinder radius="0.03" length="0.031" />
         </geometry>
       </collision>
     </link>
@@ -294,9 +338,11 @@
                  iyy="2.048E-05" iyz="0" izz="1.3443E-05" />
       </inertial>
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0" />
+        <!-- Foot: cylinder about the Y axis, replicating the Foot.STL mesh
+             (radius 0.032, length 0.031 spanning y = ±0.0155). -->
+        <origin xyz="0 0 0" rpy="1.5708 0 0" />
         <geometry>
-          <mesh filename="package://ayg_description/meshes/Foot.STL" />
+          <cylinder radius="0.032" length="0.031" />
         </geometry>
         <material name="">
           <color rgba="0.29804 0.29804 0.29804 1" />

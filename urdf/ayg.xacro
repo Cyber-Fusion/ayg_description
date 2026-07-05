@@ -10,7 +10,7 @@
   <xacro:arg name="gazebo_version" default="fortress" />
   <xacro:property name="gazebo_version" value="$(arg gazebo_version)" />
 
-  <xacro:arg name="camera" default="True" />
+  <xacro:arg name="camera" default="False" />
   <xacro:property name="camera" default="$(arg camera)" />
 
   <xacro:arg name="initial_configuration" default="lying_down" />
@@ -77,12 +77,16 @@
           rgba="0.69804 0.69804 0.69804 1" />
       </material>
     </visual>
+    <!-- Trunk collision: axis-aligned box wrapping the Base mesh body (AABB
+         0.444 x 0.239 x 0.187 centred at z=0.0055). Height is kept to the main
+         body (0.14); the narrow top mount rail (z up to 0.099, only +/-0.06
+         wide) is left out so the box does not over-claim empty space beside it. -->
     <collision>
       <origin
-        xyz="0 0 0"
+        xyz="0 0 0.0"
         rpy="0 0 0" />
       <geometry>
-        <box size="0.42 0.23 0.14" />
+        <box size="0.44 0.239 0.122" />
       </geometry>
     </collision>
   </link>
