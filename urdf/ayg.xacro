@@ -22,11 +22,14 @@
 
   <xacro:unless value="${sim}">
     <xacro:include filename="$(find robstride_hardware)/urdf/robstride_ros2_control.xacro"/>
+    <!-- The robstride macro now uses 4 separate CAN buses (lf/rf/lh/rh default can0-3) and
+         REQUIRES calibration_file (per-motor zero offsets). Passing the old single
+         can_interface="can0" is dropped; calibration_file added (matches origin/ros2). -->
     <xacro:robstride_ros2_control
-      can_interface="can0"
       actuator_type="3"
       default_kp="40.0"
       default_kd="1.0"
+      calibration_file="$(find robstride_hardware)/calibration/joint_calibration.yaml"
     />
   </xacro:unless>
 
