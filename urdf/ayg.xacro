@@ -12,6 +12,11 @@
   <xacro:arg name="controller" default="default" />
   <xacro:property name="controller" default="$(arg controller)" />
 
+  <!-- Hardware measurement mode: publish per-motor q-axis current on motor_states.
+       Off by default; enable only for HW fidelity measurement runs (see recovery_hw). -->
+  <xacro:arg name="publish_current" default="false" />
+  <xacro:property name="publish_current" value="$(arg publish_current)" />
+
   <xacro:property name="effort_lim" value="30.0" />
   <xacro:property name="velocity_lim" value="18.849" />
   <xacro:property name="PI" value="3.1415926535897931" />
@@ -29,6 +34,7 @@
       actuator_type="3"
       default_kp="40.0"
       default_kd="1.0"
+      publish_current="${publish_current}"
       calibration_file="$(find robstride_hardware)/calibration/joint_calibration.yaml"
     />
   </xacro:unless>
@@ -69,6 +75,23 @@
         rpy="0 0 0" />
       <geometry>
         <box size="0.4 0.23 0.12" />
+      </geometry>
+    </collision>
+    <!-- Top-mounted carry handles — EXACT CAD collision mesh (two end arches extracted
+         from Base.STL; handle_F front, handle_R rear, each PhysX convex-hulled). Collision
+         ONLY (mass already in Base). Propagated from cf_lab ayg_description@f09472e
+         (branch handle-collision) so the deployment model matches the hd_ctrl_s1 training
+         model — the robot physically has these handles and they change belly-up contact. -->
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ayg_description/meshes/handle_F.STL" />
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ayg_description/meshes/handle_R.STL" />
       </geometry>
     </collision>
   </link>
