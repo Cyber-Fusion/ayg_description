@@ -11,6 +11,14 @@
   -->
   <xacro:property name="M_PI" value="3.1415926535897931"/>
   <xacro:property name="d555_depth_to_color_offset" value="-0.0475"/>
+  <!--
+    Mount-bracket pitch-down. The Camera.STL housing is exported from CAD
+    already tilted 15 deg about the lateral axis (front-face normal measures
+    15.0 deg from link +X), so the tilt must NOT be added to Base_2_Camera
+    (the mesh would double-tilt). It must, however, be carried by the
+    depth/color sensor frames: the optical module tilts with the housing.
+  -->
+  <xacro:property name="d555_mount_tilt" value="${15.0 * M_PI / 180.0}"/>
 
   <!--
     Massless reference frame for TF purposes only (depth/color/infra/IMU
@@ -93,9 +101,18 @@
     with camera_name=Camera, see ayg_camera.launch.py) publishes its own
     calibrated TF tree at runtime, which supersedes any nominal URDF values.
   -->
+  <!--
+    The yaw component (-d555_mount_tilt, applied about the Camera link's local
+    Z = the robot's lateral axis) pitches the depth frame 15 deg down with the
+    housing. URDF rpy is extrinsic XYZ, so rpy=(-pi/2, 0, -tilt) composes as
+    Rz(-tilt) * Rx(-pi/2): roll into the depth-frame convention first, then
+    tilt in Camera-link coordinates. This matches the Isaac Lab training
+    camera, which spawns at this frame's origin with a 15 deg pitch-down
+    offset (rough_student_env_cfg.py depth_camera offset).
+  -->
   <xacro:massless_frame name="Camera_depth_frame"/>
   <joint name="Camera_depth_joint" type="fixed">
-    <origin xyz="0.0527 -0.024 0" rpy="${-M_PI/2} 0 0"/>
+    <origin xyz="0.0527 -0.024 0" rpy="${-M_PI/2} 0 ${-d555_mount_tilt}"/>
     <parent link="Camera"/>
     <child link="Camera_depth_frame"/>
   </joint>
@@ -171,6 +188,45 @@
         <clip>
           <near>0.26</near>  <!-- D555 Min-Z at VGA -->
           <far>9.0</far>     <!-- D555 ideal range upper bound -->
+        </clip>
+      </camera>
+      <always_on>1</always_on>
+      <visualize>false</visualize>
+    </sensor>
+  </gazebo>
+
+  <!--
+    Policy depth sensor: the exact camera the vision student was trained with
+    in Isaac Lab (rough_student_env_cfg.py): 80x60 (4:3, ~71 deg vertical FoV),
+    87 deg horizontal FoV, 0.26-9.0 m clip. This is NOT a resize of the
+    640x360 stream above - that sensor is 16:9 (~56 deg VFoV) and physically
+    cannot cover the training image's vertical extent. Sim-only; the real
+    D555 shares the same 16:9 limitation, which is an open sim-to-real gap.
+  -->
+  <gazebo reference="Camera_depth_frame">
+    <sensor name="d555_policy_depth" type="depth_camera">
+      <update_rate>30</update_rate>
+      <topic>camera/Camera/depth/policy_image</topic>
+      <gz_frame_id>Camera_depth_optical_frame</gz_frame_id>
+      <camera>
+        <horizontal_fov>1.5184</horizontal_fov>  <!-- 87 deg -->
+        <lens>
+          <intrinsics>
+            <fx>42.151</fx>
+            <fy>42.151</fy>
+            <cx>40.0</cx>
+            <cy>30.0</cy>
+            <s>0.0</s>
+          </intrinsics>
+        </lens>
+        <image>
+          <width>80</width>
+          <height>60</height>
+          <format>R_FLOAT32</format>
+        </image>
+        <clip>
+          <near>0.26</near>
+          <far>9.0</far>
         </clip>
       </camera>
       <always_on>1</always_on>
