@@ -25,6 +25,20 @@
         <box size="0.4 0.23 0.12"/>
       </geometry>
     </collision>
+    <!-- top-mounted carry handles — EXACT CAD mesh: two end arches extracted from Base.STL
+         (handle_F front, handle_R rear; PhysX convex-hulls each). Clean fix = ayg.xacro + regen. -->
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ayg_description/meshes/handle_F.STL"/>
+      </geometry>
+    </collision>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ayg_description/meshes/handle_R.STL"/>
+      </geometry>
+    </collision>
   </link>
   <link name="IMU">
     <inertial>
