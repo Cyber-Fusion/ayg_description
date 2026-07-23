@@ -209,13 +209,22 @@
       <topic>camera/Camera/depth/policy_image</topic>
       <gz_frame_id>Camera_depth_optical_frame</gz_frame_id>
       <camera>
-        <horizontal_fov>1.5184</horizontal_fov>  <!-- 87 deg -->
+        <!--
+          FoV-matched student camera (cf_lab rough_student_env_cfg.py, 2026-07-21):
+          fx = fy = 40.514 px at 80x60 = the real D555 factory fx (324.109 @ 640x360)
+          scaled to the tile -> HFoV 89.27 deg, full-frame VFoV 73.04 deg. cy = 32.19
+          matches the measured principal row of the Isaac tiled render, so the
+          row_band [10, 55) declared in the policy's env.yaml lands on the same
+          viewing angles here as in training (policy_inference zeroes the rows
+          outside the band). Older students (87 deg / fx 42.151) predate this.
+        -->
+        <horizontal_fov>1.55815</horizontal_fov>  <!-- 89.27 deg -->
         <lens>
           <intrinsics>
-            <fx>42.151</fx>
-            <fy>42.151</fy>
+            <fx>40.514</fx>
+            <fy>40.514</fy>
             <cx>40.0</cx>
-            <cy>30.0</cy>
+            <cy>32.19</cy>
             <s>0.0</s>
           </intrinsics>
         </lens>
