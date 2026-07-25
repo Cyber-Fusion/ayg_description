@@ -25,6 +25,18 @@
   <xacro:arg name="publish_current" default="false" />
   <xacro:property name="publish_current" value="$(arg publish_current)" />
 
+  <!-- MuJoCo backend only: enable the RS-03 four-quadrant torque-speed curve in the plant
+       (the certification-condition velocity envelope). Off by default so walking sims keep
+       their historical plant; recovery rehearsals should pass motor_curve:=true. -->
+  <xacro:arg name="motor_curve" default="false" />
+  <xacro:property name="motor_curve" value="$(arg motor_curve)" />
+  <!-- Per-joint clamp used inside the curve math — keep in sync with the controller's
+       effort limits (cert condition 20/16, planned HW config 30/30). -->
+  <xacro:arg name="motor_curve_tau" default="20.0" />
+  <xacro:property name="motor_curve_tau" value="$(arg motor_curve_tau)" />
+  <xacro:arg name="motor_curve_tau_knee" default="16.0" />
+  <xacro:property name="motor_curve_tau_knee" value="$(arg motor_curve_tau_knee)" />
+
   <xacro:property name="effort_lim" value="30.0" />
   <xacro:property name="velocity_lim" value="18.849" />
   <xacro:property name="PI" value="3.1415926535897931" />

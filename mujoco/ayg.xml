@@ -5,7 +5,10 @@
           noslip_iterations="5"/>
 
   <default>
-    <joint damping="0" armature="0"/>
+    <!-- armature 0.02 = real rotor inertia; the certified mujoco_val harnesses set this
+         programmatically (armature=0 was the documented snap/fail sim2sim gap). Applies to
+         the 12 hinge joints only; <freejoint> does not take joint defaults. -->
+    <joint damping="0" armature="0.02"/>
     <geom friction="1.5 0.005 0.001" condim="6" contype="1" conaffinity="1" solimp="0.9 0.95 0.001" solref="0.02 1"/>
     <motor ctrllimited="true"/>
   </default>
@@ -24,6 +27,8 @@
     <mesh name="R_Shank" file="R_Shank.STL"/>
     <mesh name="IMU" file="IMU.STL"/>
     <mesh name="Camera" file="Camera.STL"/>
+    <mesh name="handle_F" file="handle_F.STL"/>
+    <mesh name="handle_R" file="handle_R.STL"/>
   </asset>
 
   <worldbody>
@@ -40,6 +45,10 @@
             contype="0" conaffinity="0" group="1"/>
       <geom name="Base_collision" type="box" size="0.2 0.115 0.06" rgba="0.69804 0.69804 0.69804 1"
             group="3"/>
+      <!-- top-mounted carry handles — EXACT CAD mesh: two end arches extracted from Base.STL
+           (front x=+0.21, rear x=-0.21, span width, arch to z=0.092). MuJoCo convexifies each. -->
+      <geom name="handle_F" type="mesh" mesh="handle_F" contype="1" conaffinity="1" rgba="0.9 0.1 0.1 1"/>
+      <geom name="handle_R" type="mesh" mesh="handle_R" contype="1" conaffinity="1" rgba="0.9 0.1 0.1 1"/>
       <site name="imu_site" pos="-3.793e-05 0 -0.01723" size="0.001" rgba="0 1 0 1"/>
 
       <!-- IMU visual (fixed to Base) -->
