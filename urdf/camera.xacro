@@ -11,6 +11,8 @@
   -->
   <xacro:property name="M_PI" value="3.1415926535897931"/>
   <xacro:property name="d555_depth_to_color_offset" value="-0.0475"/>
+  <!-- Stereo IR baseline (D555 datasheet v1.1): infra1 (left) to infra2 (right). -->
+  <xacro:property name="d555_stereo_baseline" value="0.095"/>
   <!--
     Mount-bracket pitch-down. The Camera.STL housing is exported from CAD
     already tilted 15 deg about the lateral axis (front-face normal measures
@@ -93,13 +95,19 @@
     in body frame; local Z is Base -Y, so 0 leaves the optical module on the
     body centerline.
 
-    Only the depth and color frames are modeled here (the two Gazebo sensors
-    below reference Camera_depth_frame / Camera_color_frame and publish in the
-    matching *_optical_frame). The infra1/infra2/accel/gyro/imu frames that
-    realsense2_description also declares are omitted: nothing in this repo
-    consumes them in sim, and on real hardware realsense2_camera (launched
-    with camera_name=Camera, see ayg_camera.launch.py) publishes its own
-    calibrated TF tree at runtime, which supersedes any nominal URDF values.
+    The depth, color and stereo-IR (infra1/infra2) frames are modeled here; the
+    accel/gyro/imu frames realsense2_description also declares are omitted since
+    nothing consumes them.
+
+    This URDF is the SINGLE TF authority for the camera subtree: ayg_camera
+    launches realsense2_camera with publish_tf:=false. Letting the driver publish
+    too would fork the tree — it roots its frames at Camera_link, which has no
+    path to Base, while re-parenting Camera_depth_frame / Camera_color_frame away
+    from this tree. cuVSLAM needs Base -> Camera_infra{1,2}_optical_frame and
+    abort()s outright when the lookup fails, so a forked tree is not survivable.
+    The cost is that the extrinsics here are nominal D450-module values rather
+    than the driver's per-unit calibration; cuVSLAM recovers the precise stereo
+    baseline from camera_info regardless.
   -->
   <!--
     The yaw component (-d555_mount_tilt, applied about the Camera link's local
@@ -137,6 +145,59 @@
     <origin xyz="0 0 0" rpy="${-M_PI/2} 0 ${-M_PI/2}"/>
     <parent link="Camera_color_frame"/>
     <child link="Camera_color_optical_frame"/>
+  </joint>
+
+  <!--
+    Camera_link: the frame realsense2_camera roots its own tree at (it names
+    frames <camera_name>_*, and ayg_camera passes camera_name=Camera). Declared
+    here so any consumer that expects the driver's naming still resolves against
+    Base. On a D4xx optical module camera_link coincides with the depth origin,
+    hence the identity joint (realsense2_camera publishes camera_link ->
+    camera_depth_frame as identity).
+  -->
+  <xacro:massless_frame name="Camera_link"/>
+  <joint name="Camera_link_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="Camera_depth_frame"/>
+    <child link="Camera_link"/>
+  </joint>
+
+  <!--
+    Stereo IR pair — the cuVSLAM input (src/ayg_vslam). infra1 is the LEFT
+    imager and IS the depth origin on a D4xx module (the driver publishes
+    camera_link -> camera_infra1_frame as identity), so it sits at
+    Camera_depth_frame. infra2 is the right imager, one baseline away along the
+    depth frame's -Y (frame convention here is X-forward / Y-left / Z-up, so
+    -Y is to the robot's right).
+
+    Both carry the 15 deg housing tilt for free by hanging off Camera_depth_frame.
+  -->
+  <xacro:massless_frame name="Camera_infra1_frame"/>
+  <joint name="Camera_infra1_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="Camera_depth_frame"/>
+    <child link="Camera_infra1_frame"/>
+  </joint>
+
+  <xacro:massless_frame name="Camera_infra1_optical_frame"/>
+  <joint name="Camera_infra1_optical_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="${-M_PI/2} 0 ${-M_PI/2}"/>
+    <parent link="Camera_infra1_frame"/>
+    <child link="Camera_infra1_optical_frame"/>
+  </joint>
+
+  <xacro:massless_frame name="Camera_infra2_frame"/>
+  <joint name="Camera_infra2_joint" type="fixed">
+    <origin xyz="0 ${-d555_stereo_baseline} 0" rpy="0 0 0"/>
+    <parent link="Camera_depth_frame"/>
+    <child link="Camera_infra2_frame"/>
+  </joint>
+
+  <xacro:massless_frame name="Camera_infra2_optical_frame"/>
+  <joint name="Camera_infra2_optical_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="${-M_PI/2} 0 ${-M_PI/2}"/>
+    <parent link="Camera_infra2_frame"/>
+    <child link="Camera_infra2_optical_frame"/>
   </joint>
 
   <!--
@@ -269,6 +330,65 @@
       <visualize>false</visualize>
     </sensor>
   </gazebo>
+
+  <!--
+    Stereo IR pair for Visual SLAM (src/ayg_vslam -> cuVSLAM). Two mono sensors
+    one baseline apart, sharing intrinsics, so the pair is rectified by
+    construction (identical rotation, pure lateral offset) — which is what
+    cuVSLAM is configured for (rectified_images: true).
+
+    Topic names match real hardware (realsense2_camera, camera_name=Camera,
+    enable_infra1/2): /camera/Camera/infra{1,2}/image_rect_raw. gz leaves
+    CameraInfo.P at its default, so ayg_gazebo's stereo_camera_info node fixes P
+    up and writes the right camera's Tx = -fx * baseline — see
+    ayg_gazebo/scripts/fix_depth_camera_info.py.
+
+    The real projector must be OFF for stereo VO (its dot pattern is a
+    camera-fixed texture that corrupts feature tracking); in sim there is no
+    projector, so nothing to disable.
+
+    Intrinsics deliberately match the depth sensor above (fx=fy=337.2 at
+    640x360, 87 deg HFoV) so sim and hardware present the same geometry.
+  -->
+  <xacro:macro name="infra_sensor" params="name frame optical_frame">
+    <gazebo reference="${frame}">
+      <sensor name="${name}" type="camera">
+        <update_rate>30</update_rate>
+        <topic>camera/Camera/${name}/image_rect_raw</topic>
+        <gz_frame_id>${optical_frame}</gz_frame_id>
+        <camera>
+          <horizontal_fov>1.5184</horizontal_fov>  <!-- 87 deg -->
+          <lens>
+            <intrinsics>
+              <fx>337.2</fx>
+              <fy>337.2</fy>
+              <cx>320.0</cx>
+              <cy>180.0</cy>
+              <s>0.0</s>
+            </intrinsics>
+          </lens>
+          <image>
+            <width>640</width>
+            <height>360</height>
+            <format>L8</format>  <!-- mono8: matches the real IR streams -->
+          </image>
+          <clip>
+            <near>0.1</near>
+            <far>100.0</far>
+          </clip>
+        </camera>
+        <always_on>1</always_on>
+        <visualize>false</visualize>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+
+  <xacro:infra_sensor name="infra1"
+                      frame="Camera_infra1_frame"
+                      optical_frame="Camera_infra1_optical_frame"/>
+  <xacro:infra_sensor name="infra2"
+                      frame="Camera_infra2_frame"
+                      optical_frame="Camera_infra2_optical_frame"/>
 
   </xacro:if>
 
