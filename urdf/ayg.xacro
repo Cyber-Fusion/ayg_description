@@ -10,8 +10,10 @@
   <xacro:arg name="gazebo_version" default="fortress" />
   <xacro:property name="gazebo_version" value="$(arg gazebo_version)" />
 
-  <xacro:arg name="camera" default="False" />
-  <xacro:property name="camera" default="$(arg camera)" />
+  <!-- Ayg 1.3 replaced the D555 depth camera with a LiDAR on a new front mount;
+       the argument follows the hardware. -->
+  <xacro:arg name="lidar" default="False" />
+  <xacro:property name="lidar" default="$(arg lidar)" />
 
   <xacro:arg name="initial_configuration" default="lying_down" />
   <xacro:property name="initial_configuration" value="$(arg initial_configuration)" />
@@ -46,22 +48,22 @@
   <link
     name="Base">
     <inertial>
-      <!-- Ayg 1.3 SolidWorks export. Batteries are rigidly fixed inside the
-           chassis and are lumped into this Base mass/inertia (no separate
-           Battery links), so the trunk is a single rigid body. Total robot
-           mass ~23 kg. -->
+      <!-- Ayg 1.3 SolidWorks export CF-AYG-1.3-00-000-URDF-6. Batteries are
+           rigidly fixed inside the chassis and are lumped into this Base
+           mass/inertia (no separate Battery links), so the trunk is a single
+           rigid body. Whole-robot mass 22.948 kg across 19 links. -->
       <origin
-        xyz="-0.0030682 -4.5608E-05 -0.0023186"
+        xyz="-0.00030633 -0.0051482 -0.0019103"
         rpy="0 0 0" />
       <mass
-        value="11.049" />
+        value="10.732" />
       <inertia
-        ixx="0.032662"
-        ixy="-2.5713E-06"
-        ixz="6.2419E-05"
-        iyy="0.034773"
-        iyz="-2.217E-06"
-        izz="0.054917" />
+        ixx="0.029884"
+        ixy="4.1808E-07"
+        ixz="0.00015159"
+        iyy="0.038536"
+        iyz="1.5415E-07"
+        izz="0.055747" />
     </inertial>
     <visual>
       <origin
@@ -77,16 +79,17 @@
           rgba="0.69804 0.69804 0.69804 1" />
       </material>
     </visual>
-    <!-- Trunk collision: axis-aligned box wrapping the Base mesh body (AABB
-         0.444 x 0.239 x 0.187 centred at z=0.0055). Height is kept to the main
-         body (0.14); the narrow top mount rail (z up to 0.099, only +/-0.06
-         wide) is left out so the box does not over-claim empty space beside it. -->
+    <!-- Trunk collision: axis-aligned box wrapping the Base mesh body. Measured
+         AABB is 0.423 x 0.239 x 0.180 (x -0.2125..0.2105, y +/-0.1195,
+         z -0.088..0.092), but everything above z=0.062 is a single 8 mm rear tab
+         at x~-0.208, so the box stops there (z -0.088..0.062, centred -0.013)
+         rather than over-claiming the empty space beside the tab. -->
     <collision>
       <origin
-        xyz="0 0 0.0"
+        xyz="-0.001 0 -0.013"
         rpy="0 0 0" />
       <geometry>
-        <box size="0.44 0.239 0.122" />
+        <box size="0.423 0.239 0.150" />
       </geometry>
     </collision>
   </link>
@@ -106,10 +109,10 @@
         value="0.0013495" />
       <inertia
         ixx="4.0133E-08"
-        ixy="-6.9859E-14"
+        ixy="-6.9855E-14"
         ixz="8.9554E-12"
         iyy="5.9906E-08"
-        iyz="-1.4567E-14"
+        iyz="-1.4564E-14"
         izz="9.917E-08" />
     </inertial>
   </link>
@@ -130,7 +133,9 @@
 
   <xacro:include filename="$(find ayg_description)/urdf/legs.xacro" />
 
-  <xacro:if value="${camera}">
-    <xacro:include filename="$(find ayg_description)/urdf/camera.xacro" />
-  </xacro:if>
+  <!-- Unconditional: unlike the optional D555 it replaces, the 1.3 head is
+       structural chassis (0.72713 kg fixed to Base, reaching 0.425 m forward).
+       Leaving it out would hand ayg_kindyn/Pinocchio a robot missing that mass
+       and its pitch moment. The `lidar` arg inside gates only the sensor frame. -->
+  <xacro:include filename="$(find ayg_description)/urdf/lidar.xacro" />
 </robot>

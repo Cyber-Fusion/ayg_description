@@ -1,0 +1,215 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!--
+    Ayg 1.3 front head + LiDAR.
+
+    Replaces camera.xacro (Intel RealSense D555). The 1.3 chassis carries a HESAI
+    JT128 on a new front mount; ayg_lidar drives it (see ros/src/ayg_lidar) and
+    stamps clouds in `lidar_link`.
+
+    The `Head` link is the mount, taken verbatim from the SolidWorks export
+    CF-AYG-1.3-00-000-URDF-6. Its 0.72713 kg ALREADY INCLUDES the LiDAR body
+    (confirmed with the mechanical engineer, 2026-08-03) - do not add sensor mass
+    on top. Corroborating evidence, if this is ever revisited: the export's
+    inertia convention is provably uniform-density-solid-at-CoM (the Foot's
+    inertia is exactly that of a cylinder r=0.032 L=0.031), yet Head's reported
+    inertia is only 0.42-0.70x the uniform solid of its own mesh while its CoM
+    matches that mesh's centroid to 0.13 mm - i.e. a multi-material assembly with
+    the mass packed into the forward pod, which is where the sensor sits.
+
+    The link is named `Head` (the export's name), not `Camera` as the D555 era
+    used. Anything that referenced the old body name must follow - notably
+    cf_lab's head-contact termination (body_names="Camera").
+  -->
+
+  <xacro:property name="M_PI" value="3.1415926535897931"/>
+
+  <!-- ####################################################################### -->
+  <!-- ##  TODO(lidar-origin): PLACEHOLDER - NOT THE REAL OPTICAL ORIGIN.  ### -->
+  <!-- ####################################################################### -->
+  <!--
+    The export declares no LiDAR link, frame or mesh (a case-insensitive search
+    for lidar/hesai/livox/jt128 across the whole package returns nothing), so the
+    cloud-frame datum is not recoverable from it. It also cannot be recovered
+    geometrically: the forward pod is not a body of revolution (a sphere fit gives
+    3.9 mm RMS on a 31 mm radius, a Z-cylinder fit 5.8 mm), so there is no
+    rotation centre to read off.
+
+    The values below are the measured geometric centre of the pod's wide section,
+    used ONLY so the TF tree is complete and ayg_lidar has a parent frame to
+    resolve. They are NOT the sensor origin and must not reach the robot.
+
+    Replace with the JT128 cloud-origin coordinates in the Head frame, from CAD
+    (or Figure 5 of the JT128 user manual, relative to the mounting face). The
+    same numbers must then be mirrored into the Gazebo sensor pose below, and
+    into the cf_lab sensor prim - all three have to agree or sim-to-real drifts
+    silently.
+  -->
+  <xacro:property name="lidar_origin_x" value="0.1395"/>
+  <xacro:property name="lidar_origin_y" value="0.0"/>
+  <xacro:property name="lidar_origin_z" value="-0.049"/>
+  <xacro:property name="lidar_mount_pitch" value="0.0"/>
+
+  <!--
+    JT128 azimuth 0 maps to +Y, not REP-103's X-forward: a pure -90 deg yaw. It
+    belongs in this mount TF like any other mounting rotation. Do NOT negate
+    azimuths instead - that mirrors the cloud (see ros/src/ayg_lidar/README.md).
+  -->
+  <xacro:property name="lidar_azimuth_yaw" value="${-M_PI/2}"/>
+
+  <!--
+    Massless reference frame for TF purposes only. An explicit epsilon-mass
+    inertial is required because physics simulators (Isaac Sim, Gazebo) silently
+    assign a 1.0 kg default to any link without <inertial>. Across 14 D555
+    reference frames that silently injected +14 kg rigid-fixed to Base - enough
+    to faceplant the AYG locomotion policy in Isaac Lab. Real hardware /
+    robot_state_publisher are unaffected (TF-only consumers ignore inertia).
+  -->
+  <xacro:macro name="massless_frame" params="name">
+    <link name="${name}">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="1e-6"/>
+        <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
+      </inertial>
+    </link>
+  </xacro:macro>
+
+  <!-- ============================== Head ============================== -->
+  <link name="Head">
+    <inertial>
+      <origin xyz="0.14526 0.0015227 -0.038347" rpy="0 0 0"/>
+      <mass value="0.72713"/>
+      <inertia ixx="0.00048304" ixy="5.642E-09" ixz="2.7327E-05"
+               iyy="0.0012008"  iyz="4.3319E-09" izz="0.001352"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ayg_description/meshes/Head.STL"/>
+      </geometry>
+      <material name="">
+        <color rgba="0.69804 0.69804 0.69804 1"/>
+      </material>
+    </visual>
+    <!--
+      Collision as three boxes rather than one. The head mesh fills only 10.4% of
+      its 0.226 x 0.134 x 0.116 bounding box (it is an open bracket cage with a
+      pod at the front), so a single wrapping box would claim a great deal of
+      empty space on a part that now protrudes 0.21 m ahead of the chassis. Since
+      this is the body that strikes obstacles, and near-field obstacle response is
+      the open problem, faithfulness here is worth three primitives.
+      Measured sub-regions, in the Head frame:
+        deck   x 0.000..0.226  y +/-0.055  z -0.0045..0.008
+        pod    x 0.113..0.166  y +/-0.067  z -0.092..-0.006
+        nose   x 0.166..0.218  y +/-0.032  z -0.093..-0.029
+      The thin strut below the deck (x 0.008..0.113, y +/-0.010) is left out: it
+      is tucked under the deck box and is not a plausible contact point.
+    -->
+    <collision>
+      <origin xyz="0.113 0 0.00175" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.226 0.110 0.0125"/>
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0.1395 0 -0.049" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.053 0.134 0.086"/>
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0.192 0 -0.061" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.052 0.064 0.064"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Export Base_2_Head, verbatim. No rotation: unlike the D555 mount, which
+       carried a 90 deg roll to set up the RealSense optical-frame subtree, the
+       head is a plain rigid body and the export places it axis-aligned. -->
+  <joint name="Base_2_Head" type="fixed">
+    <origin xyz="0.199 0 0.05" rpy="0 0 0"/>
+    <parent link="Base"/>
+    <child link="Head"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+
+  <!-- ============================ lidar_link =========================== -->
+  <!-- Everything below is the sensor, gated on the `lidar` arg; the Head above is
+       structural and always present. -->
+  <xacro:if value="${lidar}">
+
+  <!-- The frame ayg_lidar stamps /lidar/points and /lidar/imu in. Its README
+       states the production stack gets base_link -> lidar_link from the URDF;
+       before 1.3 that TF did not exist anywhere and the bench launch faked it
+       with an identity static_transform_publisher. -->
+  <xacro:massless_frame name="lidar_link"/>
+  <joint name="Head_2_lidar" type="fixed">
+    <origin xyz="${lidar_origin_x} ${lidar_origin_y} ${lidar_origin_z}"
+            rpy="0 ${lidar_mount_pitch} ${lidar_azimuth_yaw}"/>
+    <parent link="Head"/>
+    <child link="lidar_link"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+
+  <!-- ========================= Gazebo sensor ========================== -->
+  <!--
+    Simulation-only, so gated on ${sim}: with sim:=False the pure URDF (consumed
+    by robot_state_publisher and by Pinocchio via ayg_kindyn on real hardware)
+    stays free of Gazebo-specific elements. Mirrors how ayg_sim_ros2_control.xacro
+    is gated in ayg.xacro.
+
+    Ray counts and FoV follow the JT128 as documented in ros/src/ayg_lidar:
+    mechanical 128-channel hemisphere, 360 x 95 deg (-4.4 to +90.5), 0-60 m,
+    10 Hz. 128 x 900 samples is ~115 k points per rotation, matching the real
+    single-return cloud; drop `horizontal/samples` if the render cost bites before
+    the policy observation is settled.
+
+    NOTE this sensor inherits the placeholder mount above. It renders from the
+    wrong origin until TODO(lidar-origin) is resolved.
+  -->
+  <xacro:if value="${sim}">
+    <gazebo reference="lidar_link">
+      <sensor name="jt128" type="gpu_lidar">
+        <update_rate>10</update_rate>
+        <!-- gz-sim publishes a gpu_lidar as TWO topics: `<topic>` carrying a
+             LaserScan, and `<topic>/points` carrying a PointCloudPacked. Naming
+             the sensor `lidar` therefore yields /lidar/points for the cloud,
+             matching what the real hesai/livox driver stamps (see ayg_lidar).
+             Naming it `lidar/points` would give /lidar/points/points. -->
+        <topic>lidar</topic>
+        <gz_frame_id>lidar_link</gz_frame_id>
+        <lidar>
+          <scan>
+            <horizontal>
+              <samples>900</samples>
+              <resolution>1</resolution>
+              <min_angle>${-M_PI}</min_angle>
+              <max_angle>${M_PI}</max_angle>
+            </horizontal>
+            <vertical>
+              <samples>128</samples>
+              <resolution>1</resolution>
+              <!-- -4.4 deg to +90.5 deg -->
+              <min_angle>${-4.4 * M_PI / 180.0}</min_angle>
+              <max_angle>${90.5 * M_PI / 180.0}</max_angle>
+            </vertical>
+          </scan>
+          <range>
+            <min>0.1</min>
+            <max>60.0</max>
+            <resolution>0.01</resolution>
+          </range>
+        </lidar>
+        <always_on>1</always_on>
+        <visualize>false</visualize>
+      </sensor>
+    </gazebo>
+  </xacro:if>
+
+  </xacro:if>
+
+</robot>
