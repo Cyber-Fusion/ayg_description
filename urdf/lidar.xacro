@@ -25,38 +25,52 @@
 
   <xacro:property name="M_PI" value="3.1415926535897931"/>
 
-  <!-- ####################################################################### -->
-  <!-- ##  TODO(lidar-origin): PLACEHOLDER - NOT THE REAL OPTICAL ORIGIN.  ### -->
-  <!-- ####################################################################### -->
   <!--
-    The export declares no LiDAR link, frame or mesh (a case-insensitive search
-    for lidar/hesai/livox/jt128 across the whole package returns nothing), so the
-    cloud-frame datum is not recoverable from it. It also cannot be recovered
-    geometrically: the forward pod is not a body of revolution (a sphere fit gives
-    3.9 mm RMS on a 31 mm radius, a Z-cylinder fit 5.8 mm), so there is no
-    rotation centre to read off.
+    ===================== LiDAR mount geometry (from CAD) =====================
 
-    The values below are the measured geometric centre of the pod's wide section,
-    used ONLY so the TF tree is complete and ayg_lidar has a parent frame to
-    resolve. They are NOT the sensor origin and must not reach the robot.
+    The spin axis points forward and 22.62 deg down, in the sagittal plane. That
+    angle is exactly atan(5/12), i.e. a 5:12 slope, so the axis direction in the
+    Head frame is (12/13, 0, -5/13) = (0.923077, 0, -0.384615) exactly.
 
-    Replace with the JT128 cloud-origin coordinates in the Head frame, from CAD
-    (or Figure 5 of the JT128 user manual, relative to the mounting face). The
-    same numbers must then be mirrored into the Gazebo sensor pose below, and
-    into the cf_lab sensor prim - all three have to agree or sim-to-real drifts
-    silently.
+    The axis passes through the Head link origin, and distances along it are
+    measured from there:
+      108.00 mm -> centre of the sensor's O62.5 mm mounting face   (CAD)
+       47.84 mm -> further to the point-cloud origin               (manual Fig 5)
+      155.84 mm -> total, Head origin to the cloud origin
+
+    Cross-check against the head geometry, which was measured before any of these
+    numbers were known: the sensor is 73 mm tall, so its dome tip lands at
+    x = 0.1671 in the Head frame, and the head's nose aperture starts at
+    x = 0.1660 and is 64.3 mm wide against the 62.5 mm dome. The nose is the
+    line-of-sight opening in front of the dome, with ~0.9 mm clearance per side.
+    An independent planar-patch search of Head.STL also found a face normal at
+    22.44 deg, matching the 22.62 deg above.
   -->
-  <xacro:property name="lidar_origin_x" value="0.1395"/>
+  <xacro:property name="lidar_pitch" value="${atan2(5.0, 12.0)}"/>
+  <xacro:property name="lidar_face_along" value="0.108"/>
+  <xacro:property name="lidar_origin_up" value="0.04784"/>
+  <xacro:property name="lidar_along" value="${lidar_face_along + lidar_origin_up}"/>
+  <xacro:property name="lidar_origin_x" value="${lidar_along * cos(lidar_pitch)}"/>
   <xacro:property name="lidar_origin_y" value="0.0"/>
-  <xacro:property name="lidar_origin_z" value="-0.049"/>
-  <xacro:property name="lidar_mount_pitch" value="0.0"/>
+  <xacro:property name="lidar_origin_z" value="${-lidar_along * sin(lidar_pitch)}"/>
 
   <!--
-    JT128 azimuth 0 maps to +Y, not REP-103's X-forward: a pure -90 deg yaw. It
-    belongs in this mount TF like any other mounting rotation. Do NOT negate
-    azimuths instead - that mirrors the cloud (see ros/src/ayg_lidar/README.md).
+    Orientation. The sensor's own axes, expressed in the Head frame:
+      Z_s = the spin axis                     = (+0.923077,  0, -0.384615)
+      Y_s = azimuth 0, perpendicular to the
+            axis, pointing down in the
+            sagittal plane                    = (-0.384615,  0, -0.923077)
+      X_s = Y_s x Z_s                         = ( 0,        -1,  0       )
+    which is rpy = (-(pi/2 + pitch), 0, -pi/2) exactly.
+
+    NOTE this supersedes an earlier guess that azimuth 0 was robot-forward (a
+    bare -pi/2 yaw). It is not: azimuth 0 points DOWN-and-slightly-rearward, so
+    the roll term is required. Getting this wrong rotates the whole cloud about
+    the sensor's own axis. Do NOT negate azimuths to compensate for anything -
+    that mirrors the cloud (see ros/src/ayg_lidar/README.md).
   -->
-  <xacro:property name="lidar_azimuth_yaw" value="${-M_PI/2}"/>
+  <xacro:property name="lidar_roll" value="${-(M_PI/2 + lidar_pitch)}"/>
+  <xacro:property name="lidar_yaw" value="${-M_PI/2}"/>
 
   <!--
     Massless reference frame for TF purposes only. An explicit epsilon-mass
@@ -149,7 +163,7 @@
   <xacro:massless_frame name="lidar_link"/>
   <joint name="Head_2_lidar" type="fixed">
     <origin xyz="${lidar_origin_x} ${lidar_origin_y} ${lidar_origin_z}"
-            rpy="0 ${lidar_mount_pitch} ${lidar_azimuth_yaw}"/>
+            rpy="${lidar_roll} 0 ${lidar_yaw}"/>
     <parent link="Head"/>
     <child link="lidar_link"/>
     <axis xyz="0 0 0"/>
@@ -162,14 +176,37 @@
     stays free of Gazebo-specific elements. Mirrors how ayg_sim_ros2_control.xacro
     is gated in ayg.xacro.
 
-    Ray counts and FoV follow the JT128 as documented in ros/src/ayg_lidar:
-    mechanical 128-channel hemisphere, 360 x 95 deg (-4.4 to +90.5), 0-60 m,
-    10 Hz. 128 x 900 samples is ~115 k points per rotation, matching the real
-    single-return cloud; drop `horizontal/samples` if the render cost bites before
-    the policy observation is settled.
+    Angles are in the sensor's own frame, which is exactly the JT128 convention:
+    Z = spin axis, elevation measured from the XY plane, -4.43 to +90.46 deg,
+    azimuth swept about Z. 900 x 128 = 115 200 points per rotation at 10 Hz,
+    matching the real single-return rate (manual 1.5).
 
-    NOTE this sensor inherits the placeholder mount above. It renders from the
-    wrong origin until TODO(lidar-origin) is resolved.
+    HOW THIS DIFFERS FROM THE REAL SENSOR - gz gpu_lidar can only emit a uniform
+    elevation fan at one azimuth per column, so four real behaviours are absent:
+
+      1. Channel elevations are UNEVEN (0.88 deg spacing near the horizon, 0.66
+         higher up, 0.70 mean over channels 1-85). A uniform fan misplaces
+         channels by up to 3.55 deg (ch 85: uniform 58.33 vs real 54.78), which
+         is ~12 cm of ground error at 2 m.
+      2. Each channel has its own AZIMUTH offset, spanning -17.16 to +17.92 deg
+         (manual Appendix A). The 128 channels do not lie in one vertical plane;
+         the real scan column is skewed ~35 deg wide, ~88 columns at 0.4 deg.
+      3. NEAR-FIELD CHANNEL DROPOUT: below 0.35 m only 63 of 128 channels fire,
+         and 0.35-0.5 m only 68. This lidar sits ~0.33 m above ground, so the
+         terrain directly beneath and around the feet - the footstep-relevant
+         region - is really sensed at ~49% vertical resolution.
+      4. Range is REFLECTIVITY-limited: 60 m instrumented but 40 m at 10%
+         reflectivity, so dark terrain drops out. A ray-cast never does.
+
+    Also note the topmost channels degenerate here: at elevation 90 deg the ray
+    lies along the spin axis, so every azimuth column returns the same point.
+
+    The authoritative geometry is the per-unit ANGLE CORRECTION FILE, which the
+    driver already fetches over PTC (ayg_lidar/config/jt128.yaml,
+    use_ptc_connected: true). Isaac Lab's ray-caster takes arbitrary ray
+    directions and CAN reproduce the exact pattern, so the faithful sensor
+    belongs in cf_lab; this block is an approximation for integration testing
+    only and should not be used to judge sim-to-real behaviour.
   -->
   <xacro:if value="${sim}">
     <gazebo reference="lidar_link">
