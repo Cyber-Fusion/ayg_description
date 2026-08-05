@@ -10,13 +10,7 @@
 
     The `Head` link is the mount, taken verbatim from the SolidWorks export
     CF-AYG-1.3-00-000-URDF-6. Its 0.72713 kg ALREADY INCLUDES the LiDAR body
-    (confirmed with the mechanical engineer, 2026-08-03) - do not add sensor mass
-    on top. Corroborating evidence, if this is ever revisited: the export's
-    inertia convention is provably uniform-density-solid-at-CoM (the Foot's
-    inertia is exactly that of a cylinder r=0.032 L=0.031), yet Head's reported
-    inertia is only 0.42-0.70x the uniform solid of its own mesh while its CoM
-    matches that mesh's centroid to 0.13 mm - i.e. a multi-material assembly with
-    the mass packed into the forward pod, which is where the sensor sits.
+    (confirmed with the mechanical engineer) - do not add sensor mass on top.
 
     The link is named `Head` (the export's name), not `Camera` as the D555 era
     used. Anything that referenced the old body name must follow - notably
@@ -38,13 +32,10 @@
        47.84 mm -> further to the point-cloud origin               (manual Fig 5)
       155.84 mm -> total, Head origin to the cloud origin
 
-    Cross-check against the head geometry, which was measured before any of these
-    numbers were known: the sensor is 73 mm tall, so its dome tip lands at
-    x = 0.1671 in the Head frame, and the head's nose aperture starts at
-    x = 0.1660 and is 64.3 mm wide against the 62.5 mm dome. The nose is the
-    line-of-sight opening in front of the dome, with ~0.9 mm clearance per side.
-    An independent planar-patch search of Head.STL also found a face normal at
-    22.44 deg, matching the 22.62 deg above.
+    Consistency check: the sensor is 73 mm tall, so its dome tip lands at
+    x = 0.1671 in the Head frame, where the head's nose aperture starts
+    (x = 0.1660) and is 64.3 mm wide against the 62.5 mm dome - the nose is the
+    line-of-sight opening in front of the dome.
   -->
   <xacro:property name="lidar_pitch" value="${atan2(5.0, 12.0)}"/>
   <xacro:property name="lidar_face_along" value="0.108"/>
@@ -63,11 +54,10 @@
       X_s = Y_s x Z_s                         = ( 0,        -1,  0       )
     which is rpy = (-(pi/2 + pitch), 0, -pi/2) exactly.
 
-    NOTE this supersedes an earlier guess that azimuth 0 was robot-forward (a
-    bare -pi/2 yaw). It is not: azimuth 0 points DOWN-and-slightly-rearward, so
-    the roll term is required. Getting this wrong rotates the whole cloud about
-    the sensor's own axis. Do NOT negate azimuths to compensate for anything -
-    that mirrors the cloud (see ros/src/ayg_lidar/README.md).
+    Azimuth 0 points down-and-slightly-rearward, not robot-forward, so the roll
+    term is required: a bare -pi/2 yaw would rotate the whole cloud about the
+    sensor axis. Do NOT negate azimuths to compensate - that mirrors the cloud
+    (see ros/src/ayg_lidar/README.md).
   -->
   <xacro:property name="lidar_roll" value="${-(M_PI/2 + lidar_pitch)}"/>
   <xacro:property name="lidar_yaw" value="${-M_PI/2}"/>

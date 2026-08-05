@@ -11,8 +11,8 @@
   <xacro:property name="gazebo_version" value="$(arg gazebo_version)" />
 
   <!-- Ayg 1.3 replaced the D555 depth camera with a LiDAR on a new front mount;
-       the argument follows the hardware. -->
-  <xacro:arg name="lidar" default="False" />
+       the argument follows the hardware. Default True, as `camera` was. -->
+  <xacro:arg name="lidar" default="True" />
   <xacro:property name="lidar" default="$(arg lidar)" />
 
   <xacro:arg name="initial_configuration" default="lying_down" />
