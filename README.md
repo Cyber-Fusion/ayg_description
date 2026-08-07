@@ -15,7 +15,7 @@ This software is released under a [BSD-3-Clause license](LICENSE).
 The `.xacro` file accepts the following arguments:
 - `lidar`: `Bool` (default: `True`). If `True`, the robot also has the `lidar_link` sensor frame (Ayg 1.3 replaced the D555 depth camera with a HESAI JT128). The head/mount itself is always present.
 - `sim`: `Bool` (default: `False`). If `True`, the URDF is augmented with Gazebo (not Gazebo Classic) tags for the robot's sensors and actuators.
-- `initial_configuration`: {`lying_down`, `standing_up`} (default: `lying_down`). Sets the initial configuration of the robot in Gazebo (requires `sim` to be `True`).
+- `initial_configuration`: {`lying_down`, `standing`} (default: `lying_down`). Sets the initial configuration of the robot in Gazebo (requires `sim` to be `True`).
 - `controller`: {`default`, `ddb`} (default: `default`). Sets the controller to be used in Gazebo (requires `sim` to be `True`). These controllers are from the [main repo](https://github.com/Cyber-Fusion/Ayg).
 - `gazebo_version`: {`fortress`, `harmonic`, ...} (default: `fortress`). Selects the Gazebo plugin naming convention. Use `fortress` for Gazebo Fortress (Ignition-era plugin names); any other value uses the newer `gz-sim-*` plugin names (e.g. for Gazebo Harmonic).
 
@@ -32,9 +32,4 @@ To visualize the robot model in RViz, run
 ros2 launch ayg_description rviz.launch.py
 ```
 
-To launch the robot description with mesh server for [Cyber Fusion Studio](https://github.com/Cyber-Fusion/Studio), run
-```shell
-ros2 launch ayg_description ayg_description_for_studio.launch.py
-```
-
-This launch file starts the robot state publisher, joint state publisher GUI, and an HTTP server for serving mesh files.
+This launch file starts the robot state publisher, the joint state publisher GUI, and RViz.

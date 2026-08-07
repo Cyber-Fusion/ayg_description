@@ -74,7 +74,8 @@
 
     <!-- ============================= Thigh ============================= -->
     <!-- Front and hind share one mesh per side (LF_Thigh and LH_Thigh are
-         byte-identical in the export, likewise RF/RH), so only L_/R_ are shipped.
+         geometrically identical in the export, likewise RF/RH), so only L_/R_
+         are shipped.
          The thigh now carries the HFE motor barrel: the hip's y extent dropped
          from 0.148 to 0.058 between revisions and the barrel moved to this link. -->
     <link name="${side}${FH}_Thigh">
@@ -137,9 +138,10 @@
     </joint>
 
     <!-- ============================= Shank ============================= -->
-    <!-- All four shank meshes are byte-identical in the export, so one Shank.STL
-         serves every leg. The part is unchanged from the previous revision; only
-         its frame slid 15.6 mm along y (the foot now sits at y=0 in this frame). -->
+    <!-- All four shank meshes are geometrically identical in the export, so one
+         Shank.STL serves every leg. The part is unchanged from the previous
+         revision; only its frame slid 15.6 mm along y (the foot now sits at y=0
+         in this frame). -->
     <link name="${side}${FH}_Shank">
       <inertial>
         <origin xyz="0.081442 -1.3138E-05 -0.079562" rpy="0 0 0" />

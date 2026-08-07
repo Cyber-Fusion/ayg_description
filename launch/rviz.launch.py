@@ -48,8 +48,9 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument(
             'lidar',
-            default_value='false',
-            description='Whether to include the head + LiDAR in the robot model',
+            default_value='true',
+            description='Whether to include the lidar_link sensor frame '
+                        '(the Head mount itself is always present)',
         ),
         robot_state_publisher_node,
         joint_state_publisher_gui_node,

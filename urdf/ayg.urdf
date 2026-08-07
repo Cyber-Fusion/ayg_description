@@ -12,7 +12,7 @@
       <param name="actuator_type">3</param>
       <param name="default_kp">40.0</param>
       <param name="default_kd">1.0</param>
-      <param name="calibration_file">/tmp/claude-1000/-home-miq-hovsepyan-Desktop-CyberFusion-cf-lab-root/006b1d3a-7cca-4abd-9969-fb1090b3251e/scratchpad/ament/share/robstride_hardware/calibration/joint_calibration.yaml</param>
+      <param name="calibration_file">/home/ayg/ayg_ws/install/robstride_hardware/share/robstride_hardware/calibration/joint_calibration.yaml</param>
     </hardware>
     <joint name="LF_HAA">
       <param name="can_id">1</param>
@@ -302,7 +302,8 @@
   </joint>
   <!-- ============================= Thigh ============================= -->
   <!-- Front and hind share one mesh per side (LF_Thigh and LH_Thigh are
-         byte-identical in the export, likewise RF/RH), so only L_/R_ are shipped.
+         geometrically identical in the export, likewise RF/RH), so only L_/R_
+         are shipped.
          The thigh now carries the HFE motor barrel: the hip's y extent dropped
          from 0.148 to 0.058 between revisions and the barrel moved to this link. -->
   <link name="LF_Thigh">
@@ -346,9 +347,10 @@
     <limit effort="50.0" lower="-2.0412" upper="3.3693" velocity="10.0"/>
   </joint>
   <!-- ============================= Shank ============================= -->
-  <!-- All four shank meshes are byte-identical in the export, so one Shank.STL
-         serves every leg. The part is unchanged from the previous revision; only
-         its frame slid 15.6 mm along y (the foot now sits at y=0 in this frame). -->
+  <!-- All four shank meshes are geometrically identical in the export, so one
+         Shank.STL serves every leg. The part is unchanged from the previous
+         revision; only its frame slid 15.6 mm along y (the foot now sits at y=0
+         in this frame). -->
   <link name="LF_Shank">
     <inertial>
       <origin rpy="0 0 0" xyz="0.081442 -1.3138E-05 -0.079562"/>
@@ -465,7 +467,8 @@
   </joint>
   <!-- ============================= Thigh ============================= -->
   <!-- Front and hind share one mesh per side (LF_Thigh and LH_Thigh are
-         byte-identical in the export, likewise RF/RH), so only L_/R_ are shipped.
+         geometrically identical in the export, likewise RF/RH), so only L_/R_
+         are shipped.
          The thigh now carries the HFE motor barrel: the hip's y extent dropped
          from 0.148 to 0.058 between revisions and the barrel moved to this link. -->
   <link name="RF_Thigh">
@@ -509,9 +512,10 @@
     <limit effort="50.0" lower="-2.0412" upper="3.3693" velocity="10.0"/>
   </joint>
   <!-- ============================= Shank ============================= -->
-  <!-- All four shank meshes are byte-identical in the export, so one Shank.STL
-         serves every leg. The part is unchanged from the previous revision; only
-         its frame slid 15.6 mm along y (the foot now sits at y=0 in this frame). -->
+  <!-- All four shank meshes are geometrically identical in the export, so one
+         Shank.STL serves every leg. The part is unchanged from the previous
+         revision; only its frame slid 15.6 mm along y (the foot now sits at y=0
+         in this frame). -->
   <link name="RF_Shank">
     <inertial>
       <origin rpy="0 0 0" xyz="0.081442 -1.3138E-05 -0.079562"/>
@@ -628,7 +632,8 @@
   </joint>
   <!-- ============================= Thigh ============================= -->
   <!-- Front and hind share one mesh per side (LF_Thigh and LH_Thigh are
-         byte-identical in the export, likewise RF/RH), so only L_/R_ are shipped.
+         geometrically identical in the export, likewise RF/RH), so only L_/R_
+         are shipped.
          The thigh now carries the HFE motor barrel: the hip's y extent dropped
          from 0.148 to 0.058 between revisions and the barrel moved to this link. -->
   <link name="LH_Thigh">
@@ -672,9 +677,10 @@
     <limit effort="50.0" lower="-2.8266" upper="2.5839" velocity="10.0"/>
   </joint>
   <!-- ============================= Shank ============================= -->
-  <!-- All four shank meshes are byte-identical in the export, so one Shank.STL
-         serves every leg. The part is unchanged from the previous revision; only
-         its frame slid 15.6 mm along y (the foot now sits at y=0 in this frame). -->
+  <!-- All four shank meshes are geometrically identical in the export, so one
+         Shank.STL serves every leg. The part is unchanged from the previous
+         revision; only its frame slid 15.6 mm along y (the foot now sits at y=0
+         in this frame). -->
   <link name="LH_Shank">
     <inertial>
       <origin rpy="0 0 0" xyz="0.081442 -1.3138E-05 -0.079562"/>
@@ -791,7 +797,8 @@
   </joint>
   <!-- ============================= Thigh ============================= -->
   <!-- Front and hind share one mesh per side (LF_Thigh and LH_Thigh are
-         byte-identical in the export, likewise RF/RH), so only L_/R_ are shipped.
+         geometrically identical in the export, likewise RF/RH), so only L_/R_
+         are shipped.
          The thigh now carries the HFE motor barrel: the hip's y extent dropped
          from 0.148 to 0.058 between revisions and the barrel moved to this link. -->
   <link name="RH_Thigh">
@@ -835,9 +842,10 @@
     <limit effort="50.0" lower="-2.8266" upper="2.5839" velocity="10.0"/>
   </joint>
   <!-- ============================= Shank ============================= -->
-  <!-- All four shank meshes are byte-identical in the export, so one Shank.STL
-         serves every leg. The part is unchanged from the previous revision; only
-         its frame slid 15.6 mm along y (the foot now sits at y=0 in this frame). -->
+  <!-- All four shank meshes are geometrically identical in the export, so one
+         Shank.STL serves every leg. The part is unchanged from the previous
+         revision; only its frame slid 15.6 mm along y (the foot now sits at y=0
+         in this frame). -->
   <link name="RH_Shank">
     <inertial>
       <origin rpy="0 0 0" xyz="0.081442 -1.3138E-05 -0.079562"/>

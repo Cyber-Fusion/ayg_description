@@ -62,26 +62,6 @@ Visualization Manager:
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
-        LB_Calf:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        LB_Hip:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        LB_Thigh:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        LF_Calf:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         LF_Hip:
           Alpha: 1
           Show Axes: false
@@ -93,37 +73,12 @@ Visualization Manager:
           Show Trail: false
           Value: true
         Link Tree Style: Links in Alphabetic Order
-        RB_Calf:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        RB_Hip:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        RB_Thigh:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        RF_Calf:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         RF_Hip:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
         RF_Thigh:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        body:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -143,31 +98,13 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        LB_Calf:
-          Value: true
-        LB_Hip:
-          Value: true
-        LB_Thigh:
-          Value: true
-        LF_Calf:
-          Value: true
         LF_Hip:
           Value: true
         LF_Thigh:
           Value: true
-        RB_Calf:
-          Value: true
-        RB_Hip:
-          Value: true
-        RB_Thigh:
-          Value: true
-        RF_Calf:
-          Value: true
         RF_Hip:
           Value: true
         RF_Thigh:
-          Value: true
-        body:
           Value: true
       Marker Scale: 0.5
       Name: TF
@@ -175,23 +112,7 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        body:
-          LB_Hip:
-            LB_Thigh:
-              LB_Calf:
-                {}
-          LF_Hip:
-            LF_Thigh:
-              LF_Calf:
-                {}
-          RB_Hip:
-            RB_Thigh:
-              RB_Calf:
-                {}
-          RF_Hip:
-            RF_Thigh:
-              RF_Calf:
-                {}
+        {}
       Update Interval: 0
       Value: true
   Enabled: true

@@ -79,10 +79,14 @@
               pos="0.1395 0 -0.049" group="3"/>
         <geom name="Head_nose_collision" type="box" size="0.026 0.032 0.032"
               pos="0.192 0 -0.061" group="3"/>
-        <!-- PLACEHOLDER, matching urdf/lidar.xacro TODO(lidar-origin): this is the
-             pod's geometric centre, NOT the JT128 cloud origin. MuJoCo has no
+        <!-- JT128 point-cloud origin, matching urdf/lidar.xacro's resolved
+             lidar_link: pos on the spin axis 0.15584 m from the Head origin,
+             quat = URDF rpy (-1.965587, 0, -1.570796) = (2 -3 3 -2)/sqrt(26),
+             site z = spin axis (forward, 22.62 deg down). MuJoCo has no
              gpu_lidar; a real scan needs rangefinder sensors off this site. -->
-        <site name="lidar_site" pos="0.1395 0 -0.049" size="0.002" rgba="0 0 1 1"/>
+        <site name="lidar_site" pos="0.143852 0 -0.059938"
+              quat="0.39223227 -0.58834841 0.58834841 -0.39223227"
+              size="0.002" rgba="0 0 1 1"/>
       </body>
 
       <!-- ==================== Left Front Leg ==================== -->

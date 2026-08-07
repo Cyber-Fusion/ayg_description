@@ -167,29 +167,46 @@
     is gated in ayg.xacro.
 
     Angles are in the sensor's own frame, which is exactly the JT128 convention:
-    Z = spin axis, elevation measured from the XY plane, -4.43 to +90.46 deg,
-    azimuth swept about Z. 900 x 128 = 115 200 points per rotation at 10 Hz,
-    matching the real single-return rate (manual 1.5).
+    Z = spin axis, elevation measured from the XY plane, azimuth swept about Z.
+    In-space channel elevations span -4.43 deg (ch 1) to +88.99 deg (ch 128);
+    the datasheet's 95 deg FOV / "-4.4 to +90.5" / Figure 4's 90.46 are
+    projections onto the vertical plane, not in-space elevations (manual 1.4,
+    1.5 note 2, Appendix A header). 900 x 128 = 115 200 points per rotation at
+    10 Hz, matching the real single-return rate (manual 1.5).
 
-    HOW THIS DIFFERS FROM THE REAL SENSOR - gz gpu_lidar can only emit a uniform
-    elevation fan at one azimuth per column, so four real behaviours are absent:
+    HOW THIS DIFFERS FROM THE REAL SENSOR - gz gpu_lidar can only emit a
+    uniform elevation fan at one azimuth per column, and this block adds no
+    noise model, so six real behaviours are absent:
 
       1. Channel elevations are UNEVEN (0.88 deg spacing near the horizon, 0.66
          higher up, 0.70 mean over channels 1-85). A uniform fan misplaces
-         channels by up to 3.55 deg (ch 85: uniform 58.33 vs real 54.78), which
-         is ~12 cm of ground error at 2 m.
-      2. Each channel has its own AZIMUTH offset, spanning -17.16 to +17.92 deg
-         (manual Appendix A). The 128 channels do not lie in one vertical plane;
-         the real scan column is skewed ~35 deg wide, ~88 columns at 0.4 deg.
+         channels by up to 2.58 deg (ch 85: uniform 57.36 vs real 54.78), which
+         is ~9 cm of ground error at 2 m.
+      2. Each channel has its own AZIMUTH offset: +/-~18 deg over channels 1-85
+         (-17.16 to +17.92 deg, so the real scan column is skewed ~35 deg wide,
+         ~88 columns at 0.4 deg), growing toward the pole where azimuth becomes
+         ill-conditioned (design table spans -57.28 deg, ch 120, to +117.30 deg,
+         ch 128; manual Appendix A). The 128 channels do not lie in one
+         vertical plane.
       3. NEAR-FIELD CHANNEL DROPOUT: below 0.35 m only 63 of 128 channels fire,
          and 0.35-0.5 m only 68. This lidar sits ~0.33 m above ground, so the
          terrain directly beneath and around the feet - the footstep-relevant
          region - is really sensed at ~49% vertical resolution.
       4. Range is REFLECTIVITY-limited: 60 m instrumented but 40 m at 10%
          reflectivity, so dark terrain drops out. A ray-cast never does.
+      5. BLIND CONE at the pole: the topmost in-space channel (+88.99 deg)
+         leaves a 1.01 deg half-angle cone about the spin axis unswept
+         (1.47 deg on this unit, whose calibration measures -4.96 to +88.53).
+         The fan uses the design endpoints, so the per-unit span and the
+         uneven near-pole crowding are not reproduced.
+      6. NO RANGE-NOISE MODEL: real returns carry ~2.2 mm sigma gaussian noise,
+         4 mm range quantization, ~1.8% spike returns and ~1.5% dropout (bench
+         measured). gz supports gaussian range noise, but this block stays a
+         noise-free integration-test approximation.
 
-    Also note the topmost channels degenerate here: at elevation 90 deg the ray
-    lies along the spin axis, so every azimuth column returns the same point.
+    Also note the topmost channels nearly degenerate here: at +88.99 deg the
+    ray is 1 deg off the spin axis, so every azimuth column of a top channel
+    returns almost the same point.
 
     The authoritative geometry is the per-unit ANGLE CORRECTION FILE, which the
     driver already fetches over PTC (ayg_lidar/config/jt128.yaml,
@@ -220,9 +237,11 @@
             <vertical>
               <samples>128</samples>
               <resolution>1</resolution>
-              <!-- -4.4 deg to +90.5 deg -->
-              <min_angle>${-4.4 * M_PI / 180.0}</min_angle>
-              <max_angle>${90.5 * M_PI / 180.0}</max_angle>
+              <!-- In-space ch 1 / ch 128 design elevations (-0.077318 /
+                   +1.553169 rad); the datasheet's -4.4 / +90.5 deg are
+                   vertical-plane projections, see the note above. -->
+              <min_angle>${-4.43 * M_PI / 180.0}</min_angle>
+              <max_angle>${88.99 * M_PI / 180.0}</max_angle>
             </vertical>
           </scan>
           <range>
