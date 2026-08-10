@@ -73,12 +73,10 @@
                   fullinertia="0.00048304 0.0012008 0.001352 5.642e-09 2.7327e-05 4.3319e-09"/>
         <geom name="Head_visual" type="mesh" mesh="Head" rgba="0.69804 0.69804 0.69804 1"
               contype="0" conaffinity="0" group="1"/>
-        <geom name="Head_deck_collision" type="box" size="0.113 0.055 0.00625"
-              pos="0.113 0 0.00175" group="3"/>
-        <geom name="Head_pod_collision" type="box" size="0.0265 0.067 0.043"
-              pos="0.1395 0 -0.049" group="3"/>
-        <geom name="Head_nose_collision" type="box" size="0.026 0.032 0.032"
-              pos="0.192 0 -0.061" group="3"/>
+        <geom name="Head_handle_collision" type="box" size="0.113 0.045 0.0040"
+              pos="0.113 0 0.008" group="3"/>
+        <geom name="Head_lidar_collision" type="cylinder" size="0.033"
+              fromto="0.12185 0 -0.05077  0.21692 0 -0.09038" group="3"/>
         <!-- JT128 point-cloud origin, matching urdf/lidar.xacro's resolved
              lidar_link: pos on the spin axis 0.15584 m from the Head origin,
              quat = URDF rpy (-1.965587, 0, -1.570796) = (2 -3 3 -2)/sqrt(26),
@@ -96,7 +94,7 @@
         <joint name="LF_HAA" axis="1 0 0" range="-0.5236 0.43633"/>
         <geom name="LF_Hip_visual" type="mesh" mesh="LF_Hip" rgba="0.69804 0.69804 0.69804 1"
               contype="0" conaffinity="0" group="1"/>
-        <geom name="LF_Hip_collision" type="cylinder" size="0.053" fromto="0.056 -0.033 0  0.056 0.025 0" group="3"/>
+        <geom name="LF_Hip_collision" type="cylinder" size="0.047" fromto="0.058 -0.0332 -0.0045  0.058 0.1118 -0.0045" group="3"/>
 
         <body name="LF_Thigh" pos="0.063 0.0996 0">
           <inertial pos="-0.028374 -0.02602 -0.029622" mass="1.5051"
@@ -104,7 +102,6 @@
           <joint name="LF_HFE" axis="0 -1 0" range="-2.0412 3.3693"/>
           <geom name="LF_Thigh_visual" type="mesh" mesh="L_Thigh" rgba="0.69804 0.69804 0.69804 1"
                 contype="0" conaffinity="0" group="1"/>
-          <geom name="LF_Thigh_barrel" type="cylinder" size="0.055" fromto="0 -0.07605 0  0 0.01195 0" group="3"/>
           <geom name="LF_Thigh_collision" type="box" size="0.026 0.008 0.085"
                 pos="-0.1121 -0.0035 -0.1091" quat="0.32593 0 -0.94539 0" group="3"/>
 
@@ -137,7 +134,7 @@
         <joint name="RF_HAA" axis="1 0 0" range="-0.43633 0.5236"/>
         <geom name="RF_Hip_visual" type="mesh" mesh="RF_Hip" rgba="0.69804 0.69804 0.69804 1"
               contype="0" conaffinity="0" group="1"/>
-        <geom name="RF_Hip_collision" type="cylinder" size="0.053" fromto="0.056 -0.025 0  0.056 0.033 0" group="3"/>
+        <geom name="RF_Hip_collision" type="cylinder" size="0.047" fromto="0.058 -0.1118 -0.0045  0.058 0.0332 -0.0045" group="3"/>
 
         <body name="RF_Thigh" pos="0.063 -0.0996 0">
           <inertial pos="-0.02838 0.025988 -0.029631" mass="1.5052"
@@ -145,7 +142,6 @@
           <joint name="RF_HFE" axis="0 -1 0" range="-2.0412 3.3693"/>
           <geom name="RF_Thigh_visual" type="mesh" mesh="R_Thigh" rgba="0.69804 0.69804 0.69804 1"
                 contype="0" conaffinity="0" group="1"/>
-          <geom name="RF_Thigh_barrel" type="cylinder" size="0.055" fromto="0 -0.01195 0  0 0.07605 0" group="3"/>
           <geom name="RF_Thigh_collision" type="box" size="0.026 0.008 0.085"
                 pos="-0.1121 0.0035 -0.1091" quat="0.32593 0 -0.94539 0" group="3"/>
 
@@ -178,7 +174,7 @@
         <joint name="LH_HAA" axis="1 0 0" range="-0.5236 0.8203"/>
         <geom name="LH_Hip_visual" type="mesh" mesh="LH_Hip" rgba="0.69804 0.69804 0.69804 1"
               contype="0" conaffinity="0" group="1"/>
-        <geom name="LH_Hip_collision" type="cylinder" size="0.053" fromto="-0.056 -0.033 0  -0.056 0.025 0" group="3"/>
+        <geom name="LH_Hip_collision" type="cylinder" size="0.047" fromto="-0.058 -0.0332 -0.0045  -0.058 0.1118 -0.0045" group="3"/>
 
         <body name="LH_Thigh" pos="-0.063 0.0996 0">
           <inertial pos="-0.028374 -0.02602 -0.029622" mass="1.5051"
@@ -186,7 +182,6 @@
           <joint name="LH_HFE" axis="0 -1 0" range="-2.8266 2.5839"/>
           <geom name="LH_Thigh_visual" type="mesh" mesh="L_Thigh" rgba="0.69804 0.69804 0.69804 1"
                 contype="0" conaffinity="0" group="1"/>
-          <geom name="LH_Thigh_barrel" type="cylinder" size="0.055" fromto="0 -0.07605 0  0 0.01195 0" group="3"/>
           <geom name="LH_Thigh_collision" type="box" size="0.026 0.008 0.085"
                 pos="-0.1121 -0.0035 -0.1091" quat="0.32593 0 -0.94539 0" group="3"/>
 
@@ -219,7 +214,7 @@
         <joint name="RH_HAA" axis="1 0 0" range="-0.8203 0.5236"/>
         <geom name="RH_Hip_visual" type="mesh" mesh="RH_Hip" rgba="0.69804 0.69804 0.69804 1"
               contype="0" conaffinity="0" group="1"/>
-        <geom name="RH_Hip_collision" type="cylinder" size="0.053" fromto="-0.056 -0.025 0  -0.056 0.033 0" group="3"/>
+        <geom name="RH_Hip_collision" type="cylinder" size="0.047" fromto="-0.058 -0.1118 -0.0045  -0.058 0.0332 -0.0045" group="3"/>
 
         <body name="RH_Thigh" pos="-0.063 -0.0996 0">
           <inertial pos="-0.02838 0.025988 -0.029631" mass="1.5052"
@@ -227,7 +222,6 @@
           <joint name="RH_HFE" axis="0 -1 0" range="-2.8266 2.5839"/>
           <geom name="RH_Thigh_visual" type="mesh" mesh="R_Thigh" rgba="0.69804 0.69804 0.69804 1"
                 contype="0" conaffinity="0" group="1"/>
-          <geom name="RH_Thigh_barrel" type="cylinder" size="0.055" fromto="0 -0.01195 0  0 0.07605 0" group="3"/>
           <geom name="RH_Thigh_collision" type="box" size="0.026 0.008 0.085"
                 pos="-0.1121 0.0035 -0.1091" quat="0.32593 0 -0.94539 0" group="3"/>
 

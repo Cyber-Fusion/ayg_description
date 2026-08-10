@@ -282,14 +282,33 @@
         <color rgba="0.69804 0.69804 0.69804 1"/>
       </material>
     </visual>
-    <!-- Rounded hip housing: one cylinder about y. Mesh AABB is
-           0.116 (x) x 0.058 (y) x 0.103 (z); r=0.053 wraps z exactly and leaves
-           the last ~5 mm of each x end uncovered, which is where the HAA flange
-           and the HFE interface sit - both shielded by the neighbouring link. -->
+    <!-- Hip housing AND HFE motor barrel: ONE cylinder about y, spanning the
+           whole HAA-to-HFE assembly (hip mesh y -0.0331..0.0250, barrel y
+           0.0235..0.1116 -> 0.0393 +/- 0.0725). This is the pre-1.3 arrangement:
+           the barrel is coaxial with the HFE axis, so carrying it on the parent
+           link is kinematically identical to carrying it on the thigh, and it
+           keeps one collider per hip instead of two.
+           The housing mesh is symmetric in z (+/-0.0513) but its two sides are
+           not: the top is roofed by the Head deck collider (underside z=+0.0455)
+           and can never touch anything, while the underside faces terrain and is
+           in the base_contact termination list. So the cylinder is r=0.047 with
+           its axis dropped to z=-0.0045 rather than r=0.053 centred: bottom
+           -0.0515 still covers the real underside (-0.0513), top +0.0425 clears
+           the deck by 3 mm. A symmetric shrink to r=0.044 would clear the deck
+           too but leave the exposed underside 7.3 mm short.
+           The last few mm of each x end stay uncovered, which is where the HAA
+           flange and the HFE interface sit - both shielded by the neighbouring
+           link.
+           x=0.058 rather than the mesh centre 0.0591 or the HFE axis 0.063: the
+           Base box is not centred (front face +0.2105, rear face -0.2125), so
+           0.058 is the smallest offset that clears the box at BOTH ends (front
+           3.5 mm, hind 1.5 mm) while still stopping short of the Head pod
+           collider at x=0.312 (4.0 mm). The Base overlap it removes is filtered
+           anyway (parent-child); this only keeps the wrappers visually honest. -->
     <collision>
-      <origin rpy="1.5707963267948966 0 0" xyz="0.056 -0.004 0"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0.058 0.0393 -0.0045"/>
       <geometry>
-        <cylinder length="0.058" radius="0.053"/>
+        <cylinder length="0.145" radius="0.047"/>
       </geometry>
     </collision>
   </link>
@@ -304,8 +323,8 @@
   <!-- Front and hind share one mesh per side (LF_Thigh and LH_Thigh are
          geometrically identical in the export, likewise RF/RH), so only L_/R_
          are shipped.
-         The thigh now carries the HFE motor barrel: the hip's y extent dropped
-         from 0.148 to 0.058 between revisions and the barrel moved to this link. -->
+         The HFE motor barrel lives on the hip link (one cylinder for the whole
+         HAA-to-HFE assembly), so the thigh carries only the slim leg member. -->
   <link name="LF_Thigh">
     <inertial>
       <origin rpy="0 0 0" xyz="-0.028374 -0.02602 -0.029622"/>
@@ -321,14 +340,6 @@
         <color rgba="0.69804 0.69804 0.69804 1"/>
       </material>
     </visual>
-    <!-- HFE motor barrel: cylinder coaxial with the HFE axis, so it is
-           invariant under hip-flexion and can never self-collide with the hip. -->
-    <collision>
-      <origin rpy="1.5707963267948966 0 0" xyz="0 -0.03205 0"/>
-      <geometry>
-        <cylinder length="0.088" radius="0.055"/>
-      </geometry>
-    </collision>
     <!-- Slim leg member: box pitched about y onto the HFE->KFE line
            (atan2(-0.15715, -0.20082) = -2.4776 rad), shortened at the knee end
            where the shank's coaxial knee cylinder takes over. -->
@@ -447,14 +458,33 @@
         <color rgba="0.69804 0.69804 0.69804 1"/>
       </material>
     </visual>
-    <!-- Rounded hip housing: one cylinder about y. Mesh AABB is
-           0.116 (x) x 0.058 (y) x 0.103 (z); r=0.053 wraps z exactly and leaves
-           the last ~5 mm of each x end uncovered, which is where the HAA flange
-           and the HFE interface sit - both shielded by the neighbouring link. -->
+    <!-- Hip housing AND HFE motor barrel: ONE cylinder about y, spanning the
+           whole HAA-to-HFE assembly (hip mesh y -0.0331..0.0250, barrel y
+           0.0235..0.1116 -> 0.0393 +/- 0.0725). This is the pre-1.3 arrangement:
+           the barrel is coaxial with the HFE axis, so carrying it on the parent
+           link is kinematically identical to carrying it on the thigh, and it
+           keeps one collider per hip instead of two.
+           The housing mesh is symmetric in z (+/-0.0513) but its two sides are
+           not: the top is roofed by the Head deck collider (underside z=+0.0455)
+           and can never touch anything, while the underside faces terrain and is
+           in the base_contact termination list. So the cylinder is r=0.047 with
+           its axis dropped to z=-0.0045 rather than r=0.053 centred: bottom
+           -0.0515 still covers the real underside (-0.0513), top +0.0425 clears
+           the deck by 3 mm. A symmetric shrink to r=0.044 would clear the deck
+           too but leave the exposed underside 7.3 mm short.
+           The last few mm of each x end stay uncovered, which is where the HAA
+           flange and the HFE interface sit - both shielded by the neighbouring
+           link.
+           x=0.058 rather than the mesh centre 0.0591 or the HFE axis 0.063: the
+           Base box is not centred (front face +0.2105, rear face -0.2125), so
+           0.058 is the smallest offset that clears the box at BOTH ends (front
+           3.5 mm, hind 1.5 mm) while still stopping short of the Head pod
+           collider at x=0.312 (4.0 mm). The Base overlap it removes is filtered
+           anyway (parent-child); this only keeps the wrappers visually honest. -->
     <collision>
-      <origin rpy="1.5707963267948966 0 0" xyz="0.056 0.004 0"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="0.058 -0.0393 -0.0045"/>
       <geometry>
-        <cylinder length="0.058" radius="0.053"/>
+        <cylinder length="0.145" radius="0.047"/>
       </geometry>
     </collision>
   </link>
@@ -469,8 +499,8 @@
   <!-- Front and hind share one mesh per side (LF_Thigh and LH_Thigh are
          geometrically identical in the export, likewise RF/RH), so only L_/R_
          are shipped.
-         The thigh now carries the HFE motor barrel: the hip's y extent dropped
-         from 0.148 to 0.058 between revisions and the barrel moved to this link. -->
+         The HFE motor barrel lives on the hip link (one cylinder for the whole
+         HAA-to-HFE assembly), so the thigh carries only the slim leg member. -->
   <link name="RF_Thigh">
     <inertial>
       <origin rpy="0 0 0" xyz="-0.02838 0.025988 -0.029631"/>
@@ -486,14 +516,6 @@
         <color rgba="0.69804 0.69804 0.69804 1"/>
       </material>
     </visual>
-    <!-- HFE motor barrel: cylinder coaxial with the HFE axis, so it is
-           invariant under hip-flexion and can never self-collide with the hip. -->
-    <collision>
-      <origin rpy="1.5707963267948966 0 0" xyz="0 0.03205 0"/>
-      <geometry>
-        <cylinder length="0.088" radius="0.055"/>
-      </geometry>
-    </collision>
     <!-- Slim leg member: box pitched about y onto the HFE->KFE line
            (atan2(-0.15715, -0.20082) = -2.4776 rad), shortened at the knee end
            where the shank's coaxial knee cylinder takes over. -->
@@ -612,14 +634,33 @@
         <color rgba="0.69804 0.69804 0.69804 1"/>
       </material>
     </visual>
-    <!-- Rounded hip housing: one cylinder about y. Mesh AABB is
-           0.116 (x) x 0.058 (y) x 0.103 (z); r=0.053 wraps z exactly and leaves
-           the last ~5 mm of each x end uncovered, which is where the HAA flange
-           and the HFE interface sit - both shielded by the neighbouring link. -->
+    <!-- Hip housing AND HFE motor barrel: ONE cylinder about y, spanning the
+           whole HAA-to-HFE assembly (hip mesh y -0.0331..0.0250, barrel y
+           0.0235..0.1116 -> 0.0393 +/- 0.0725). This is the pre-1.3 arrangement:
+           the barrel is coaxial with the HFE axis, so carrying it on the parent
+           link is kinematically identical to carrying it on the thigh, and it
+           keeps one collider per hip instead of two.
+           The housing mesh is symmetric in z (+/-0.0513) but its two sides are
+           not: the top is roofed by the Head deck collider (underside z=+0.0455)
+           and can never touch anything, while the underside faces terrain and is
+           in the base_contact termination list. So the cylinder is r=0.047 with
+           its axis dropped to z=-0.0045 rather than r=0.053 centred: bottom
+           -0.0515 still covers the real underside (-0.0513), top +0.0425 clears
+           the deck by 3 mm. A symmetric shrink to r=0.044 would clear the deck
+           too but leave the exposed underside 7.3 mm short.
+           The last few mm of each x end stay uncovered, which is where the HAA
+           flange and the HFE interface sit - both shielded by the neighbouring
+           link.
+           x=0.058 rather than the mesh centre 0.0591 or the HFE axis 0.063: the
+           Base box is not centred (front face +0.2105, rear face -0.2125), so
+           0.058 is the smallest offset that clears the box at BOTH ends (front
+           3.5 mm, hind 1.5 mm) while still stopping short of the Head pod
+           collider at x=0.312 (4.0 mm). The Base overlap it removes is filtered
+           anyway (parent-child); this only keeps the wrappers visually honest. -->
     <collision>
-      <origin rpy="1.5707963267948966 0 0" xyz="-0.056 -0.004 0"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="-0.058 0.0393 -0.0045"/>
       <geometry>
-        <cylinder length="0.058" radius="0.053"/>
+        <cylinder length="0.145" radius="0.047"/>
       </geometry>
     </collision>
   </link>
@@ -634,8 +675,8 @@
   <!-- Front and hind share one mesh per side (LF_Thigh and LH_Thigh are
          geometrically identical in the export, likewise RF/RH), so only L_/R_
          are shipped.
-         The thigh now carries the HFE motor barrel: the hip's y extent dropped
-         from 0.148 to 0.058 between revisions and the barrel moved to this link. -->
+         The HFE motor barrel lives on the hip link (one cylinder for the whole
+         HAA-to-HFE assembly), so the thigh carries only the slim leg member. -->
   <link name="LH_Thigh">
     <inertial>
       <origin rpy="0 0 0" xyz="-0.028374 -0.02602 -0.029622"/>
@@ -651,14 +692,6 @@
         <color rgba="0.69804 0.69804 0.69804 1"/>
       </material>
     </visual>
-    <!-- HFE motor barrel: cylinder coaxial with the HFE axis, so it is
-           invariant under hip-flexion and can never self-collide with the hip. -->
-    <collision>
-      <origin rpy="1.5707963267948966 0 0" xyz="0 -0.03205 0"/>
-      <geometry>
-        <cylinder length="0.088" radius="0.055"/>
-      </geometry>
-    </collision>
     <!-- Slim leg member: box pitched about y onto the HFE->KFE line
            (atan2(-0.15715, -0.20082) = -2.4776 rad), shortened at the knee end
            where the shank's coaxial knee cylinder takes over. -->
@@ -777,14 +810,33 @@
         <color rgba="0.69804 0.69804 0.69804 1"/>
       </material>
     </visual>
-    <!-- Rounded hip housing: one cylinder about y. Mesh AABB is
-           0.116 (x) x 0.058 (y) x 0.103 (z); r=0.053 wraps z exactly and leaves
-           the last ~5 mm of each x end uncovered, which is where the HAA flange
-           and the HFE interface sit - both shielded by the neighbouring link. -->
+    <!-- Hip housing AND HFE motor barrel: ONE cylinder about y, spanning the
+           whole HAA-to-HFE assembly (hip mesh y -0.0331..0.0250, barrel y
+           0.0235..0.1116 -> 0.0393 +/- 0.0725). This is the pre-1.3 arrangement:
+           the barrel is coaxial with the HFE axis, so carrying it on the parent
+           link is kinematically identical to carrying it on the thigh, and it
+           keeps one collider per hip instead of two.
+           The housing mesh is symmetric in z (+/-0.0513) but its two sides are
+           not: the top is roofed by the Head deck collider (underside z=+0.0455)
+           and can never touch anything, while the underside faces terrain and is
+           in the base_contact termination list. So the cylinder is r=0.047 with
+           its axis dropped to z=-0.0045 rather than r=0.053 centred: bottom
+           -0.0515 still covers the real underside (-0.0513), top +0.0425 clears
+           the deck by 3 mm. A symmetric shrink to r=0.044 would clear the deck
+           too but leave the exposed underside 7.3 mm short.
+           The last few mm of each x end stay uncovered, which is where the HAA
+           flange and the HFE interface sit - both shielded by the neighbouring
+           link.
+           x=0.058 rather than the mesh centre 0.0591 or the HFE axis 0.063: the
+           Base box is not centred (front face +0.2105, rear face -0.2125), so
+           0.058 is the smallest offset that clears the box at BOTH ends (front
+           3.5 mm, hind 1.5 mm) while still stopping short of the Head pod
+           collider at x=0.312 (4.0 mm). The Base overlap it removes is filtered
+           anyway (parent-child); this only keeps the wrappers visually honest. -->
     <collision>
-      <origin rpy="1.5707963267948966 0 0" xyz="-0.056 0.004 0"/>
+      <origin rpy="1.5707963267948966 0 0" xyz="-0.058 -0.0393 -0.0045"/>
       <geometry>
-        <cylinder length="0.058" radius="0.053"/>
+        <cylinder length="0.145" radius="0.047"/>
       </geometry>
     </collision>
   </link>
@@ -799,8 +851,8 @@
   <!-- Front and hind share one mesh per side (LF_Thigh and LH_Thigh are
          geometrically identical in the export, likewise RF/RH), so only L_/R_
          are shipped.
-         The thigh now carries the HFE motor barrel: the hip's y extent dropped
-         from 0.148 to 0.058 between revisions and the barrel moved to this link. -->
+         The HFE motor barrel lives on the hip link (one cylinder for the whole
+         HAA-to-HFE assembly), so the thigh carries only the slim leg member. -->
   <link name="RH_Thigh">
     <inertial>
       <origin rpy="0 0 0" xyz="-0.02838 0.025988 -0.029631"/>
@@ -816,14 +868,6 @@
         <color rgba="0.69804 0.69804 0.69804 1"/>
       </material>
     </visual>
-    <!-- HFE motor barrel: cylinder coaxial with the HFE axis, so it is
-           invariant under hip-flexion and can never self-collide with the hip. -->
-    <collision>
-      <origin rpy="1.5707963267948966 0 0" xyz="0 0.03205 0"/>
-      <geometry>
-        <cylinder length="0.088" radius="0.055"/>
-      </geometry>
-    </collision>
     <!-- Slim leg member: box pitched about y onto the HFE->KFE line
            (atan2(-0.15715, -0.20082) = -2.4776 rad), shortened at the knee end
            where the shank's coaxial knee cylinder takes over. -->
@@ -955,35 +999,63 @@
       </material>
     </visual>
     <!--
-      Collision as three boxes rather than one. The head mesh fills only 10.4% of
-      its 0.226 x 0.134 x 0.116 bounding box (it is an open bracket cage with a
-      pod at the front), so a single wrapping box would claim a great deal of
-      empty space on a part that now protrudes 0.21 m ahead of the chassis. Since
-      this is the body that strikes obstacles, and near-field obstacle response is
-      the open problem, faithfulness here is worth three primitives.
+      Collision as two primitives, each shaped like the thing it stands for: a
+      box for the carry handle on top, a cylinder for the LiDAR below it. The
+      head mesh fills only 10.4% of its 0.226 x 0.134 x 0.116 bounding box (it
+      is an open bracket cage), so a single wrapping box would claim a great
+      deal of empty space on a part that protrudes 0.21 m ahead of the chassis.
+      Since this is the body that strikes obstacles, and near-field obstacle
+      response is the open problem, shape faithfulness is worth the extra
+      primitive.
       Measured sub-regions, in the Head frame:
-        deck   x 0.000..0.226  y +/-0.055  z -0.0045..0.008
-        pod    x 0.113..0.166  y +/-0.067  z -0.092..-0.006
-        nose   x 0.166..0.218  y +/-0.032  z -0.093..-0.029
-      The thin strut below the deck (x 0.008..0.113, y +/-0.010) is left out: it
-      is tucked under the deck box and is not a plausible contact point.
+        handle x 0.000..0.226  y +/-0.045  z  0.000..0.008
+        cage   x 0.113..0.152  y +/-0.067  z -0.092..-0.006
+        shroud x 0.165..0.230  y +/-0.032  z -0.093..-0.029  (coaxial with the
+               spin axis; its 64.4 mm width is the CAD aperture, 64.3 mm)
+      The thin strut below the handle (x 0.008..0.113, y +/-0.010) is left out:
+      it is tucked under the handle box and is not a plausible contact point.
+      The cage's side walls (|y| 0.033..0.067) are left out too: they are thin
+      sheet either side of the sensor, and wrapping them cost a 611 cm3 box.
+
+      The top box is the CARRY HANDLE above the LiDAR, sized to the part rather
+      than to the head's bounding box: 8 mm thick (the measured plate is
+      z 0.000..0.008, not the 0.0125 an earlier revision claimed) and y +/-0.045
+      (the two rails and the centre spine span 0.090, not 0.110). It runs the
+      full length of the head, x 0.000..0.226, back to the chassis.
+
+      It is seated 4 mm ABOVE the measured plate, at Base-frame z 0.0540..0.0620
+      rather than 0.0500..0.0580, so its top face is flush with the Base
+      collision box's top surface (+0.0620). Reason: the handle's rear passes
+      over the two front hips, and Head is a separate rigid body
+      (merge_fixed_joints=False), so Head<->Hip is a non-adjacent pair PhysX
+      leaves active - it feeds both head_contact and base_contact (the hips are
+      in that termination's body list). Under HAA the hip cylinder's inboard end
+      swings up to z=+0.0534, which lands inside the plate's true 0.0500..0.0580
+      band; the cylinder comes up INTO the handle rather than passing under it,
+      so no thinning or narrowing clears it. Lifting the box to start at 0.0540
+      does, across the whole HAA range (-30..+30 deg on both front legs), with
+      0.5 mm to spare over the 0.0535 boundary - and without shortening the
+      handle or shrinking the hip cylinder below the coverage its exposed
+      underside needs.
+      The real parts never touch: Head.STL to LF_Hip.STL holds 2.0 mm at every
+      HAA angle, so this is wrapper-vs-wrapper, not a hardware constraint. The
+      offset trades the plate's lower 4 mm for 4 mm of air beneath the chassis
+      top plane, both shielded approaches.
     -->
     <collision>
-      <origin rpy="0 0 0" xyz="0.113 0 0.00175"/>
+      <origin rpy="0 0 0" xyz="0.113 0 0.008"/>
       <geometry>
-        <box size="0.226 0.110 0.0125"/>
+        <box size="0.226 0.090 0.008"/>
       </geometry>
     </collision>
+    <!-- LiDAR: one cylinder on the spin axis, replacing the pod + nose boxes it
+         used to take (823 -> 352 cm3). rpy sends the cylinder's own +z onto the
+         axis direction (12/13, 0, -5/13); the origin is the span's midpoint
+         measured along that axis from the Head origin. -->
     <collision>
-      <origin rpy="0 0 0" xyz="0.1395 0 -0.049"/>
+      <origin rpy="0 1.965587446494658 0" xyz="0.16938461538461538 0 -0.07057692307692306"/>
       <geometry>
-        <box size="0.053 0.134 0.086"/>
-      </geometry>
-    </collision>
-    <collision>
-      <origin rpy="0 0 0" xyz="0.192 0 -0.061"/>
-      <geometry>
-        <box size="0.052 0.064 0.064"/>
+        <cylinder length="0.10299999999999998" radius="0.033"/>
       </geometry>
     </collision>
   </link>
