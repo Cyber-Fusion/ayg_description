@@ -98,8 +98,8 @@
 
         <xacro:if value="${gazebo_version == 'fortress'}">
             <gazebo>
-                <plugin filename="ignition-gazebo-odometry-publisher-system"
-                        name="ignition::gazebo::systems::OdometryPublisher">
+                <plugin filename="gz-sim-odometry-publisher-system"
+                        name="gz::sim::systems::OdometryPublisher">
                     <odom_frame>Base</odom_frame>
                     <robot_base_frame>Base</robot_base_frame>
                     <odom_publish_frequency>500</odom_publish_frequency>
@@ -108,8 +108,8 @@
             </gazebo>
 
             <gazebo>
-                <plugin filename="ignition-gazebo-imu-system"
-                        name="ignition::gazebo::systems::Imu"/>
+                <plugin filename="gz-sim-imu-system"
+                        name="gz::sim::systems::Imu"/>
             </gazebo>
         </xacro:if>
 
