@@ -4,6 +4,7 @@
 <!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED                                 | -->
 <!-- =================================================================================== -->
 <robot name="ayg">
+  <model_version>1.2</model_version>
   <!-- Robstride ros2_control macro for quadruped -->
   <!-- Include this in your main robot URDF to add hardware interface -->
   <ros2_control name="RobstrideSystem" type="system">

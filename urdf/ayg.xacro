@@ -24,6 +24,9 @@
   <xacro:property name="velocity_lim" value="10.0" />
   <xacro:property name="PI" value="3.1415926535897931" />
 
+  <xacro:property name="model_version" value="1.3" />
+  <model_version>${model_version}</model_version>
+
   <!-- Battery inertial properties (CAD export → URDF frame)
        CAD frame: X=forward, Y=up, Z=left  |  URDF frame: X=forward, Y=left, Z=up
        Mapping: (URDF_x, URDF_y, URDF_z) = (CAD_x, CAD_z, CAD_y)
