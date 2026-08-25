@@ -30,6 +30,15 @@
             <plugin>${system_plugin}</plugin>
             <xacro:if value="${sim_backend == 'mujoco'}">
                 <param name="mujoco_model_path">$(find ayg_description)/mujoco/ayg.xml</param>
+                <xacro:if value="${motor_curve}">
+                    <!-- RS-03 four-quadrant curve = certification plant (mujoco_val
+                         eval_phased_recovery with vcap 20 + motor_curve, tau 20/16). -->
+                    <param name="motor_curve">true</param>
+                    <param name="motor_curve_vcap">20.0</param>
+                    <param name="motor_curve_tau_sat">60.0</param>
+                    <param name="motor_curve_tau">${motor_curve_tau}</param>
+                    <param name="motor_curve_tau_knee">${motor_curve_tau_knee}</param>
+                </xacro:if>
             </xacro:if>
         </hardware>
 
