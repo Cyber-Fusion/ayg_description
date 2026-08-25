@@ -26,6 +26,9 @@
   <xacro:property name="velocity_lim" value="10.0" />
   <xacro:property name="PI" value="3.1415926535897931" />
 
+  <xacro:property name="model_version" value="1.3" />
+  <model_version>${model_version}</model_version>
+
   <xacro:if value="${sim}">
     <xacro:include filename="$(find ayg_description)/urdf/ayg_sim_ros2_control.xacro" />
   </xacro:if>
