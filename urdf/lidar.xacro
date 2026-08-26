@@ -9,8 +9,10 @@
     stamps clouds in `lidar_link`.
 
     The `Head` link is the mount, taken verbatim from the SolidWorks export
-    CF-AYG-1.3-00-000-URDF-6. Its 0.72713 kg ALREADY INCLUDES the LiDAR body
-    (confirmed with the mechanical engineer) - do not add sensor mass on top.
+    CF-AYG-1.3-00-000-URDF-7. Its 0.81801 kg ALREADY INCLUDES the LiDAR body
+    (confirmed with the mechanical engineer for URDF-6's 0.72713 kg; URDF-7 adds
+    91 g and moves the CoM 15 mm back and 13 mm up) - do not add sensor mass on
+    top. The mount geometry (axis, face distance, Base_2_Head) is unchanged.
 
     The link is named `Head` (the export's name), not `Camera` as the D555 era
     used. Anything that referenced the old body name must follow - notably
@@ -100,10 +102,10 @@
   <!-- ============================== Head ============================== -->
   <link name="Head">
     <inertial>
-      <origin xyz="0.14526 0.0015227 -0.038347" rpy="0 0 0"/>
-      <mass value="0.72713"/>
-      <inertia ixx="0.00048304" ixy="5.642E-09" ixz="2.7327E-05"
-               iyy="0.0012008"  iyz="4.3319E-09" izz="0.001352"/>
+      <origin xyz="0.13017 -9.7488E-06 -0.025308" rpy="0 0 0"/>
+      <mass value="0.81801"/>
+      <inertia ixx="0.00052732" ixy="-3.3579E-08" ixz="-3.8961E-05"
+               iyy="0.0012906"  iyz="-4.1369E-08" izz="0.0015175"/>
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -117,20 +119,21 @@
     <!--
       Collision as two primitives, each shaped like the thing it stands for: a
       box for the carry handle on top, a cylinder for the LiDAR below it. The
-      head mesh fills only 10.4% of its 0.226 x 0.134 x 0.116 bounding box (it
-      is an open bracket cage), so a single wrapping box would claim a great
-      deal of empty space on a part that protrudes 0.21 m ahead of the chassis.
-      Since this is the body that strikes obstacles, and near-field obstacle
-      response is the open problem, shape faithfulness is worth the extra
-      primitive.
-      Measured sub-regions, in the Head frame:
+      head mesh fills only ~10% of its 0.226 x 0.144 x 0.116 bounding box (it
+      is an open bracket cage; 10.4% measured on URDF-6), so a single wrapping
+      box would claim a great deal of empty space on a part that protrudes
+      0.21 m ahead of the chassis. Since this is the body that strikes
+      obstacles, and near-field obstacle response is the open problem, shape
+      faithfulness is worth the extra primitive.
+      Measured sub-regions, in the Head frame (URDF-7; only the cage width
+      changed from URDF-6, +/-0.067 -> +/-0.072):
         handle x 0.000..0.226  y +/-0.045  z  0.000..0.008
-        cage   x 0.113..0.152  y +/-0.067  z -0.092..-0.006
+        cage   x 0.113..0.152  y +/-0.072  z -0.092..-0.006
         shroud x 0.165..0.230  y +/-0.032  z -0.093..-0.029  (coaxial with the
                spin axis; its 64.4 mm width is the CAD aperture, 64.3 mm)
       The thin strut below the handle (x 0.008..0.113, y +/-0.010) is left out:
       it is tucked under the handle box and is not a plausible contact point.
-      The cage's side walls (|y| 0.033..0.067) are left out too: they are thin
+      The cage's side walls (|y| 0.033..0.072) are left out too: they are thin
       sheet either side of the sensor, and wrapping them cost a 611 cm3 box.
 
       The top box is the CARRY HANDLE above the LiDAR, sized to the part rather

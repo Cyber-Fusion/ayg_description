@@ -2,23 +2,32 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <!--
-    Legs, Ayg 1.3 (SolidWorks export CF-AYG-1.3-00-000-URDF-6).
+    Legs, Ayg 1.3 (SolidWorks export CF-AYG-1.3-00-000-URDF-7).
 
     One macro instantiated four times. `sx` = +1 front / -1 hind, `sy` = +1 left /
     -1 right; every joint origin and mirrored inertia term is written as an export
     value times those signs, so the file reads as a direct transcription of the
-    export and can be re-checked against a future one line by line.
+    export and can be re-checked against a future one line by line. Where the
+    export's four instances of a part disagree in the last digits (tessellation
+    noise, at most 4e-5 m / 1.6e-6 kg m^2), the LF value is the one written.
 
     Frames are the export's own placement, unchanged. Axes are normalized to the
     deployed convention: HAA about +x, HFE/KFE about -y (the export uses +y for
     HFE/KFE, so those two joints carry a negated axis and correspondingly
     negated-and-swapped limits). Because the HFE/KFE axes are parallel to y, the
     export's frame origins sit at an arbitrary point along the rotation axis -
-    sliding them in y is kinematically null, which is why the export's y offsets
-    differ from earlier revisions while the foot positions are identical.
+    sliding them in y is kinematically null. URDF-7 slid the HFE origin 78 mm
+    inboard and the KFE origin 61 mm outboard relative to URDF-6, so the thigh's
+    strut plane now sits at y = 0.0731 (not -0.0035) in the thigh frame and the
+    shank/foot plane at y = 0.0156 (not 0) in the shank frame; the foot track in
+    the Base frame moved by only 0.5 mm. The collision primitives below carry
+    those y offsets.
 
-    Segment lengths: thigh |(-0.15715, -0.20082)| = shank |(0.170476, -0.189639)|
-    = 0.255 m exactly, so the leg extends 0.510 m hip-to-foot (was 0.443 m).
+    Segment lengths: thigh |(-0.15715, -0.20082)| = 0.2550 m, shank
+    |(0.17048, -0.19164)| = 0.2565 m (URDF-6: 0.2550; the shank envelope is
+    unchanged, the foot centre moved 2 mm down its frame), so the leg extends
+    0.5115 m hip-to-foot and the zero pose puts Base 0.4245 m above ground
+    (0.20082 + 0.19164 + 0.032 foot radius).
   -->
 
   <xacro:macro name="ayg_leg" params="side FH sx sy">
@@ -29,10 +38,10 @@
          single pair can be reused by rotating a joint frame. -->
     <link name="${side}${FH}_Hip">
       <inertial>
-        <origin xyz="${0.059856*sx} ${0.0023868*sy} ${1.6688E-05*sx*sy}" rpy="0 0 0" />
-        <mass value="0.98111" />
-        <inertia ixx="0.00070791" ixy="${1.6598E-06*sx*sy}" ixz="${9.3501E-07*sy}"
-                 iyy="0.0012845"  iyz="${-2.4177E-07*sx}"   izz="0.00087996" />
+        <origin xyz="${0.06215*sx} ${-0.0031317*sy} -0.00034351" rpy="0 0 0" />
+        <mass value="1.0451" />
+        <inertia ixx="0.00069698" ixy="${-1.5149E-06*sx*sy}" ixz="${1.4486E-05*sx}"
+                 iyy="0.0012902"  iyz="${-1.5206E-06*sy}"    izz="0.00084229" />
       </inertial>
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
@@ -44,30 +53,36 @@
         </material>
       </visual>
       <!-- Hip housing AND HFE motor barrel: ONE cylinder about y, spanning the
-           whole HAA-to-HFE assembly (hip mesh y -0.0331..0.0250, barrel y
-           0.0235..0.1116 -> 0.0393 +/- 0.0725). This is the pre-1.3 arrangement:
-           the barrel is coaxial with the HFE axis, so carrying it on the parent
-           link is kinematically identical to carrying it on the thigh, and it
-           keeps one collider per hip instead of two.
-           The housing mesh is symmetric in z (+/-0.0513) but its two sides are
-           not: the top is roofed by the Head deck collider (underside z=+0.0455)
-           and can never touch anything, while the underside faces terrain and is
-           in the base_contact termination list. So the cylinder is r=0.047 with
-           its axis dropped to z=-0.0045 rather than r=0.053 centred: bottom
-           -0.0515 still covers the real underside (-0.0513), top +0.0425 clears
-           the deck by 3 mm. A symmetric shrink to r=0.044 would clear the deck
-           too but leave the exposed underside 7.3 mm short.
+           whole HAA-to-HFE assembly (hip mesh y -0.0376..0.0250, barrel y
+           0.0215..0.1071 in this frame). This is the pre-1.3 arrangement: the
+           barrel is coaxial with the HFE axis, so carrying it on the parent link
+           is kinematically identical to carrying it on the thigh, and it keeps
+           one collider per hip instead of two.
+           The housing mesh is near-symmetric in z (-0.0520..+0.0513) but its two
+           sides are not: the top is roofed by the Head deck collider (underside
+           z=+0.0455) and can never touch anything, while the underside faces
+           terrain and is in the base_contact termination list. So the cylinder
+           is r=0.047 with its axis dropped to z=-0.0045 rather than r=0.053
+           centred: bottom -0.0515 covers the real underside to within 0.5 mm,
+           top +0.0425 clears the deck by 3 mm. A symmetric shrink to r=0.044
+           would clear the deck too but leave the exposed underside 7.3 mm short.
+           The y span is deliberately NOT widened to the hip mesh's new inboard
+           end (-0.0376): under +/-30 deg HAA the inboard rim of this cylinder
+           rises to z=+0.0534, 0.5 mm under the Head handle collider, and every
+           mm added inboard pushes it into that box. The uncovered 4.4 mm sliver
+           sits inside the Base collision box anyway.
            The last few mm of each x end stay uncovered, which is where the HAA
            flange and the HFE interface sit - both shielded by the neighbouring
            link.
-           x=0.058 rather than the mesh centre 0.0591 or the HFE axis 0.063: the
-           Base box is not centred (front face +0.2105, rear face -0.2125), so
-           0.058 is the smallest offset that clears the box at BOTH ends (front
-           3.5 mm, hind 1.5 mm) while still stopping short of the Head pod
-           collider at x=0.312 (4.0 mm). The Base overlap it removes is filtered
-           anyway (parent-child); this only keeps the wrappers visually honest. -->
+           x=0.060 puts the cylinder at Base x=+/-0.261, exactly where URDF-6 had
+           it (0.203 + 0.058): the HAA moved 2 mm inboard in x and the offset
+           follows, so the clearances to the Base box (front 3.5 mm, hind 1.5 mm;
+           the box is not centred, faces +0.2105/-0.2125) and to the LiDAR
+           collider ahead of it are unchanged. The Base overlap it removes is
+           filtered anyway (parent-child); this only keeps the wrappers visually
+           honest. -->
       <collision>
-        <origin xyz="${0.058*sx} ${0.0393*sy} -0.0045" rpy="${PI/2} 0 0" />
+        <origin xyz="${0.060*sx} ${0.0393*sy} -0.0045" rpy="${PI/2} 0 0" />
         <geometry>
           <cylinder radius="0.047" length="0.145" />
         </geometry>
@@ -75,42 +90,39 @@
     </link>
 
     <joint name="${side}${FH}_HAA" type="revolute">
-      <origin xyz="${0.203*sx} ${0.054*sy} 0" rpy="0 0 0" />
+      <origin xyz="${0.201*sx} ${0.056*sy} 0" rpy="0 0 0" />
       <parent link="Base" />
       <child link="${side}${FH}_Hip" />
       <axis xyz="1 0 0" />
-      <!-- Export HAA limits carry over verbatim (axis unchanged). The outward
-           travel differs front vs hind: 0.43633 front, 0.8203 hind. -->
+      <!-- Export HAA limits carry over verbatim (axis unchanged). URDF-7 made
+           the front hips symmetric (+/-0.5236; URDF-6 allowed only 0.43633
+           outward); the hind outward travel stays 0.8203. -->
       <xacro:if value="${side == 'L'}">
-        <limit lower="-0.5236" upper="${0.43633 if FH == 'F' else 0.8203}"
+        <limit lower="-0.5236" upper="${0.5236 if FH == 'F' else 0.8203}"
                effort="${effort_lim}" velocity="${velocity_lim}" />
       </xacro:if>
       <xacro:unless value="${side == 'L'}">
-        <limit lower="${-0.43633 if FH == 'F' else -0.8203}" upper="0.5236"
+        <limit lower="${-0.5236 if FH == 'F' else -0.8203}" upper="0.5236"
                effort="${effort_lim}" velocity="${velocity_lim}" />
       </xacro:unless>
     </joint>
 
     <!-- ============================= Thigh ============================= -->
-    <!-- Front and hind share one mesh per side (LF_Thigh and LH_Thigh are
-         geometrically identical in the export, likewise RF/RH), so only L_/R_
-         are shipped.
+    <!-- Front and hind share one mesh per side (LF_Thigh and LH_Thigh agree to
+         0.07 mm in the export, RF/RH exactly), so only L_/R_ are shipped. Left
+         and right are NOT mirror images (5 mm apart), hence two files.
+         URDF-7 redesigned this part (the collision with the chassis at extreme
+         HFE is gone; the barrel's rear face pulled in 1.7 mm) and its inertia is
+         now an exact left/right mirror, so one signed block replaces URDF-6's
+         separate L/R values.
          The HFE motor barrel lives on the hip link (one cylinder for the whole
          HAA-to-HFE assembly), so the thigh carries only the slim leg member. -->
     <link name="${side}${FH}_Thigh">
       <inertial>
-        <xacro:if value="${side == 'L'}">
-          <origin xyz="-0.028374 -0.02602 -0.029622" rpy="0 0 0" />
-          <mass value="1.5051" />
-          <inertia ixx="0.0043448" ixy="0.00034914" ixz="-0.0029698"
-                   iyy="0.0075708" iyz="0.00034106" izz="0.0039222" />
-        </xacro:if>
-        <xacro:unless value="${side == 'L'}">
-          <origin xyz="-0.02838 0.025988 -0.029631" rpy="0 0 0" />
-          <mass value="1.5052" />
-          <inertia ixx="0.0043476" ixy="-0.00034935" ixz="-0.0029719"
-                   iyy="0.0075751" iyz="-0.00034134" izz="0.0039239" />
-        </xacro:unless>
+        <origin xyz="-0.024065 ${0.049498*sy} -0.02468" rpy="0 0 0" />
+        <mass value="1.6083" />
+        <inertia ixx="0.004797"  ixy="${0.00038562*sy}" ixz="-0.0032535"
+                 iyy="0.0083583" iyz="${0.00037881*sy}" izz="0.0043329" />
       </inertial>
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0" />
@@ -123,9 +135,12 @@
       </visual>
       <!-- Slim leg member: box pitched about y onto the HFE->KFE line
            (atan2(-0.15715, -0.20082) = -2.4776 rad), shortened at the knee end
-           where the shank's coaxial knee cylinder takes over. -->
+           where the shank's coaxial knee cylinder takes over. y is the strut's
+           centre plane, measured on the mesh (mid-strut y 0.0661..0.0801, 14 mm
+           wide) = the KFE origin's 0.057518 plus the shank frame's 0.015582
+           foot offset. -->
       <collision>
-        <origin xyz="-0.1121 ${-0.0035*sy} -0.1091" rpy="0 -2.4776 0" />
+        <origin xyz="-0.1121 ${0.0731*sy} -0.1091" rpy="0 -2.4776 0" />
         <geometry>
           <box size="0.052 0.016 0.170" />
         </geometry>
@@ -133,7 +148,7 @@
     </link>
 
     <joint name="${side}${FH}_HFE" type="revolute">
-      <origin xyz="${0.063*sx} ${0.0996*sy} 0" rpy="0 0 0" />
+      <origin xyz="${0.065*sx} ${0.0215*sy} 0" rpy="0 0 0" />
       <parent link="${side}${FH}_Hip" />
       <child link="${side}${FH}_Thigh" />
       <axis xyz="0 -1 0" />
@@ -149,19 +164,22 @@
     </joint>
 
     <!-- ============================= Shank ============================= -->
-    <!-- All four shank meshes are geometrically identical in the export, so one
-         Shank.STL serves every leg. The part is unchanged from the previous
-         revision; only its frame slid 15.6 mm along y (the foot now sits at y=0
-         in this frame). -->
+    <!-- The same physical part on all four legs: LF and LH agree to 0.07 mm,
+         and RF/RH are LF translated by -0.031164 in y (0.02 mm) - a plain copy,
+         not a mirror image (the strut is not symmetric about its own plane). So
+         one Shank.STL serves every leg, placed at the export's y = +0.015582
+         (left) / -0.015582 (right); the visual origin below carries the
+         -0.031164 shift on the right side.
+         URDF-7 reworked the part inside the same envelope (0.346 -> 0.285 kg). -->
     <link name="${side}${FH}_Shank">
       <inertial>
-        <origin xyz="0.081442 -1.3138E-05 -0.079562" rpy="0 0 0" />
-        <mass value="0.34563" />
-        <inertia ixx="0.0016882" ixy="-5.8149E-12" ixz="0.0015751"
-                 iyy="0.0032906" iyz="-3.2788E-12" izz="0.0016244" />
+        <origin xyz="0.079065 ${0.015593*sy} -0.077092" rpy="0 0 0" />
+        <mass value="0.28461" />
+        <inertia ixx="0.0013467" ixy="3.9114E-12" ixz="0.0012546"
+                 iyy="0.0026227" iyz="-1.247E-11" izz="0.0012937" />
       </inertial>
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0" />
+        <origin xyz="0 ${0.015582*(sy-1)} 0" rpy="0 0 0" />
         <geometry>
           <mesh filename="package://ayg_description/meshes/Shank.STL" />
         </geometry>
@@ -170,21 +188,22 @@
         </material>
       </visual>
       <!-- Slim leg member: box pitched onto the KFE->foot line
-           (atan2(0.170476, -0.189639) = +2.4094 rad). Widened to 0.040 in the
-           box's x from the 0.020 used for the previous revision: the strut is
-           curved, and 0.020 left the outer ~25 mm of its sweep uncovered. -->
+           (atan2(0.17048, -0.19164) = +2.4146 rad; URDF-6: 2.4094), 0.040 wide
+           in the box's x because the strut is curved and 0.020 left the outer
+           ~25 mm of its sweep uncovered. Centred on the foot plane y=0.015582
+           (strut mesh y 0.0001..0.0311). -->
       <collision>
-        <origin xyz="0.0897 0 -0.0938" rpy="0 2.4094 0" />
+        <origin xyz="0.0897 ${0.015582*sy} -0.0938" rpy="0 2.4146 0" />
         <geometry>
           <box size="0.040 0.017 0.180" />
         </geometry>
       </collision>
       <!-- Knee filler: cylinder coaxial with the KFE axis, so it is invariant
            under knee bend and bridges the thigh/shank gap for external contacts
-           without ever self-colliding with either. Length follows the new knee
-           width (0.018 measured) rather than the old 0.031. -->
+           without ever self-colliding with either. Centred on the knee's own
+           y (mesh 0.0071..0.0241 at the joint, 17 mm wide). -->
       <collision>
-        <origin xyz="0 0 0" rpy="${PI/2} 0 0" />
+        <origin xyz="0 ${0.015582*sy} 0" rpy="${PI/2} 0 0" />
         <geometry>
           <cylinder radius="0.030" length="0.019" />
         </geometry>
@@ -192,7 +211,7 @@
     </link>
 
     <joint name="${side}${FH}_KFE" type="revolute">
-      <origin xyz="-0.15715 ${-0.0035*sy} -0.20082" rpy="0 0 0" />
+      <origin xyz="-0.15715 ${0.057518*sy} -0.20082" rpy="0 0 0" />
       <parent link="${side}${FH}_Thigh" />
       <child link="${side}${FH}_Shank" />
       <axis xyz="0 -1 0" />
@@ -203,14 +222,16 @@
     <!-- ============================== Foot ============================= -->
     <!-- Modelled as primitives rather than the export's Foot mesh: the export's
          own inertia is exactly that of a solid cylinder r=0.032, L=0.031 about y
-         (iyy = m r^2 / 2 = 2.048E-05, ixx = izz = m r^2 / 4 + m L^2 / 12 =
-         1.3443E-05), so the primitive is the mass model, not an approximation. -->
+         (iyy = m r^2 / 2 = 2.7889E-05, ixx = izz = m r^2 / 4 + m L^2 / 12 =
+         1.8306E-05), so the primitive is the mass model, not an approximation.
+         URDF-7 keeps that cylinder and raises its mass 0.040 -> 0.05447 kg (the
+         elastic-tire foot); the compliance itself is not modelled here. -->
     <link name="${side}${FH}_Foot">
       <inertial>
         <origin xyz="0 0 0" rpy="0 0 0" />
-        <mass value="0.04" />
-        <inertia ixx="1.3443E-05" ixy="0" ixz="0"
-                 iyy="2.048E-05"  iyz="0" izz="1.3443E-05" />
+        <mass value="0.05447" />
+        <inertia ixx="1.8306E-05" ixy="0" ixz="0"
+                 iyy="2.7889E-05" iyz="0" izz="1.8306E-05" />
       </inertial>
       <visual>
         <origin xyz="0 0 0" rpy="${PI/2} 0 0" />
@@ -230,7 +251,7 @@
     </link>
 
     <joint name="${side}${FH}_Shank_2_Foot" type="fixed">
-      <origin xyz="0.170476 0 -0.189639" rpy="0 0 0" />
+      <origin xyz="0.17048 ${0.015582*sy} -0.19164" rpy="0 0 0" />
       <parent link="${side}${FH}_Shank" />
       <child link="${side}${FH}_Foot" />
       <axis xyz="0 0 0" />

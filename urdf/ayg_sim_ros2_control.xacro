@@ -63,13 +63,14 @@
 
         <!--
             standing: the zero pose, feet directly below their HFE origins at a
-            0.4225 m base height. This is the 1.3 nominal stance: it equals the
-            cf_lab training init (every episode resets to all-zero joints), it
-            clears the JT128's 0.35 m near-field threshold (sensor at 0.413 m vs
-            0.330 m at the earlier 0.340 m carry-over), and it holds the lowest
-            static KFE torque of the workable range (9.2 vs 11.4 N*m per leg).
+            0.4245 m base height (URDF-7; 0.4225 on URDF-6). This is the 1.3
+            nominal stance: it equals the cf_lab training init (every episode
+            resets to all-zero joints), it clears the JT128's 0.35 m near-field
+            threshold (sensor at 0.415 m vs 0.330 m at the earlier 0.340 m
+            carry-over), and it holds the lowest static KFE torque of the
+            workable range (9.2 vs 11.4 N*m per leg at the URDF-6 masses).
             The KFE extension stop still leaves 0.565 rad (7.6 cm of base rise)
-            beyond it. Requires spawn_height above 0.4225 (simulate_ayg uses
+            beyond it. Requires spawn_height above 0.4245 (simulate_ayg uses
             0.45).
         -->
         <xacro:if value="${initial_configuration == 'standing'}">

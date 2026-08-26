@@ -1,7 +1,7 @@
 <mujoco model="ayg">
   <!--
     Ayg 1.3, kept in step with urdf/ayg.xacro + urdf/legs.xacro + urdf/lidar.xacro
-    (SolidWorks export CF-AYG-1.3-00-000-URDF-6). Masses, CoMs, inertias, joint
+    (SolidWorks export CF-AYG-1.3-00-000-URDF-7). Masses, CoMs, inertias, joint
     origins, limits and collision primitives are the same numbers as the URDF; see
     those files for the derivations.
 
@@ -12,7 +12,11 @@
         r=0.032 L=0.031.
       * the head was a visual-only geom on Base whose 0.727 kg was therefore
         absent from the model. It is now a child body with its own inertial, so
-        the total is the real 22.948 kg.
+        the total is the real 23.809 kg.
+
+    The shank is one mesh for all four legs (the export's RF/RH shanks are the LF
+    part translated -0.031164 in y, not mirrored), so the right-side visual geoms
+    carry that pos offset.
 
     Hind legs no longer carry the pi yaw the 1.2 model used. It only ever existed
     so front and hind could share a hip mesh; the export ships four, and dropping
@@ -50,27 +54,27 @@
     <geom name="floor" type="plane" size="5 5 0.1" material="grid_mat" contype="1" conaffinity="1"
           friction="1.5 0.005 0.001" condim="6" solimp="0.9 0.95 0.001" solref="0.02 1"/>
 
-    <!-- Spawn height clears the zero-joint pose: the 1.3 leg puts the feet 0.4225 m
+    <!-- Spawn height clears the zero-joint pose: the 1.3 leg puts the feet 0.4245 m
          below Base at all-zero joints (was 0.341 m), so 0.40 would start the model
          underground. -->
     <body name="Base" pos="0 0 0.46">
       <freejoint name="float_base"/>
       <!-- Batteries are lumped into Base (rigidly fixed inside the chassis). -->
-      <inertial pos="-0.00030633 -0.0051482 -0.0019103" mass="10.732"
-                fullinertia="0.029884 0.038536 0.055747 4.1808e-07 0.00015159 1.5415e-07"/>
+      <inertial pos="-0.0005817 -1.9934e-05 -0.0020067" mass="11.02"
+                fullinertia="0.035479 0.032555 0.055613 -3.4801e-06 8.3812e-05 0.00043953"/>
       <geom name="Base_visual" type="mesh" mesh="Base" rgba="0.69804 0.69804 0.69804 1"
             contype="0" conaffinity="0" group="1"/>
       <geom name="Base_collision" type="box" size="0.2115 0.1195 0.075" pos="-0.001 0 -0.013"
             rgba="0.69804 0.69804 0.69804 1" group="3"/>
-      <site name="imu_site" pos="0 0 -0.00983" size="0.001" rgba="0 1 0 1"/>
+      <site name="imu_site" pos="0 0 -0.02883" size="0.001" rgba="0 1 0 1"/>
 
       <!-- ==================== Head (LiDAR mount) ==================== -->
-      <!-- 0.72713 kg INCLUDING the JT128 body; do not add sensor mass. Collision
+      <!-- 0.81801 kg INCLUDING the JT128 body; do not add sensor mass. Collision
            is three boxes (deck / pod / nose) because the mesh fills only 10.4% of
            its bounding box and this is the body that strikes obstacles. -->
       <body name="Head" pos="0.199 0 0.05">
-        <inertial pos="0.14526 0.0015227 -0.038347" mass="0.72713"
-                  fullinertia="0.00048304 0.0012008 0.001352 5.642e-09 2.7327e-05 4.3319e-09"/>
+        <inertial pos="0.13017 -9.7488e-06 -0.025308" mass="0.81801"
+                  fullinertia="0.00052732 0.0012906 0.0015175 -3.3579e-08 -3.8961e-05 -4.1369e-08"/>
         <geom name="Head_visual" type="mesh" mesh="Head" rgba="0.69804 0.69804 0.69804 1"
               contype="0" conaffinity="0" group="1"/>
         <geom name="Head_handle_collision" type="box" size="0.113 0.045 0.0040"
@@ -88,36 +92,36 @@
       </body>
 
       <!-- ==================== Left Front Leg ==================== -->
-      <body name="LF_Hip" pos="0.203 0.054 0">
-        <inertial pos="0.059856 0.0023868 1.6688e-05" mass="0.98111"
-                  fullinertia="0.00070791 0.0012845 0.00087996 1.6598e-06 9.3501e-07 -2.4177e-07"/>
-        <joint name="LF_HAA" axis="1 0 0" range="-0.5236 0.43633"/>
+      <body name="LF_Hip" pos="0.201 0.056 0">
+        <inertial pos="0.06215 -0.0031317 -0.00034351" mass="1.0451"
+                  fullinertia="0.00069698 0.0012902 0.00084229 -1.5149e-06 1.4486e-05 -1.5206e-06"/>
+        <joint name="LF_HAA" axis="1 0 0" range="-0.5236 0.5236"/>
         <geom name="LF_Hip_visual" type="mesh" mesh="LF_Hip" rgba="0.69804 0.69804 0.69804 1"
               contype="0" conaffinity="0" group="1"/>
-        <geom name="LF_Hip_collision" type="cylinder" size="0.047" fromto="0.058 -0.0332 -0.0045  0.058 0.1118 -0.0045" group="3"/>
+        <geom name="LF_Hip_collision" type="cylinder" size="0.047" fromto="0.06 -0.0332 -0.0045  0.06 0.1118 -0.0045" group="3"/>
 
-        <body name="LF_Thigh" pos="0.063 0.0996 0">
-          <inertial pos="-0.028374 -0.02602 -0.029622" mass="1.5051"
-                    fullinertia="0.0043448 0.0075708 0.0039222 0.00034914 -0.0029698 0.00034106"/>
+        <body name="LF_Thigh" pos="0.065 0.0215 0">
+          <inertial pos="-0.024065 0.049498 -0.02468" mass="1.6083"
+                    fullinertia="0.004797 0.0083583 0.0043329 0.00038562 -0.0032535 0.00037881"/>
           <joint name="LF_HFE" axis="0 -1 0" range="-2.0412 3.3693"/>
           <geom name="LF_Thigh_visual" type="mesh" mesh="L_Thigh" rgba="0.69804 0.69804 0.69804 1"
                 contype="0" conaffinity="0" group="1"/>
           <geom name="LF_Thigh_collision" type="box" size="0.026 0.008 0.085"
-                pos="-0.1121 -0.0035 -0.1091" quat="0.32593 0 -0.94539 0" group="3"/>
+                pos="-0.1121 0.0731 -0.1091" quat="0.32593 0 -0.94539 0" group="3"/>
 
-          <body name="LF_Shank" pos="-0.15715 -0.0035 -0.20082">
-            <inertial pos="0.081442 -1.3138e-05 -0.079562" mass="0.34563"
-                      fullinertia="0.0016882 0.0032906 0.0016244 -5.8149e-12 0.0015751 -3.2788e-12"/>
+          <body name="LF_Shank" pos="-0.15715 0.057518 -0.20082">
+            <inertial pos="0.079065 0.015593 -0.077092" mass="0.28461"
+                      fullinertia="0.0013467 0.0026227 0.0012937 3.9114e-12 0.0012546 -1.247e-11"/>
             <joint name="LF_KFE" axis="0 -1 0" range="-0.56374 1.4085"/>
             <geom name="LF_Shank_visual" type="mesh" mesh="Shank" rgba="0.69804 0.69804 0.69804 1"
                   contype="0" conaffinity="0" group="1"/>
             <geom name="LF_Shank_collision" type="box" size="0.020 0.0085 0.090"
-                  pos="0.0897 0 -0.0938" quat="0.35797 0 0.93373 0" group="3"/>
-            <geom name="LF_Knee_collision" type="cylinder" size="0.030" fromto="0 -0.0095 0  0 0.0095 0" group="3"/>
+                  pos="0.0897 0.015582 -0.0938" quat="0.35556 0 0.93465 0" group="3"/>
+            <geom name="LF_Knee_collision" type="cylinder" size="0.030" fromto="0 0.006082 0  0 0.025082 0" group="3"/>
 
-            <body name="LF_Foot" pos="0.170476 0 -0.189639">
-              <inertial pos="0 0 0" mass="0.04"
-                        fullinertia="1.3443e-05 2.048e-05 1.3443e-05 0 0 0"/>
+            <body name="LF_Foot" pos="0.17048 0.015582 -0.19164">
+              <inertial pos="0 0 0" mass="0.05447"
+                        fullinertia="1.8306e-05 2.7889e-05 1.8306e-05 0 0 0"/>
               <geom name="LF_Foot_visual" type="cylinder" size="0.032 0.0155" quat="0.70711 0.70711 0 0"
                     rgba="0.29804 0.29804 0.29804 1" contype="0" conaffinity="0" group="1"/>
               <geom name="LF_Foot_collision" type="sphere" size="0.032" friction="2.0 0.01 0.001" group="3"/>
@@ -128,36 +132,36 @@
       </body>
 
       <!-- ==================== Right Front Leg ==================== -->
-      <body name="RF_Hip" pos="0.203 -0.054 0">
-        <inertial pos="0.059856 -0.0023868 -1.6688e-05" mass="0.98111"
-                  fullinertia="0.00070791 0.0012845 0.00087996 -1.6598e-06 -9.3501e-07 -2.4177e-07"/>
-        <joint name="RF_HAA" axis="1 0 0" range="-0.43633 0.5236"/>
+      <body name="RF_Hip" pos="0.201 -0.056 0">
+        <inertial pos="0.06215 0.0031317 -0.00034351" mass="1.0451"
+                  fullinertia="0.00069698 0.0012902 0.00084229 1.5149e-06 1.4486e-05 1.5206e-06"/>
+        <joint name="RF_HAA" axis="1 0 0" range="-0.5236 0.5236"/>
         <geom name="RF_Hip_visual" type="mesh" mesh="RF_Hip" rgba="0.69804 0.69804 0.69804 1"
               contype="0" conaffinity="0" group="1"/>
-        <geom name="RF_Hip_collision" type="cylinder" size="0.047" fromto="0.058 -0.1118 -0.0045  0.058 0.0332 -0.0045" group="3"/>
+        <geom name="RF_Hip_collision" type="cylinder" size="0.047" fromto="0.06 -0.1118 -0.0045  0.06 0.0332 -0.0045" group="3"/>
 
-        <body name="RF_Thigh" pos="0.063 -0.0996 0">
-          <inertial pos="-0.02838 0.025988 -0.029631" mass="1.5052"
-                    fullinertia="0.0043476 0.0075751 0.0039239 -0.00034935 -0.0029719 -0.00034134"/>
+        <body name="RF_Thigh" pos="0.065 -0.0215 0">
+          <inertial pos="-0.024065 -0.049498 -0.02468" mass="1.6083"
+                    fullinertia="0.004797 0.0083583 0.0043329 -0.00038562 -0.0032535 -0.00037881"/>
           <joint name="RF_HFE" axis="0 -1 0" range="-2.0412 3.3693"/>
           <geom name="RF_Thigh_visual" type="mesh" mesh="R_Thigh" rgba="0.69804 0.69804 0.69804 1"
                 contype="0" conaffinity="0" group="1"/>
           <geom name="RF_Thigh_collision" type="box" size="0.026 0.008 0.085"
-                pos="-0.1121 0.0035 -0.1091" quat="0.32593 0 -0.94539 0" group="3"/>
+                pos="-0.1121 -0.0731 -0.1091" quat="0.32593 0 -0.94539 0" group="3"/>
 
-          <body name="RF_Shank" pos="-0.15715 0.0035 -0.20082">
-            <inertial pos="0.081442 -1.3138e-05 -0.079562" mass="0.34563"
-                      fullinertia="0.0016882 0.0032906 0.0016244 -5.8149e-12 0.0015751 -3.2788e-12"/>
+          <body name="RF_Shank" pos="-0.15715 -0.057518 -0.20082">
+            <inertial pos="0.079065 -0.015593 -0.077092" mass="0.28461"
+                      fullinertia="0.0013467 0.0026227 0.0012937 3.9114e-12 0.0012546 -1.247e-11"/>
             <joint name="RF_KFE" axis="0 -1 0" range="-0.56374 1.4085"/>
-            <geom name="RF_Shank_visual" type="mesh" mesh="Shank" rgba="0.69804 0.69804 0.69804 1"
+            <geom name="RF_Shank_visual" type="mesh" mesh="Shank" pos="0 -0.031164 0" rgba="0.69804 0.69804 0.69804 1"
                   contype="0" conaffinity="0" group="1"/>
             <geom name="RF_Shank_collision" type="box" size="0.020 0.0085 0.090"
-                  pos="0.0897 0 -0.0938" quat="0.35797 0 0.93373 0" group="3"/>
-            <geom name="RF_Knee_collision" type="cylinder" size="0.030" fromto="0 -0.0095 0  0 0.0095 0" group="3"/>
+                  pos="0.0897 -0.015582 -0.0938" quat="0.35556 0 0.93465 0" group="3"/>
+            <geom name="RF_Knee_collision" type="cylinder" size="0.030" fromto="0 -0.025082 0  0 -0.006082 0" group="3"/>
 
-            <body name="RF_Foot" pos="0.170476 0 -0.189639">
-              <inertial pos="0 0 0" mass="0.04"
-                        fullinertia="1.3443e-05 2.048e-05 1.3443e-05 0 0 0"/>
+            <body name="RF_Foot" pos="0.17048 -0.015582 -0.19164">
+              <inertial pos="0 0 0" mass="0.05447"
+                        fullinertia="1.8306e-05 2.7889e-05 1.8306e-05 0 0 0"/>
               <geom name="RF_Foot_visual" type="cylinder" size="0.032 0.0155" quat="0.70711 0.70711 0 0"
                     rgba="0.29804 0.29804 0.29804 1" contype="0" conaffinity="0" group="1"/>
               <geom name="RF_Foot_collision" type="sphere" size="0.032" friction="2.0 0.01 0.001" group="3"/>
@@ -168,36 +172,36 @@
       </body>
 
       <!-- ==================== Left Hind Leg ==================== -->
-      <body name="LH_Hip" pos="-0.203 0.054 0">
-        <inertial pos="-0.059856 0.0023868 -1.6688e-05" mass="0.98111"
-                  fullinertia="0.00070791 0.0012845 0.00087996 -1.6598e-06 9.3501e-07 2.4177e-07"/>
+      <body name="LH_Hip" pos="-0.201 0.056 0">
+        <inertial pos="-0.06215 -0.0031317 -0.00034351" mass="1.0451"
+                  fullinertia="0.00069698 0.0012902 0.00084229 1.5149e-06 -1.4486e-05 -1.5206e-06"/>
         <joint name="LH_HAA" axis="1 0 0" range="-0.5236 0.8203"/>
         <geom name="LH_Hip_visual" type="mesh" mesh="LH_Hip" rgba="0.69804 0.69804 0.69804 1"
               contype="0" conaffinity="0" group="1"/>
-        <geom name="LH_Hip_collision" type="cylinder" size="0.047" fromto="-0.058 -0.0332 -0.0045  -0.058 0.1118 -0.0045" group="3"/>
+        <geom name="LH_Hip_collision" type="cylinder" size="0.047" fromto="-0.06 -0.0332 -0.0045  -0.06 0.1118 -0.0045" group="3"/>
 
-        <body name="LH_Thigh" pos="-0.063 0.0996 0">
-          <inertial pos="-0.028374 -0.02602 -0.029622" mass="1.5051"
-                    fullinertia="0.0043448 0.0075708 0.0039222 0.00034914 -0.0029698 0.00034106"/>
+        <body name="LH_Thigh" pos="-0.065 0.0215 0">
+          <inertial pos="-0.024065 0.049498 -0.02468" mass="1.6083"
+                    fullinertia="0.004797 0.0083583 0.0043329 0.00038562 -0.0032535 0.00037881"/>
           <joint name="LH_HFE" axis="0 -1 0" range="-2.8266 2.5839"/>
           <geom name="LH_Thigh_visual" type="mesh" mesh="L_Thigh" rgba="0.69804 0.69804 0.69804 1"
                 contype="0" conaffinity="0" group="1"/>
           <geom name="LH_Thigh_collision" type="box" size="0.026 0.008 0.085"
-                pos="-0.1121 -0.0035 -0.1091" quat="0.32593 0 -0.94539 0" group="3"/>
+                pos="-0.1121 0.0731 -0.1091" quat="0.32593 0 -0.94539 0" group="3"/>
 
-          <body name="LH_Shank" pos="-0.15715 -0.0035 -0.20082">
-            <inertial pos="0.081442 -1.3138e-05 -0.079562" mass="0.34563"
-                      fullinertia="0.0016882 0.0032906 0.0016244 -5.8149e-12 0.0015751 -3.2788e-12"/>
+          <body name="LH_Shank" pos="-0.15715 0.057518 -0.20082">
+            <inertial pos="0.079065 0.015593 -0.077092" mass="0.28461"
+                      fullinertia="0.0013467 0.0026227 0.0012937 3.9114e-12 0.0012546 -1.247e-11"/>
             <joint name="LH_KFE" axis="0 -1 0" range="-0.56374 1.4085"/>
             <geom name="LH_Shank_visual" type="mesh" mesh="Shank" rgba="0.69804 0.69804 0.69804 1"
                   contype="0" conaffinity="0" group="1"/>
             <geom name="LH_Shank_collision" type="box" size="0.020 0.0085 0.090"
-                  pos="0.0897 0 -0.0938" quat="0.35797 0 0.93373 0" group="3"/>
-            <geom name="LH_Knee_collision" type="cylinder" size="0.030" fromto="0 -0.0095 0  0 0.0095 0" group="3"/>
+                  pos="0.0897 0.015582 -0.0938" quat="0.35556 0 0.93465 0" group="3"/>
+            <geom name="LH_Knee_collision" type="cylinder" size="0.030" fromto="0 0.006082 0  0 0.025082 0" group="3"/>
 
-            <body name="LH_Foot" pos="0.170476 0 -0.189639">
-              <inertial pos="0 0 0" mass="0.04"
-                        fullinertia="1.3443e-05 2.048e-05 1.3443e-05 0 0 0"/>
+            <body name="LH_Foot" pos="0.17048 0.015582 -0.19164">
+              <inertial pos="0 0 0" mass="0.05447"
+                        fullinertia="1.8306e-05 2.7889e-05 1.8306e-05 0 0 0"/>
               <geom name="LH_Foot_visual" type="cylinder" size="0.032 0.0155" quat="0.70711 0.70711 0 0"
                     rgba="0.29804 0.29804 0.29804 1" contype="0" conaffinity="0" group="1"/>
               <geom name="LH_Foot_collision" type="sphere" size="0.032" friction="2.0 0.01 0.001" group="3"/>
@@ -208,36 +212,36 @@
       </body>
 
       <!-- ==================== Right Hind Leg ==================== -->
-      <body name="RH_Hip" pos="-0.203 -0.054 0">
-        <inertial pos="-0.059856 -0.0023868 1.6688e-05" mass="0.98111"
-                  fullinertia="0.00070791 0.0012845 0.00087996 1.6598e-06 -9.3501e-07 2.4177e-07"/>
+      <body name="RH_Hip" pos="-0.201 -0.056 0">
+        <inertial pos="-0.06215 0.0031317 -0.00034351" mass="1.0451"
+                  fullinertia="0.00069698 0.0012902 0.00084229 -1.5149e-06 -1.4486e-05 1.5206e-06"/>
         <joint name="RH_HAA" axis="1 0 0" range="-0.8203 0.5236"/>
         <geom name="RH_Hip_visual" type="mesh" mesh="RH_Hip" rgba="0.69804 0.69804 0.69804 1"
               contype="0" conaffinity="0" group="1"/>
-        <geom name="RH_Hip_collision" type="cylinder" size="0.047" fromto="-0.058 -0.1118 -0.0045  -0.058 0.0332 -0.0045" group="3"/>
+        <geom name="RH_Hip_collision" type="cylinder" size="0.047" fromto="-0.06 -0.1118 -0.0045  -0.06 0.0332 -0.0045" group="3"/>
 
-        <body name="RH_Thigh" pos="-0.063 -0.0996 0">
-          <inertial pos="-0.02838 0.025988 -0.029631" mass="1.5052"
-                    fullinertia="0.0043476 0.0075751 0.0039239 -0.00034935 -0.0029719 -0.00034134"/>
+        <body name="RH_Thigh" pos="-0.065 -0.0215 0">
+          <inertial pos="-0.024065 -0.049498 -0.02468" mass="1.6083"
+                    fullinertia="0.004797 0.0083583 0.0043329 -0.00038562 -0.0032535 -0.00037881"/>
           <joint name="RH_HFE" axis="0 -1 0" range="-2.8266 2.5839"/>
           <geom name="RH_Thigh_visual" type="mesh" mesh="R_Thigh" rgba="0.69804 0.69804 0.69804 1"
                 contype="0" conaffinity="0" group="1"/>
           <geom name="RH_Thigh_collision" type="box" size="0.026 0.008 0.085"
-                pos="-0.1121 0.0035 -0.1091" quat="0.32593 0 -0.94539 0" group="3"/>
+                pos="-0.1121 -0.0731 -0.1091" quat="0.32593 0 -0.94539 0" group="3"/>
 
-          <body name="RH_Shank" pos="-0.15715 0.0035 -0.20082">
-            <inertial pos="0.081442 -1.3138e-05 -0.079562" mass="0.34563"
-                      fullinertia="0.0016882 0.0032906 0.0016244 -5.8149e-12 0.0015751 -3.2788e-12"/>
+          <body name="RH_Shank" pos="-0.15715 -0.057518 -0.20082">
+            <inertial pos="0.079065 -0.015593 -0.077092" mass="0.28461"
+                      fullinertia="0.0013467 0.0026227 0.0012937 3.9114e-12 0.0012546 -1.247e-11"/>
             <joint name="RH_KFE" axis="0 -1 0" range="-0.56374 1.4085"/>
-            <geom name="RH_Shank_visual" type="mesh" mesh="Shank" rgba="0.69804 0.69804 0.69804 1"
+            <geom name="RH_Shank_visual" type="mesh" mesh="Shank" pos="0 -0.031164 0" rgba="0.69804 0.69804 0.69804 1"
                   contype="0" conaffinity="0" group="1"/>
             <geom name="RH_Shank_collision" type="box" size="0.020 0.0085 0.090"
-                  pos="0.0897 0 -0.0938" quat="0.35797 0 0.93373 0" group="3"/>
-            <geom name="RH_Knee_collision" type="cylinder" size="0.030" fromto="0 -0.0095 0  0 0.0095 0" group="3"/>
+                  pos="0.0897 -0.015582 -0.0938" quat="0.35556 0 0.93465 0" group="3"/>
+            <geom name="RH_Knee_collision" type="cylinder" size="0.030" fromto="0 -0.025082 0  0 -0.006082 0" group="3"/>
 
-            <body name="RH_Foot" pos="0.170476 0 -0.189639">
-              <inertial pos="0 0 0" mass="0.04"
-                        fullinertia="1.3443e-05 2.048e-05 1.3443e-05 0 0 0"/>
+            <body name="RH_Foot" pos="0.17048 -0.015582 -0.19164">
+              <inertial pos="0 0 0" mass="0.05447"
+                        fullinertia="1.8306e-05 2.7889e-05 1.8306e-05 0 0 0"/>
               <geom name="RH_Foot_visual" type="cylinder" size="0.032 0.0155" quat="0.70711 0.70711 0 0"
                     rgba="0.29804 0.29804 0.29804 1" contype="0" conaffinity="0" group="1"/>
               <geom name="RH_Foot_collision" type="sphere" size="0.032" friction="2.0 0.01 0.001" group="3"/>

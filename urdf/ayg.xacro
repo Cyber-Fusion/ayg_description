@@ -51,22 +51,24 @@
   <link
     name="Base">
     <inertial>
-      <!-- Ayg 1.3 SolidWorks export CF-AYG-1.3-00-000-URDF-6. Batteries are
+      <!-- Ayg 1.3 SolidWorks export CF-AYG-1.3-00-000-URDF-7. Batteries are
            rigidly fixed inside the chassis and are lumped into this Base
            mass/inertia (no separate Battery links), so the trunk is a single
-           rigid body. Whole-robot mass 22.948 kg across 19 links. -->
+           rigid body. Whole-robot mass 23.809 kg across 19 links. The Base
+           mesh envelope is unchanged from URDF-6, so the collision box below
+           still fits. -->
       <origin
-        xyz="-0.00030633 -0.0051482 -0.0019103"
+        xyz="-0.0005817 -1.9934E-05 -0.0020067"
         rpy="0 0 0" />
       <mass
-        value="10.732" />
+        value="11.02" />
       <inertia
-        ixx="0.029884"
-        ixy="4.1808E-07"
-        ixz="0.00015159"
-        iyy="0.038536"
-        iyz="1.5415E-07"
-        izz="0.055747" />
+        ixx="0.035479"
+        ixy="-3.4801E-06"
+        ixz="8.3812E-05"
+        iyy="0.032555"
+        iyz="0.00043953"
+        izz="0.055613" />
     </inertial>
     <visual>
       <origin
@@ -101,7 +103,8 @@
        its mesh is inside the chassis (not visible) so no <visual>, and the
        Gazebo/real IMU sensor is defined on the Base link (see
        ayg_sim_ros2_control.xacro), not on this link. Mass/inertia are the 1.3
-       CAD-export values (bare module, ~1.35 g); negligible vs the 23 kg total. -->
+       CAD-export values (bare module, ~1.35 g); negligible vs the 24 kg total.
+       URDF-7 moved the module 19 mm down (z -0.00983 -> -0.02883). -->
   <link
     name="IMU">
     <inertial>
@@ -112,10 +115,10 @@
         value="0.0013495" />
       <inertia
         ixx="4.0133E-08"
-        ixy="-6.9855E-14"
+        ixy="-6.9859E-14"
         ixz="8.9554E-12"
         iyy="5.9906E-08"
-        iyz="-1.4564E-14"
+        iyz="-1.4567E-14"
         izz="9.917E-08" />
     </inertial>
   </link>
@@ -124,7 +127,7 @@
     name="Base_2_IMU"
     type="fixed">
     <origin
-      xyz="0 0 -0.00983"
+      xyz="0 0 -0.02883"
       rpy="0 0 0" />
     <parent
       link="Base" />
@@ -137,7 +140,7 @@
   <xacro:include filename="$(find ayg_description)/urdf/legs.xacro" />
 
   <!-- Unconditional: unlike the optional D555 it replaces, the 1.3 head is
-       structural chassis (0.72713 kg fixed to Base, reaching 0.425 m forward).
+       structural chassis (0.81801 kg fixed to Base, reaching 0.425 m forward).
        Leaving it out would hand ayg_kindyn/Pinocchio a robot missing that mass
        and its pitch moment. The `lidar` arg inside gates only the sensor frame. -->
   <xacro:include filename="$(find ayg_description)/urdf/lidar.xacro" />
