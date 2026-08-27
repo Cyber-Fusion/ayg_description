@@ -9,7 +9,7 @@ from launch_ros.parameter_descriptions import ParameterValue
 
 
 def generate_launch_description():
-    camera = LaunchConfiguration('camera')
+    lidar = LaunchConfiguration('lidar')
     
     xacro_path = os.path.join(
         get_package_share_path('ayg_description'),
@@ -24,7 +24,7 @@ def generate_launch_description():
     )
 
     ayg_description = ParameterValue(
-        Command(['xacro ', xacro_path, ' camera:=', camera]),
+        Command(['xacro ', xacro_path, ' lidar:=', lidar]),
         value_type=str,
     )
 
@@ -47,9 +47,10 @@ def generate_launch_description():
 
     return LaunchDescription([
         DeclareLaunchArgument(
-            'camera',
+            'lidar',
             default_value='true',
-            description='Whether to include the camera in the robot model',
+            description='Whether to include the lidar_link sensor frame '
+                        '(the Head mount itself is always present)',
         ),
         robot_state_publisher_node,
         joint_state_publisher_gui_node,

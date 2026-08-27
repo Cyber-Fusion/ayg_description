@@ -1,0 +1,310 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!--
+    Ayg 1.3 front head + LiDAR.
+
+    Replaces camera.xacro (Intel RealSense D555). The 1.3 chassis carries a HESAI
+    JT128 on a new front mount; ayg_lidar drives it (see ros/src/ayg_lidar) and
+    stamps clouds in `lidar_link`.
+
+    The `Head` link is the mount, taken verbatim from the SolidWorks export
+    CF-AYG-1.3-00-000-URDF-7. Its 0.81801 kg ALREADY INCLUDES the LiDAR body
+    (confirmed with the mechanical engineer for URDF-6's 0.72713 kg; URDF-7 adds
+    91 g and moves the CoM 15 mm back and 13 mm up) - do not add sensor mass on
+    top. The mount geometry (axis, face distance, Base_2_Head) is unchanged.
+
+    The link is named `Head` (the export's name), not `Camera` as the D555 era
+    used. Anything that referenced the old body name must follow - notably
+    cf_lab's head-contact termination (body_names="Camera").
+  -->
+
+  <xacro:property name="M_PI" value="3.1415926535897931"/>
+
+  <!--
+    ===================== LiDAR mount geometry (from CAD) =====================
+
+    The spin axis points forward and 22.62 deg down, in the sagittal plane. That
+    angle is exactly atan(5/12), i.e. a 5:12 slope, so the axis direction in the
+    Head frame is (12/13, 0, -5/13) = (0.923077, 0, -0.384615) exactly.
+
+    The axis passes through the Head link origin, and distances along it are
+    measured from there:
+      108.00 mm -> centre of the sensor's O62.5 mm mounting face   (CAD)
+       47.84 mm -> further to the point-cloud origin               (manual Fig 5)
+      155.84 mm -> total, Head origin to the cloud origin
+
+    Consistency check: the sensor is 73 mm tall, so its dome tip lands at
+    x = 0.1671 in the Head frame, where the head's nose aperture starts
+    (x = 0.1660) and is 64.3 mm wide against the 62.5 mm dome - the nose is the
+    line-of-sight opening in front of the dome.
+  -->
+  <xacro:property name="lidar_pitch" value="${atan2(5.0, 12.0)}"/>
+  <xacro:property name="lidar_face_along" value="0.108"/>
+  <xacro:property name="lidar_origin_up" value="0.04784"/>
+  <xacro:property name="lidar_along" value="${lidar_face_along + lidar_origin_up}"/>
+  <xacro:property name="lidar_origin_x" value="${lidar_along * cos(lidar_pitch)}"/>
+  <xacro:property name="lidar_origin_y" value="0.0"/>
+  <xacro:property name="lidar_origin_z" value="${-lidar_along * sin(lidar_pitch)}"/>
+
+  <!--
+    Orientation. The sensor's own axes, expressed in the Head frame:
+      Z_s = the spin axis                     = (+0.923077,  0, -0.384615)
+      Y_s = azimuth 0, perpendicular to the
+            axis, pointing down in the
+            sagittal plane                    = (-0.384615,  0, -0.923077)
+      X_s = Y_s x Z_s                         = ( 0,        -1,  0       )
+    which is rpy = (-(pi/2 + pitch), 0, -pi/2) exactly.
+
+    Azimuth 0 points down-and-slightly-rearward, not robot-forward, so the roll
+    term is required: a bare -pi/2 yaw would rotate the whole cloud about the
+    sensor axis. Do NOT negate azimuths to compensate - that mirrors the cloud
+    (see ros/src/ayg_lidar/README.md).
+  -->
+  <xacro:property name="lidar_roll" value="${-(M_PI/2 + lidar_pitch)}"/>
+  <xacro:property name="lidar_yaw" value="${-M_PI/2}"/>
+
+  <!--
+    Collision cylinder for the sensor + its aperture shroud, coaxial with the
+    spin axis (see the Head link below). Distances are along that axis from the
+    Head origin, same convention as the mount geometry above.
+      0.132 -> where the bracket's near-axis material starts (measured); the
+               CAD mount face at 0.108 is further in, shrouded by the cage and
+               close enough to the front hips that a cylinder reaching it
+               overlaps them at every HAA angle
+      0.235 -> front of the aperture shroud
+      0.033 -> covers the O62.5 mm dome (r 0.03125) and the 64.3 mm aperture
+               (r 0.03215)
+  -->
+  <xacro:property name="lidar_col_s0" value="0.132"/>
+  <xacro:property name="lidar_col_s1" value="0.235"/>
+  <xacro:property name="lidar_col_r" value="0.033"/>
+  <xacro:property name="lidar_col_mid" value="${(lidar_col_s0 + lidar_col_s1)/2}"/>
+
+  <!--
+    Massless reference frame for TF purposes only. An explicit epsilon-mass
+    inertial is required because physics simulators (Isaac Sim, Gazebo) silently
+    assign a 1.0 kg default to any link without <inertial>. Across 14 D555
+    reference frames that silently injected +14 kg rigid-fixed to Base - enough
+    to faceplant the AYG locomotion policy in Isaac Lab. Real hardware /
+    robot_state_publisher are unaffected (TF-only consumers ignore inertia).
+  -->
+  <xacro:macro name="massless_frame" params="name">
+    <link name="${name}">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="1e-6"/>
+        <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
+      </inertial>
+    </link>
+  </xacro:macro>
+
+  <!-- ============================== Head ============================== -->
+  <link name="Head">
+    <inertial>
+      <origin xyz="0.13017 -9.7488E-06 -0.025308" rpy="0 0 0"/>
+      <mass value="0.81801"/>
+      <inertia ixx="0.00052732" ixy="-3.3579E-08" ixz="-3.8961E-05"
+               iyy="0.0012906"  iyz="-4.1369E-08" izz="0.0015175"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ayg_description/meshes/Head.STL"/>
+      </geometry>
+      <material name="">
+        <color rgba="0.69804 0.69804 0.69804 1"/>
+      </material>
+    </visual>
+    <!--
+      Collision as two primitives, each shaped like the thing it stands for: a
+      box for the carry handle on top, a cylinder for the LiDAR below it. The
+      head mesh fills only ~10% of its 0.226 x 0.144 x 0.116 bounding box (it
+      is an open bracket cage; 10.4% measured on URDF-6), so a single wrapping
+      box would claim a great deal of empty space on a part that protrudes
+      0.21 m ahead of the chassis. Since this is the body that strikes
+      obstacles, and near-field obstacle response is the open problem, shape
+      faithfulness is worth the extra primitive.
+      Measured sub-regions, in the Head frame (URDF-7; only the cage width
+      changed from URDF-6, +/-0.067 -> +/-0.072):
+        handle x 0.000..0.226  y +/-0.045  z  0.000..0.008
+        cage   x 0.113..0.152  y +/-0.072  z -0.092..-0.006
+        shroud x 0.165..0.230  y +/-0.032  z -0.093..-0.029  (coaxial with the
+               spin axis; its 64.4 mm width is the CAD aperture, 64.3 mm)
+      The thin strut below the handle (x 0.008..0.113, y +/-0.010) is left out:
+      it is tucked under the handle box and is not a plausible contact point.
+      The cage's side walls (|y| 0.033..0.072) are left out too: they are thin
+      sheet either side of the sensor, and wrapping them cost a 611 cm3 box.
+
+      The top box is the CARRY HANDLE above the LiDAR, sized to the part rather
+      than to the head's bounding box: 8 mm thick (the measured plate is
+      z 0.000..0.008, not the 0.0125 an earlier revision claimed) and y +/-0.045
+      (the two rails and the centre spine span 0.090, not 0.110). It runs the
+      full length of the head, x 0.000..0.226, back to the chassis.
+
+      It is seated 4 mm ABOVE the measured plate, at Base-frame z 0.0540..0.0620
+      rather than 0.0500..0.0580, so its top face is flush with the Base
+      collision box's top surface (+0.0620). Reason: the handle's rear passes
+      over the two front hips, and Head is a separate rigid body
+      (merge_fixed_joints=False), so Head<->Hip is a non-adjacent pair PhysX
+      leaves active - it feeds both head_contact and base_contact (the hips are
+      in that termination's body list). Under HAA the hip cylinder's inboard end
+      swings up to z=+0.0534, which lands inside the plate's true 0.0500..0.0580
+      band; the cylinder comes up INTO the handle rather than passing under it,
+      so no thinning or narrowing clears it. Lifting the box to start at 0.0540
+      does, across the whole HAA range (-30..+30 deg on both front legs), with
+      0.5 mm to spare over the 0.0535 boundary - and without shortening the
+      handle or shrinking the hip cylinder below the coverage its exposed
+      underside needs.
+      The real parts never touch: Head.STL to LF_Hip.STL holds 2.0 mm at every
+      HAA angle, so this is wrapper-vs-wrapper, not a hardware constraint. The
+      offset trades the plate's lower 4 mm for 4 mm of air beneath the chassis
+      top plane, both shielded approaches.
+    -->
+    <collision>
+      <origin xyz="0.113 0 0.008" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.226 0.090 0.008"/>
+      </geometry>
+    </collision>
+    <!-- LiDAR: one cylinder on the spin axis, replacing the pod + nose boxes it
+         used to take (823 -> 352 cm3). rpy sends the cylinder's own +z onto the
+         axis direction (12/13, 0, -5/13); the origin is the span's midpoint
+         measured along that axis from the Head origin. -->
+    <collision>
+      <origin xyz="${lidar_col_mid * cos(lidar_pitch)} 0 ${-lidar_col_mid * sin(lidar_pitch)}"
+              rpy="0 ${M_PI/2 + lidar_pitch} 0"/>
+      <geometry>
+        <cylinder radius="${lidar_col_r}" length="${lidar_col_s1 - lidar_col_s0}"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Export Base_2_Head, verbatim. No rotation: unlike the D555 mount, which
+       carried a 90 deg roll to set up the RealSense optical-frame subtree, the
+       head is a plain rigid body and the export places it axis-aligned. -->
+  <joint name="Base_2_Head" type="fixed">
+    <origin xyz="0.199 0 0.05" rpy="0 0 0"/>
+    <parent link="Base"/>
+    <child link="Head"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+
+  <!-- ============================ lidar_link =========================== -->
+  <!-- Everything below is the sensor, gated on the `lidar` arg; the Head above is
+       structural and always present. -->
+  <xacro:if value="${lidar}">
+
+  <!-- The frame ayg_lidar stamps /lidar/points and /lidar/imu in. Its README
+       states the production stack gets base_link -> lidar_link from the URDF;
+       before 1.3 that TF did not exist anywhere and the bench launch faked it
+       with an identity static_transform_publisher. -->
+  <xacro:massless_frame name="lidar_link"/>
+  <joint name="Head_2_lidar" type="fixed">
+    <origin xyz="${lidar_origin_x} ${lidar_origin_y} ${lidar_origin_z}"
+            rpy="${lidar_roll} 0 ${lidar_yaw}"/>
+    <parent link="Head"/>
+    <child link="lidar_link"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+
+  <!-- ========================= Gazebo sensor ========================== -->
+  <!--
+    Simulation-only, so gated on ${sim}: with sim:=False the pure URDF (consumed
+    by robot_state_publisher and by Pinocchio via ayg_kindyn on real hardware)
+    stays free of Gazebo-specific elements. Mirrors how ayg_sim_ros2_control.xacro
+    is gated in ayg.xacro.
+
+    Angles are in the sensor's own frame, which is exactly the JT128 convention:
+    Z = spin axis, elevation measured from the XY plane, azimuth swept about Z.
+    In-space channel elevations span -4.43 deg (ch 1) to +88.99 deg (ch 128);
+    the datasheet's 95 deg FOV / "-4.4 to +90.5" / Figure 4's 90.46 are
+    projections onto the vertical plane, not in-space elevations (manual 1.4,
+    1.5 note 2, Appendix A header). 900 x 128 = 115 200 points per rotation at
+    10 Hz, matching the real single-return rate (manual 1.5).
+
+    HOW THIS DIFFERS FROM THE REAL SENSOR - gz gpu_lidar can only emit a
+    uniform elevation fan at one azimuth per column, and this block adds no
+    noise model, so six real behaviours are absent:
+
+      1. Channel elevations are UNEVEN (0.88 deg spacing near the horizon, 0.66
+         higher up, 0.70 mean over channels 1-85). A uniform fan misplaces
+         channels by up to 2.58 deg (ch 85: uniform 57.36 vs real 54.78), which
+         is ~9 cm of ground error at 2 m.
+      2. Each channel has its own AZIMUTH offset: +/-~18 deg over channels 1-85
+         (-17.16 to +17.92 deg, so the real scan column is skewed ~35 deg wide,
+         ~88 columns at 0.4 deg), growing toward the pole where azimuth becomes
+         ill-conditioned (design table spans -57.28 deg, ch 120, to +117.30 deg,
+         ch 128; manual Appendix A). The 128 channels do not lie in one
+         vertical plane.
+      3. NEAR-FIELD CHANNEL DROPOUT: below 0.35 m only 63 of 128 channels fire,
+         and 0.35-0.5 m only 68. This lidar sits ~0.33 m above ground, so the
+         terrain directly beneath and around the feet - the footstep-relevant
+         region - is really sensed at ~49% vertical resolution.
+      4. Range is REFLECTIVITY-limited: 60 m instrumented but 40 m at 10%
+         reflectivity, so dark terrain drops out. A ray-cast never does.
+      5. BLIND CONE at the pole: the topmost in-space channel (+88.99 deg)
+         leaves a 1.01 deg half-angle cone about the spin axis unswept
+         (1.47 deg on this unit, whose calibration measures -4.96 to +88.53).
+         The fan uses the design endpoints, so the per-unit span and the
+         uneven near-pole crowding are not reproduced.
+      6. NO RANGE-NOISE MODEL: real returns carry ~2.2 mm sigma gaussian noise,
+         4 mm range quantization, ~1.8% spike returns and ~1.5% dropout (bench
+         measured). gz supports gaussian range noise, but this block stays a
+         noise-free integration-test approximation.
+
+    Also note the topmost channels nearly degenerate here: at +88.99 deg the
+    ray is 1 deg off the spin axis, so every azimuth column of a top channel
+    returns almost the same point.
+
+    The authoritative geometry is the per-unit ANGLE CORRECTION FILE, which the
+    driver already fetches over PTC (ayg_lidar/config/jt128.yaml,
+    use_ptc_connected: true). Isaac Lab's ray-caster takes arbitrary ray
+    directions and CAN reproduce the exact pattern, so the faithful sensor
+    belongs in cf_lab; this block is an approximation for integration testing
+    only and should not be used to judge sim-to-real behaviour.
+  -->
+  <xacro:if value="${sim}">
+    <gazebo reference="lidar_link">
+      <sensor name="jt128" type="gpu_lidar">
+        <update_rate>10</update_rate>
+        <!-- gz-sim publishes a gpu_lidar as TWO topics: `<topic>` carrying a
+             LaserScan, and `<topic>/points` carrying a PointCloudPacked. Naming
+             the sensor `lidar` therefore yields /lidar/points for the cloud,
+             matching what the real hesai/livox driver stamps (see ayg_lidar).
+             Naming it `lidar/points` would give /lidar/points/points. -->
+        <topic>lidar</topic>
+        <gz_frame_id>lidar_link</gz_frame_id>
+        <lidar>
+          <scan>
+            <horizontal>
+              <samples>900</samples>
+              <resolution>1</resolution>
+              <min_angle>${-M_PI}</min_angle>
+              <max_angle>${M_PI}</max_angle>
+            </horizontal>
+            <vertical>
+              <samples>128</samples>
+              <resolution>1</resolution>
+              <!-- In-space ch 1 / ch 128 design elevations (-0.077318 /
+                   +1.553169 rad); the datasheet's -4.4 / +90.5 deg are
+                   vertical-plane projections, see the note above. -->
+              <min_angle>${-4.43 * M_PI / 180.0}</min_angle>
+              <max_angle>${88.99 * M_PI / 180.0}</max_angle>
+            </vertical>
+          </scan>
+          <range>
+            <min>0.1</min>
+            <max>60.0</max>
+            <resolution>0.01</resolution>
+          </range>
+        </lidar>
+        <always_on>1</always_on>
+        <visualize>false</visualize>
+      </sensor>
+    </gazebo>
+  </xacro:if>
+
+  </xacro:if>
+
+</robot>

@@ -33,34 +33,59 @@
             </xacro:if>
         </hardware>
 
+        <!--
+            Ayg 1.3 poses. Both were re-solved for the 0.510 m leg (was 0.443 m);
+            the 1.2 values no longer produce the pose they are named after. In this
+            convention front and hind take the SAME joint values to reach the same
+            leg pose in the Base frame (both thigh frames are Base-aligned), so the
+            legs no longer need front/hind-specific numbers.
+
+            lying_down: knee near its 1.4085 limit, hip folded so the foot sits
+            under the HFE (foot 3 mm ahead of it). Base 0.1196 m, i.e. 32 mm of
+            belly clearance under the trunk collision box - folded as far as the
+            knee limit allows. The 1.2 values (-0.36/1.09) now leave the base at
+            0.192 m, standing on part-folded legs rather than lying down.
+        -->
         <xacro:if value="${initial_configuration == 'lying_down'}">
-            <xacro:ros2_control_joint joint_name="LF_HAA" effort_lim="${effort_lim}" initial_value="-0.00"/>
-            <xacro:ros2_control_joint joint_name="LF_HFE" effort_lim="${effort_lim}" initial_value="-0.36"/>
-            <xacro:ros2_control_joint joint_name="LF_KFE" effort_lim="${effort_lim}" initial_value=" 1.09"/>
+            <xacro:ros2_control_joint joint_name="LF_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"/>
+            <xacro:ros2_control_joint joint_name="LF_HFE" effort_lim="${effort_lim}" initial_value="-0.70"/>
+            <xacro:ros2_control_joint joint_name="LF_KFE" effort_lim="${effort_lim}" initial_value=" 1.40"/>
             <xacro:ros2_control_joint joint_name="RF_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"/>
-            <xacro:ros2_control_joint joint_name="RF_HFE" effort_lim="${effort_lim}" initial_value="-0.36"/>
-            <xacro:ros2_control_joint joint_name="RF_KFE" effort_lim="${effort_lim}" initial_value=" 1.09"/>
+            <xacro:ros2_control_joint joint_name="RF_HFE" effort_lim="${effort_lim}" initial_value="-0.70"/>
+            <xacro:ros2_control_joint joint_name="RF_KFE" effort_lim="${effort_lim}" initial_value=" 1.40"/>
             <xacro:ros2_control_joint joint_name="LH_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"/>
-            <xacro:ros2_control_joint joint_name="LH_HFE" effort_lim="${effort_lim}" initial_value="-0.48"/>
-            <xacro:ros2_control_joint joint_name="LH_KFE" effort_lim="${effort_lim}" initial_value=" 1.20"/>
+            <xacro:ros2_control_joint joint_name="LH_HFE" effort_lim="${effort_lim}" initial_value="-0.70"/>
+            <xacro:ros2_control_joint joint_name="LH_KFE" effort_lim="${effort_lim}" initial_value=" 1.40"/>
             <xacro:ros2_control_joint joint_name="RH_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"/>
-            <xacro:ros2_control_joint joint_name="RH_HFE" effort_lim="${effort_lim}" initial_value="-0.48"/>
-            <xacro:ros2_control_joint joint_name="RH_KFE" effort_lim="${effort_lim}" initial_value=" 1.20"/>
+            <xacro:ros2_control_joint joint_name="RH_HFE" effort_lim="${effort_lim}" initial_value="-0.70"/>
+            <xacro:ros2_control_joint joint_name="RH_KFE" effort_lim="${effort_lim}" initial_value=" 1.40"/>
         </xacro:if>
 
+        <!--
+            standing: the zero pose, feet directly below their HFE origins at a
+            0.4245 m base height (URDF-7; 0.4225 on URDF-6). This is the 1.3
+            nominal stance: it equals the cf_lab training init (every episode
+            resets to all-zero joints), it clears the JT128's 0.35 m near-field
+            threshold (sensor at 0.415 m vs 0.330 m at the earlier 0.340 m
+            carry-over), and it holds the lowest static KFE torque of the
+            workable range (9.2 vs 11.4 N*m per leg at the URDF-6 masses).
+            The KFE extension stop still leaves 0.565 rad (7.6 cm of base rise)
+            beyond it. Requires spawn_height above 0.4245 (simulate_ayg uses
+            0.45).
+        -->
         <xacro:if value="${initial_configuration == 'standing'}">
-            <xacro:ros2_control_joint joint_name="LF_HAA" effort_lim="${effort_lim}" initial_value="-0.00"/>
-            <xacro:ros2_control_joint joint_name="LF_HFE" effort_lim="${effort_lim}" initial_value="-0.00"/>
-            <xacro:ros2_control_joint joint_name="LF_KFE" effort_lim="${effort_lim}" initial_value=" 0.00"/>
-            <xacro:ros2_control_joint joint_name="RF_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"/>
-            <xacro:ros2_control_joint joint_name="RF_HFE" effort_lim="${effort_lim}" initial_value="-0.00"/>
-            <xacro:ros2_control_joint joint_name="RF_KFE" effort_lim="${effort_lim}" initial_value=" 0.00"/>
-            <xacro:ros2_control_joint joint_name="LH_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"/>
-            <xacro:ros2_control_joint joint_name="LH_HFE" effort_lim="${effort_lim}" initial_value="-0.00"/>
-            <xacro:ros2_control_joint joint_name="LH_KFE" effort_lim="${effort_lim}" initial_value=" 0.00"/>
-            <xacro:ros2_control_joint joint_name="RH_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"/>
-            <xacro:ros2_control_joint joint_name="RH_HFE" effort_lim="${effort_lim}" initial_value="-0.00"/>
-            <xacro:ros2_control_joint joint_name="RH_KFE" effort_lim="${effort_lim}" initial_value=" 0.00"/>
+            <xacro:ros2_control_joint joint_name="LF_HAA" effort_lim="${effort_lim}" initial_value="0.0"/>
+            <xacro:ros2_control_joint joint_name="LF_HFE" effort_lim="${effort_lim}" initial_value="0.0"/>
+            <xacro:ros2_control_joint joint_name="LF_KFE" effort_lim="${effort_lim}" initial_value="0.0"/>
+            <xacro:ros2_control_joint joint_name="RF_HAA" effort_lim="${effort_lim}" initial_value="0.0"/>
+            <xacro:ros2_control_joint joint_name="RF_HFE" effort_lim="${effort_lim}" initial_value="0.0"/>
+            <xacro:ros2_control_joint joint_name="RF_KFE" effort_lim="${effort_lim}" initial_value="0.0"/>
+            <xacro:ros2_control_joint joint_name="LH_HAA" effort_lim="${effort_lim}" initial_value="0.0"/>
+            <xacro:ros2_control_joint joint_name="LH_HFE" effort_lim="${effort_lim}" initial_value="0.0"/>
+            <xacro:ros2_control_joint joint_name="LH_KFE" effort_lim="${effort_lim}" initial_value="0.0"/>
+            <xacro:ros2_control_joint joint_name="RH_HAA" effort_lim="${effort_lim}" initial_value="0.0"/>
+            <xacro:ros2_control_joint joint_name="RH_HFE" effort_lim="${effort_lim}" initial_value="0.0"/>
+            <xacro:ros2_control_joint joint_name="RH_KFE" effort_lim="${effort_lim}" initial_value="0.0"/>
         </xacro:if>
 
         <sensor name="imu_sensor">
