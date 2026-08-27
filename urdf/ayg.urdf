@@ -19,7 +19,7 @@
       <param name="can_id">1</param>
       <param name="can_interface">can0</param>
       <param name="position_min">-0.5236</param>
-      <param name="position_max">0.43633</param>
+      <param name="position_max">0.5236</param>
       <command_interface name="position"/>
       <command_interface name="velocity"/>
       <command_interface name="effort"/>
@@ -63,7 +63,7 @@
     <joint name="RF_HAA">
       <param name="can_id">4</param>
       <param name="can_interface">can1</param>
-      <param name="position_min">-0.43633</param>
+      <param name="position_min">-0.5236</param>
       <param name="position_max">0.5236</param>
       <command_interface name="position"/>
       <command_interface name="velocity"/>
