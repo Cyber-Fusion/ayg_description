@@ -132,7 +132,7 @@
   <xacro:if value="${sim}">
 
   <!--
-    Gazebo Ignition (Fortress) depth sensor.
+    Gazebo depth sensor.
     Renders along Camera_depth_frame's +X axis (forward in robot body).
     Topic and frame_id are chosen to match real-hardware realsense2_camera
     when launched with camera_name=Camera (see ayg_bringup/launch/ayg.launch.py).
@@ -146,12 +146,11 @@
       <camera>
         <horizontal_fov>1.5184</horizontal_fov>  <!-- 87 deg -->
         <!--
-          Explicit intrinsics: gz-sim Fortress otherwise populates CameraInfo
-          with its default 320x240/60deg model (fx=277, cx=160, cy=120) instead
-          of the configured 640x360/87deg. NOTE gz applies this only to the K
-          matrix, not P; a small republisher copies K->P (ayg_gazebo
-          fix_depth_camera_info.py + depth_cloud.launch.py) so depth_image_proc
-          and RViz reconstruct an aligned point cloud.
+          Explicit intrinsics, so CameraInfo's K states the camera model
+          instead of leaving it implied by <horizontal_fov>. NOTE gz applies
+          these to K only: P is always derived from the FoV and resolution, so
+          a republisher copies K->P (ayg_gazebo fix_depth_camera_info.py) to
+          keep depth_image_proc and RViz aligned.
           fx=fy=(width/2)/tan(hfov/2)=337.2, cx=width/2, cy=height/2.
         -->
         <lens>
