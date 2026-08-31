@@ -228,7 +228,7 @@
           with its default 320x240/60deg model (fx=277, cx=160, cy=120) instead
           of the configured 640x360/87deg. NOTE gz applies this only to the K
           matrix, not P; a small republisher copies K->P (ayg_gazebo
-          fix_depth_camera_info.py + depth_cloud.launch.py) so depth_image_proc
+          fix_camera_info.py + depth_cloud.launch.py) so depth_image_proc
           and RViz reconstruct an aligned point cloud.
           fx=fy=(width/2)/tan(hfov/2)=337.2, cx=width/2, cy=height/2.
         -->
@@ -339,9 +339,9 @@
 
     Topic names match real hardware (realsense2_camera, camera_name=Camera,
     enable_infra1/2): /camera/Camera/infra{1,2}/image_rect_raw. gz leaves
-    CameraInfo.P at its default, so ayg_gazebo's stereo_camera_info node fixes P
-    up and writes the right camera's Tx = -fx * baseline — see
-    ayg_gazebo/scripts/fix_depth_camera_info.py.
+    CameraInfo.P at its default, so ayg_gazebo's stereo_camera_info.launch.py
+    fixes P up and writes the right camera's Tx = -fx * baseline — see
+    ayg_gazebo/scripts/fix_camera_info.py.
 
     The real projector must be OFF for stereo VO (its dot pattern is a
     camera-fixed texture that corrupts feature tracking); in sim there is no
@@ -383,12 +383,21 @@
     </gazebo>
   </xacro:macro>
 
-  <xacro:infra_sensor name="infra1"
-                      frame="Camera_infra1_frame"
-                      optical_frame="Camera_infra1_optical_frame"/>
-  <xacro:infra_sensor name="infra2"
-                      frame="Camera_infra2_frame"
-                      optical_frame="Camera_infra2_optical_frame"/>
+  <!--
+    Gated on its own arg, not on `camera`: two extra 640x360 renderers at 30 Hz
+    is a real cost in gz, and only cuVSLAM consumes them. ayg_gazebo turns this
+    on when enable_vslam:=true, so a depth-only sim run does not pay for it. The
+    infra *frames* above stay unconditional: massless frames are free, and
+    keeping them means the TF tree matches hardware either way.
+  -->
+  <xacro:if value="${stereo_ir}">
+    <xacro:infra_sensor name="infra1"
+                        frame="Camera_infra1_frame"
+                        optical_frame="Camera_infra1_optical_frame"/>
+    <xacro:infra_sensor name="infra2"
+                        frame="Camera_infra2_frame"
+                        optical_frame="Camera_infra2_optical_frame"/>
+  </xacro:if>
 
   </xacro:if>
 

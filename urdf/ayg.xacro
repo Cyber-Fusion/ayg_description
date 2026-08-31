@@ -13,6 +13,15 @@
   <xacro:arg name="camera" default="True" />
   <xacro:property name="camera" default="$(arg camera)" />
 
+  <!--
+    Simulated stereo IR pair (the cuVSLAM input). Off by default: two extra
+    640x360 renderers at 30 Hz cost real gz frame time, and only Visual SLAM
+    consumes them. ayg_gazebo passes stereo_ir:=true when enable_vslam:=true.
+    Only meaningful with camera:=true and sim:=true.
+  -->
+  <xacro:arg name="stereo_ir" default="False" />
+  <xacro:property name="stereo_ir" default="$(arg stereo_ir)" />
+
   <xacro:arg name="initial_configuration" default="lying_down" />
   <xacro:property name="initial_configuration" value="$(arg initial_configuration)" />
   <xacro:arg name="controller" default="default" />
