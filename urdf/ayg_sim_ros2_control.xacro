@@ -96,38 +96,18 @@
             </gazebo>
         </xacro:if>
 
-        <xacro:if value="${gazebo_version == 'fortress'}">
-            <gazebo>
-                <plugin filename="ignition-gazebo-odometry-publisher-system"
-                        name="ignition::gazebo::systems::OdometryPublisher">
-                    <odom_frame>Base</odom_frame>
-                    <robot_base_frame>Base</robot_base_frame>
-                    <odom_publish_frequency>500</odom_publish_frequency>
-                    <dimensions>3</dimensions>
-                </plugin>
-            </gazebo>
+        <gazebo>
+            <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
+                <odom_frame>Base</odom_frame>
+                <robot_base_frame>Base</robot_base_frame>
+                <odom_publish_frequency>500</odom_publish_frequency>
+                <dimensions>3</dimensions>
+            </plugin>
+        </gazebo>
 
-            <gazebo>
-                <plugin filename="ignition-gazebo-imu-system"
-                        name="ignition::gazebo::systems::Imu"/>
-            </gazebo>
-        </xacro:if>
-
-        <xacro:unless value="${gazebo_version == 'fortress'}">
-            <gazebo>
-                <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
-                    <odom_frame>Base</odom_frame>
-                    <robot_base_frame>Base</robot_base_frame>
-                    <odom_publish_frequency>500</odom_publish_frequency>
-                    <dimensions>3</dimensions>
-                </plugin>
-            </gazebo>
-
-            <gazebo>
-                <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu">
-                </plugin>
-            </gazebo>
-        </xacro:unless>
+        <gazebo>
+            <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+        </gazebo>
 
         <gazebo reference="Base">
             <sensor name="imu_sensor" type="imu">
