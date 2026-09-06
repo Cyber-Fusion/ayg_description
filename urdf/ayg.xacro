@@ -7,9 +7,6 @@
   <xacro:arg name="sim_backend" default="gazebo" />
   <xacro:property name="sim_backend" value="$(arg sim_backend)" />
 
-  <xacro:arg name="gazebo_version" default="fortress" />
-  <xacro:property name="gazebo_version" value="$(arg gazebo_version)" />
-
   <!-- Which Ayg model to build: "1.2" or "1.3". Selects the whole per-version
        subtree (root xacro, legs, meshes, mujoco/rviz configs) - see the
        dispatch include at the bottom of this file.
