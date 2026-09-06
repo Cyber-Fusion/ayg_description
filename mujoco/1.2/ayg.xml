@@ -1,5 +1,5 @@
 <mujoco model="ayg">
-  <compiler angle="radian" meshdir="../meshes"/>
+  <compiler angle="radian" meshdir="../../meshes/1.2"/>
 
   <option timestep="0.001" iterations="50" solver="Newton" gravity="0 0 -9.81"
           noslip_iterations="5"/>

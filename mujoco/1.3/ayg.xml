@@ -22,7 +22,7 @@
     so front and hind could share a hip mesh; the export ships four, and dropping
     it changes no joint value (the thigh frame was Base-aligned either way).
   -->
-  <compiler angle="radian" meshdir="../meshes"/>
+  <compiler angle="radian" meshdir="../../meshes/1.3"/>
 
   <option timestep="0.001" iterations="50" solver="Newton" gravity="0 0 -9.81"
           noslip_iterations="5"/>

@@ -110,7 +110,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://ayg_description/meshes/Head.STL"/>
+        <mesh filename="package://ayg_description/meshes/1.3/Head.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.69804 0.69804 0.69804 1"/>

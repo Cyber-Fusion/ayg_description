@@ -4,6 +4,8 @@
 <!-- |    EDITING THIS FILE BY HAND IS NOT RECOMMENDED                                 | -->
 <!-- =================================================================================== -->
 <robot name="ayg">
+  <!-- $(arg version) substituted as TEXT, not read back through a property:
+       see the dispatch include below for why. -->
   <model_version>1.3</model_version>
   <!-- Robstride ros2_control macro for quadruped -->
   <!-- Include this in your main robot URDF to add hardware interface -->
@@ -19,7 +21,7 @@
       <param name="can_id">1</param>
       <param name="can_interface">can0</param>
       <param name="position_min">-0.5236</param>
-      <param name="position_max">0.5236</param>
+      <param name="position_max">0.436</param>
       <command_interface name="position"/>
       <command_interface name="velocity"/>
       <command_interface name="effort"/>
@@ -33,8 +35,8 @@
     <joint name="LF_HFE">
       <param name="can_id">2</param>
       <param name="can_interface">can0</param>
-      <param name="position_min">-2.0412</param>
-      <param name="position_max">3.3693</param>
+      <param name="position_min">-1.667</param>
+      <param name="position_max">3.238</param>
       <command_interface name="position"/>
       <command_interface name="velocity"/>
       <command_interface name="effort"/>
@@ -48,8 +50,8 @@
     <joint name="LF_KFE">
       <param name="can_id">3</param>
       <param name="can_interface">can0</param>
-      <param name="position_min">-0.56374</param>
-      <param name="position_max">1.4085</param>
+      <param name="position_min">-0.74</param>
+      <param name="position_max">1.187</param>
       <command_interface name="position"/>
       <command_interface name="velocity"/>
       <command_interface name="effort"/>
@@ -63,7 +65,7 @@
     <joint name="RF_HAA">
       <param name="can_id">4</param>
       <param name="can_interface">can1</param>
-      <param name="position_min">-0.5236</param>
+      <param name="position_min">-0.4363</param>
       <param name="position_max">0.5236</param>
       <command_interface name="position"/>
       <command_interface name="velocity"/>
@@ -78,8 +80,8 @@
     <joint name="RF_HFE">
       <param name="can_id">5</param>
       <param name="can_interface">can1</param>
-      <param name="position_min">-2.0412</param>
-      <param name="position_max">3.3693</param>
+      <param name="position_min">-1.667</param>
+      <param name="position_max">3.238</param>
       <command_interface name="position"/>
       <command_interface name="velocity"/>
       <command_interface name="effort"/>
@@ -93,8 +95,8 @@
     <joint name="RF_KFE">
       <param name="can_id">6</param>
       <param name="can_interface">can1</param>
-      <param name="position_min">-0.56374</param>
-      <param name="position_max">1.4085</param>
+      <param name="position_min">-0.74</param>
+      <param name="position_max">1.187</param>
       <command_interface name="position"/>
       <command_interface name="velocity"/>
       <command_interface name="effort"/>
@@ -109,7 +111,7 @@
       <param name="can_id">7</param>
       <param name="can_interface">can2</param>
       <param name="position_min">-0.5236</param>
-      <param name="position_max">0.8203</param>
+      <param name="position_max">0.8378</param>
       <command_interface name="position"/>
       <command_interface name="velocity"/>
       <command_interface name="effort"/>
@@ -123,8 +125,8 @@
     <joint name="LH_HFE">
       <param name="can_id">8</param>
       <param name="can_interface">can2</param>
-      <param name="position_min">-2.8266</param>
-      <param name="position_max">2.5839</param>
+      <param name="position_min">-2.4522</param>
+      <param name="position_max">2.4522</param>
       <command_interface name="position"/>
       <command_interface name="velocity"/>
       <command_interface name="effort"/>
@@ -138,8 +140,8 @@
     <joint name="LH_KFE">
       <param name="can_id">9</param>
       <param name="can_interface">can2</param>
-      <param name="position_min">-0.56374</param>
-      <param name="position_max">1.4085</param>
+      <param name="position_min">-0.74</param>
+      <param name="position_max">1.187</param>
       <command_interface name="position"/>
       <command_interface name="velocity"/>
       <command_interface name="effort"/>
@@ -153,7 +155,7 @@
     <joint name="RH_HAA">
       <param name="can_id">10</param>
       <param name="can_interface">can3</param>
-      <param name="position_min">-0.8203</param>
+      <param name="position_min">-0.8378</param>
       <param name="position_max">0.5236</param>
       <command_interface name="position"/>
       <command_interface name="velocity"/>
@@ -168,8 +170,8 @@
     <joint name="RH_HFE">
       <param name="can_id">11</param>
       <param name="can_interface">can3</param>
-      <param name="position_min">-2.8266</param>
-      <param name="position_max">2.5839</param>
+      <param name="position_min">-2.4522</param>
+      <param name="position_max">2.4522</param>
       <command_interface name="position"/>
       <command_interface name="velocity"/>
       <command_interface name="effort"/>
@@ -183,8 +185,8 @@
     <joint name="RH_KFE">
       <param name="can_id">12</param>
       <param name="can_interface">can3</param>
-      <param name="position_min">-0.56374</param>
-      <param name="position_max">1.4085</param>
+      <param name="position_min">-0.74</param>
+      <param name="position_max">1.187</param>
       <command_interface name="position"/>
       <command_interface name="velocity"/>
       <command_interface name="effort"/>
@@ -211,7 +213,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ayg_description/meshes/Base.STL"/>
+        <mesh filename="package://ayg_description/meshes/1.3/Base.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.69804 0.69804 0.69804 1"/>
@@ -289,7 +291,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ayg_description/meshes/LF_Hip.STL"/>
+        <mesh filename="package://ayg_description/meshes/1.3/LF_Hip.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.69804 0.69804 0.69804 1"/>
@@ -357,7 +359,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ayg_description/meshes/L_Thigh.STL"/>
+        <mesh filename="package://ayg_description/meshes/1.3/L_Thigh.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.69804 0.69804 0.69804 1"/>
@@ -400,7 +402,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0.0 0"/>
       <geometry>
-        <mesh filename="package://ayg_description/meshes/Shank.STL"/>
+        <mesh filename="package://ayg_description/meshes/1.3/Shank.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.69804 0.69804 0.69804 1"/>
@@ -484,7 +486,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ayg_description/meshes/RF_Hip.STL"/>
+        <mesh filename="package://ayg_description/meshes/1.3/RF_Hip.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.69804 0.69804 0.69804 1"/>
@@ -552,7 +554,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ayg_description/meshes/R_Thigh.STL"/>
+        <mesh filename="package://ayg_description/meshes/1.3/R_Thigh.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.69804 0.69804 0.69804 1"/>
@@ -595,7 +597,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 -0.031164 0"/>
       <geometry>
-        <mesh filename="package://ayg_description/meshes/Shank.STL"/>
+        <mesh filename="package://ayg_description/meshes/1.3/Shank.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.69804 0.69804 0.69804 1"/>
@@ -679,7 +681,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ayg_description/meshes/LH_Hip.STL"/>
+        <mesh filename="package://ayg_description/meshes/1.3/LH_Hip.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.69804 0.69804 0.69804 1"/>
@@ -747,7 +749,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ayg_description/meshes/L_Thigh.STL"/>
+        <mesh filename="package://ayg_description/meshes/1.3/L_Thigh.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.69804 0.69804 0.69804 1"/>
@@ -790,7 +792,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0.0 0"/>
       <geometry>
-        <mesh filename="package://ayg_description/meshes/Shank.STL"/>
+        <mesh filename="package://ayg_description/meshes/1.3/Shank.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.69804 0.69804 0.69804 1"/>
@@ -874,7 +876,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ayg_description/meshes/RH_Hip.STL"/>
+        <mesh filename="package://ayg_description/meshes/1.3/RH_Hip.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.69804 0.69804 0.69804 1"/>
@@ -942,7 +944,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ayg_description/meshes/R_Thigh.STL"/>
+        <mesh filename="package://ayg_description/meshes/1.3/R_Thigh.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.69804 0.69804 0.69804 1"/>
@@ -985,7 +987,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 -0.031164 0"/>
       <geometry>
-        <mesh filename="package://ayg_description/meshes/Shank.STL"/>
+        <mesh filename="package://ayg_description/meshes/1.3/Shank.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.69804 0.69804 0.69804 1"/>
@@ -1083,7 +1085,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://ayg_description/meshes/Head.STL"/>
+        <mesh filename="package://ayg_description/meshes/1.3/Head.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.69804 0.69804 0.69804 1"/>
