@@ -29,7 +29,7 @@
         <hardware>
             <plugin>${system_plugin}</plugin>
             <xacro:if value="${sim_backend == 'mujoco'}">
-                <param name="mujoco_model_path">$(find ayg_description)/mujoco/ayg.xml</param>
+                <param name="mujoco_model_path">$(find ayg_description)/mujoco/$(arg version)/ayg.xml</param>
             </xacro:if>
         </hardware>
 
@@ -60,7 +60,10 @@
         <xacro:if value="${controller == 'default'}">
             <gazebo>
                 <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-                    <parameters>$(find ayg_control)/config/gazebo/ayg_sw_controllers.yaml</parameters>
+                    <!-- ayg_control#306 split this config per-version; $(arg version)
+                         text substitution, same convention as the dispatch sites above
+                         (do NOT read this back through a ${...} property). -->
+                    <parameters>$(find ayg_control)/config/$(arg version)/gazebo/ayg_sw_controllers.yaml</parameters>
                 </plugin>
             </gazebo>
         </xacro:if>
