@@ -29,39 +29,16 @@
         <hardware>
             <plugin>${system_plugin}</plugin>
             <xacro:if value="${sim_backend == 'mujoco'}">
-                <param name="mujoco_model_path">$(find ayg_description)/mujoco/ayg.xml</param>
+                <param name="mujoco_model_path">$(find ayg_description)/mujoco/$(arg version)/ayg.xml</param>
             </xacro:if>
         </hardware>
 
-        <xacro:if value="${initial_configuration == 'lying_down'}">
-            <xacro:ros2_control_joint joint_name="LF_HAA" effort_lim="${effort_lim}" initial_value="-0.00"/>
-            <xacro:ros2_control_joint joint_name="LF_HFE" effort_lim="${effort_lim}" initial_value="-0.36"/>
-            <xacro:ros2_control_joint joint_name="LF_KFE" effort_lim="${effort_lim}" initial_value=" 1.09"/>
-            <xacro:ros2_control_joint joint_name="RF_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"/>
-            <xacro:ros2_control_joint joint_name="RF_HFE" effort_lim="${effort_lim}" initial_value="-0.36"/>
-            <xacro:ros2_control_joint joint_name="RF_KFE" effort_lim="${effort_lim}" initial_value=" 1.09"/>
-            <xacro:ros2_control_joint joint_name="LH_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"/>
-            <xacro:ros2_control_joint joint_name="LH_HFE" effort_lim="${effort_lim}" initial_value="-0.48"/>
-            <xacro:ros2_control_joint joint_name="LH_KFE" effort_lim="${effort_lim}" initial_value=" 1.20"/>
-            <xacro:ros2_control_joint joint_name="RH_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"/>
-            <xacro:ros2_control_joint joint_name="RH_HFE" effort_lim="${effort_lim}" initial_value="-0.48"/>
-            <xacro:ros2_control_joint joint_name="RH_KFE" effort_lim="${effort_lim}" initial_value=" 1.20"/>
-        </xacro:if>
-
-        <xacro:if value="${initial_configuration == 'standing'}">
-            <xacro:ros2_control_joint joint_name="LF_HAA" effort_lim="${effort_lim}" initial_value="-0.00"/>
-            <xacro:ros2_control_joint joint_name="LF_HFE" effort_lim="${effort_lim}" initial_value="-0.00"/>
-            <xacro:ros2_control_joint joint_name="LF_KFE" effort_lim="${effort_lim}" initial_value=" 0.00"/>
-            <xacro:ros2_control_joint joint_name="RF_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"/>
-            <xacro:ros2_control_joint joint_name="RF_HFE" effort_lim="${effort_lim}" initial_value="-0.00"/>
-            <xacro:ros2_control_joint joint_name="RF_KFE" effort_lim="${effort_lim}" initial_value=" 0.00"/>
-            <xacro:ros2_control_joint joint_name="LH_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"/>
-            <xacro:ros2_control_joint joint_name="LH_HFE" effort_lim="${effort_lim}" initial_value="-0.00"/>
-            <xacro:ros2_control_joint joint_name="LH_KFE" effort_lim="${effort_lim}" initial_value=" 0.00"/>
-            <xacro:ros2_control_joint joint_name="RH_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"/>
-            <xacro:ros2_control_joint joint_name="RH_HFE" effort_lim="${effort_lim}" initial_value="-0.00"/>
-            <xacro:ros2_control_joint joint_name="RH_KFE" effort_lim="${effort_lim}" initial_value=" 0.00"/>
-        </xacro:if>
+        <!-- initial_configuration poses (lying_down / standing) are per-version:
+             the 1.2 and 1.3 leg geometries need different joint values to reach
+             the same named pose (see each version's file for the derivation).
+             Filename substitution on $(arg version), same convention and same
+             reason as the ayg$(arg version).xacro dispatch in ayg.xacro. -->
+        <xacro:include filename="$(find ayg_description)/urdf/$(arg version)/initial_configuration.xacro" />
 
         <sensor name="imu_sensor">
             <state_interface name="orientation.x"/>
@@ -83,7 +60,10 @@
         <xacro:if value="${controller == 'default'}">
             <gazebo>
                 <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-                    <parameters>$(find ayg_control)/config/gazebo/ayg_sw_controllers.yaml</parameters>
+                    <!-- ayg_control#306 split this config per-version; $(arg version)
+                         text substitution, same convention as the dispatch sites above
+                         (do NOT read this back through a ${...} property). -->
+                    <parameters>$(find ayg_control)/config/$(arg version)/gazebo/ayg_sw_controllers.yaml</parameters>
                 </plugin>
             </gazebo>
         </xacro:if>

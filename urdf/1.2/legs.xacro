@@ -32,11 +32,11 @@
         <geometry>
           <xacro:if value="${FH == 'F'}">
             <mesh
-              filename="package://ayg_description/meshes/L_Hip.STL" />
+              filename="package://ayg_description/meshes/1.2/L_Hip.STL" />
           </xacro:if>
           <xacro:unless value="${FH == 'F'}">
             <mesh
-              filename="package://ayg_description/meshes/R_Hip.STL" />
+              filename="package://ayg_description/meshes/1.2/R_Hip.STL" />
           </xacro:unless>
         </geometry>
         <material
@@ -124,7 +124,7 @@
           rpy="0 0 0" />
         <geometry>
           <mesh
-            filename="package://ayg_description/meshes/L_Thigh.STL" />
+            filename="package://ayg_description/meshes/1.2/L_Thigh.STL" />
         </geometry>
         <material
           name="">
@@ -197,7 +197,7 @@
           rpy="0 0 0" />
         <geometry>
           <mesh
-            filename="package://ayg_description/meshes/L_Shank.STL" />
+            filename="package://ayg_description/meshes/1.2/L_Shank.STL" />
         </geometry>
         <material
           name="">
@@ -324,11 +324,11 @@
         <geometry>
           <xacro:if value="${FH == 'F'}">
             <mesh
-              filename="package://ayg_description/meshes/R_Hip.STL" />
+              filename="package://ayg_description/meshes/1.2/R_Hip.STL" />
           </xacro:if>
           <xacro:unless value="${FH == 'F'}">
             <mesh
-              filename="package://ayg_description/meshes/L_Hip.STL" />
+              filename="package://ayg_description/meshes/1.2/L_Hip.STL" />
           </xacro:unless>
         </geometry>
         <material
@@ -416,7 +416,7 @@
           rpy="0 0 0" />
         <geometry>
           <mesh
-            filename="package://ayg_description/meshes/R_Thigh.STL" />
+            filename="package://ayg_description/meshes/1.2/R_Thigh.STL" />
         </geometry>
         <material
           name="">
@@ -489,7 +489,7 @@
           rpy="0 0 0" />
         <geometry>
           <mesh
-            filename="package://ayg_description/meshes/R_Shank.STL" />
+            filename="package://ayg_description/meshes/1.2/R_Shank.STL" />
         </geometry>
         <material
           name="">

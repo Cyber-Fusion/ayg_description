@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!-- Ayg 1.2 initial_configuration poses, included by urdf/sim_ros2_control.xacro
+     (shared file) via filename substitution on $(arg version). -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:if value="${initial_configuration == 'lying_down'}">
+        <xacro:ros2_control_joint joint_name="LF_HAA" effort_lim="${effort_lim}" initial_value="-0.00"/>
+        <xacro:ros2_control_joint joint_name="LF_HFE" effort_lim="${effort_lim}" initial_value="-0.36"/>
+        <xacro:ros2_control_joint joint_name="LF_KFE" effort_lim="${effort_lim}" initial_value=" 1.09"/>
+        <xacro:ros2_control_joint joint_name="RF_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"/>
+        <xacro:ros2_control_joint joint_name="RF_HFE" effort_lim="${effort_lim}" initial_value="-0.36"/>
+        <xacro:ros2_control_joint joint_name="RF_KFE" effort_lim="${effort_lim}" initial_value=" 1.09"/>
+        <xacro:ros2_control_joint joint_name="LH_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"/>
+        <xacro:ros2_control_joint joint_name="LH_HFE" effort_lim="${effort_lim}" initial_value="-0.48"/>
+        <xacro:ros2_control_joint joint_name="LH_KFE" effort_lim="${effort_lim}" initial_value=" 1.20"/>
+        <xacro:ros2_control_joint joint_name="RH_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"/>
+        <xacro:ros2_control_joint joint_name="RH_HFE" effort_lim="${effort_lim}" initial_value="-0.48"/>
+        <xacro:ros2_control_joint joint_name="RH_KFE" effort_lim="${effort_lim}" initial_value=" 1.20"/>
+    </xacro:if>
+
+    <xacro:if value="${initial_configuration == 'standing'}">
+        <xacro:ros2_control_joint joint_name="LF_HAA" effort_lim="${effort_lim}" initial_value="-0.00"/>
+        <xacro:ros2_control_joint joint_name="LF_HFE" effort_lim="${effort_lim}" initial_value="-0.00"/>
+        <xacro:ros2_control_joint joint_name="LF_KFE" effort_lim="${effort_lim}" initial_value=" 0.00"/>
+        <xacro:ros2_control_joint joint_name="RF_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"/>
+        <xacro:ros2_control_joint joint_name="RF_HFE" effort_lim="${effort_lim}" initial_value="-0.00"/>
+        <xacro:ros2_control_joint joint_name="RF_KFE" effort_lim="${effort_lim}" initial_value=" 0.00"/>
+        <xacro:ros2_control_joint joint_name="LH_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"/>
+        <xacro:ros2_control_joint joint_name="LH_HFE" effort_lim="${effort_lim}" initial_value="-0.00"/>
+        <xacro:ros2_control_joint joint_name="LH_KFE" effort_lim="${effort_lim}" initial_value=" 0.00"/>
+        <xacro:ros2_control_joint joint_name="RH_HAA" effort_lim="${effort_lim}" initial_value=" 0.00"/>
+        <xacro:ros2_control_joint joint_name="RH_HFE" effort_lim="${effort_lim}" initial_value="-0.00"/>
+        <xacro:ros2_control_joint joint_name="RH_KFE" effort_lim="${effort_lim}" initial_value=" 0.00"/>
+    </xacro:if>
+
+</robot>

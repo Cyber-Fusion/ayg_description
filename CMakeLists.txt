@@ -22,7 +22,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # =============================== Dependencies =================================
 
 find_package(ament_cmake REQUIRED)
-find_package(ament_cmake_python REQUIRED)
 
 # ================================== Install ===================================
 

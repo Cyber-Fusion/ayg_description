@@ -42,7 +42,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://ayg_description/meshes/Camera.STL"/>
+        <mesh filename="package://ayg_description/meshes/1.2/Camera.STL"/>
       </geometry>
       <material name="">
         <color rgba="0.69804 0.69804 0.69804 1"/>
