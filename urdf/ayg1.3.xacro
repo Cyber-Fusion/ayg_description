@@ -9,15 +9,19 @@
   <!-- Unmodelled-hardware allowance. The real robot weighs ~24.8 kg on a scale
        against this CAD export's 23.809; the difference is the wiring harness and
        other hardware absent from SolidWorks. It is carried on Base rather than as
-       its own link, with the CAD figure kept separate so the export stays
+       its own link, with the CAD figures kept separate so the export stays
        auditable. Set extra_base_mass to 0 for the pure CAD robot.
-       The inertia is scaled by the same ratio, which assumes the extra mass is
-       distributed like the existing trunk contents - a lower-bound assumption,
-       since the CAD trunk is battery-heavy and centrally concentrated. -->
-  <xacro:property name="base_mass_cad"      value="11.02" />
-  <xacro:property name="extra_base_mass"    value="1.0" />
-  <xacro:property name="base_mass"          value="${base_mass_cad + extra_base_mass}" />
-  <xacro:property name="base_inertia_scale" value="${base_mass / base_mass_cad}" />
+       Where the extra mass sits is unknown, so it is modelled as uniform over
+       the Base collision box, centred on the CAD centre of mass: with every
+       position inside the trunk equally likely, that is the expected inertia.
+       Each diagonal term gains m (a^2 + b^2) / 12; the centre of mass and the
+       products of inertia keep their CAD values. -->
+  <xacro:property name="base_mass_cad"   value="11.02" />
+  <xacro:property name="extra_base_mass" value="1.0" />
+  <xacro:property name="base_mass"       value="${base_mass_cad + extra_base_mass}" />
+  <xacro:property name="base_box_x"      value="0.423" />
+  <xacro:property name="base_box_y"      value="0.239" />
+  <xacro:property name="base_box_z"      value="0.150" />
 
   <link
     name="Base">
@@ -25,22 +29,24 @@
       <!-- Ayg 1.3 SolidWorks export CF-AYG-1.3-00-000-URDF-7. Batteries are
            rigidly fixed inside the chassis and are lumped into this Base
            mass/inertia (no separate Battery links), so the trunk is a single
-           rigid body. Whole-robot mass 24.809 kg across 19 links, of which
-           23.809 is the CAD export and 1.0 is the extra_base_mass allowance
-           defined in urdf/ayg1.3.xacro. The Base mesh envelope is unchanged
-           from URDF-6, so the collision box below still fits. -->
+           rigid body. Whole-robot CAD mass 23.809 kg across 20 links. The mass
+           and inertia diagonal below add the extra_base_mass allowance defined
+           in urdf/ayg1.3.xacro, spread uniformly over the collision box; the
+           origin and products of inertia are the CAD export's. The Base mesh
+           envelope is unchanged from URDF-6, so the collision box below still
+           fits. -->
       <origin
         xyz="-0.0005817 -1.9934E-05 -0.0020067"
         rpy="0 0 0" />
       <mass
         value="${base_mass}" />
       <inertia
-        ixx="${0.035479    * base_inertia_scale}"
-        ixy="${-3.4801E-06 * base_inertia_scale}"
-        ixz="${8.3812E-05  * base_inertia_scale}"
-        iyy="${0.032555    * base_inertia_scale}"
-        iyz="${0.00043953  * base_inertia_scale}"
-        izz="${0.055613    * base_inertia_scale}" />
+        ixx="${round(0.035479 + extra_base_mass * (base_box_y**2 + base_box_z**2) / 12, 6)}"
+        ixy="-3.4801E-06"
+        ixz="8.3812E-05"
+        iyy="${round(0.032555 + extra_base_mass * (base_box_x**2 + base_box_z**2) / 12, 6)}"
+        iyz="0.00043953"
+        izz="${round(0.055613 + extra_base_mass * (base_box_x**2 + base_box_y**2) / 12, 6)}" />
     </inertial>
     <visual>
       <origin
@@ -66,7 +72,7 @@
         xyz="-0.001 0 -0.013"
         rpy="0 0 0" />
       <geometry>
-        <box size="0.423 0.239 0.150" />
+        <box size="${base_box_x} ${base_box_y} ${base_box_z}" />
       </geometry>
     </collision>
   </link>

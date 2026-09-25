@@ -211,13 +211,15 @@
       <!-- Ayg 1.3 SolidWorks export CF-AYG-1.3-00-000-URDF-7. Batteries are
            rigidly fixed inside the chassis and are lumped into this Base
            mass/inertia (no separate Battery links), so the trunk is a single
-           rigid body. Whole-robot mass 24.809 kg across 19 links, of which
-           23.809 is the CAD export and 1.0 is the extra_base_mass allowance
-           defined in urdf/ayg1.3.xacro. The Base mesh envelope is unchanged
-           from URDF-6, so the collision box below still fits. -->
+           rigid body. Whole-robot CAD mass 23.809 kg across 20 links. The mass
+           and inertia diagonal below add the extra_base_mass allowance defined
+           in urdf/ayg1.3.xacro, spread uniformly over the collision box; the
+           origin and products of inertia are the CAD export's. The Base mesh
+           envelope is unchanged from URDF-6, so the collision box below still
+           fits. -->
       <origin rpy="0 0 0" xyz="-0.0005817 -1.9934E-05 -0.0020067"/>
       <mass value="12.02"/>
-      <inertia ixx="0.038698509981851176" ixy="-3.795898548094374e-06" ixz="9.141744464609801e-05" iyy="0.03550917422867514" iyz="0.0004794147549909256" izz="0.060659551724137936"/>
+      <inertia ixx="0.042114" ixy="-3.4801E-06" ixz="8.3812E-05" iyy="0.049341" iyz="0.00043953" izz="0.075284"/>
     </inertial>
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
@@ -236,7 +238,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="-0.001 0 -0.013"/>
       <geometry>
-        <box size="0.423 0.239 0.150"/>
+        <box size="0.423 0.239 0.15"/>
       </geometry>
     </collision>
   </link>
