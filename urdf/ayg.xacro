@@ -24,6 +24,10 @@
   <xacro:arg name="lidar" default="True" />
   <xacro:property name="lidar" default="$(arg lidar)" />
 
+  <!-- Payload carried on Base, in kg (Ayg 1.3 only; a no-op when version:=1.2).
+       0 is the bare robot; set it in simulation to test a policy under load. -->
+  <xacro:arg name="payload_mass" default="0.0" />
+
   <xacro:arg name="initial_configuration" default="lying_down" />
   <xacro:property name="initial_configuration" value="$(arg initial_configuration)" />
   <xacro:arg name="controller" default="default" />

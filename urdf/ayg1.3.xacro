@@ -15,10 +15,15 @@
        the Base collision box, centred on the CAD centre of mass: with every
        position inside the trunk equally likely, that is the expected inertia.
        Each diagonal term gains m (a^2 + b^2) / 12; the centre of mass and the
-       products of inertia keep their CAD values. -->
+       products of inertia keep their CAD values.
+       The payload_mass xacro arg (default 0) adds a carried load on top of it,
+       modelled the same way: uniform over the Base box at the CAD centre of
+       mass. -->
   <xacro:property name="base_mass_cad"   value="11.02" />
   <xacro:property name="extra_base_mass" value="1.0" />
-  <xacro:property name="base_mass"       value="${base_mass_cad + extra_base_mass}" />
+  <xacro:property name="payload_mass"    value="$(arg payload_mass)" />
+  <xacro:property name="added_base_mass" value="${extra_base_mass + payload_mass}" />
+  <xacro:property name="base_mass"       value="${base_mass_cad + added_base_mass}" />
   <xacro:property name="base_box_x"      value="0.423" />
   <xacro:property name="base_box_y"      value="0.239" />
   <xacro:property name="base_box_z"      value="0.150" />
@@ -41,12 +46,12 @@
       <mass
         value="${base_mass}" />
       <inertia
-        ixx="${round(0.035479 + extra_base_mass * (base_box_y**2 + base_box_z**2) / 12, 6)}"
+        ixx="${round(0.035479 + added_base_mass * (base_box_y**2 + base_box_z**2) / 12, 6)}"
         ixy="-3.4801E-06"
         ixz="8.3812E-05"
-        iyy="${round(0.032555 + extra_base_mass * (base_box_x**2 + base_box_z**2) / 12, 6)}"
+        iyy="${round(0.032555 + added_base_mass * (base_box_x**2 + base_box_z**2) / 12, 6)}"
         iyz="0.00043953"
-        izz="${round(0.055613 + extra_base_mass * (base_box_x**2 + base_box_y**2) / 12, 6)}" />
+        izz="${round(0.055613 + added_base_mass * (base_box_x**2 + base_box_y**2) / 12, 6)}" />
     </inertial>
     <visual>
       <origin
