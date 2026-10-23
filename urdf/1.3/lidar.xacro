@@ -215,88 +215,67 @@
     stays free of Gazebo-specific elements. Mirrors how ayg_sim_ros2_control.xacro
     is gated in ayg.xacro.
 
-    Angles are in the sensor's own frame, which is exactly the JT128 convention:
-    Z = spin axis, elevation measured from the XY plane, azimuth swept about Z.
-    In-space channel elevations span -4.43 deg (ch 1) to +88.99 deg (ch 128);
-    the datasheet's 95 deg FOV / "-4.4 to +90.5" / Figure 4's 90.46 are
-    projections onto the vertical plane, not in-space elevations (manual 1.4,
-    1.5 note 2, Appendix A header). 900 x 128 = 115 200 points per rotation at
-    10 Hz, matching the real single-return rate (manual 1.5).
+    THIS IS NOT THE JT128. gz gpu_lidar can only cast a uniform elevation fan
+    at one azimuth per column and adds no realistic error, while the real sensor
+    has uneven channel elevations, a per-channel azimuth offset (the 128 channels
+    do not lie in one plane), near-field channel dropout (63/128 below 0.35 m,
+    68/128 below 0.5 m), 2.2 mm range noise on 4 mm ticks, bursty phantom spikes
+    and return loss. So this sensor is configured as a DENSE, NOISE-FREE RANGE
+    IMAGE of the scene over the sensor's hemisphere, on its own topic
+    (/lidar/gz/points), and the ayg_lidar_sim `jt128_emulator` node resamples
+    it onto the real per-channel pattern (from this unit's angle correction
+    file), applies the gating and the bench-measured error model, and publishes
+    /lidar/points in the Hesai driver's layout: the topic ayg_height_map and
+    the policy consume, exactly as on the robot. Nothing downstream may read
+    /lidar/gz/points directly.
 
-    HOW THIS DIFFERS FROM THE REAL SENSOR - gz gpu_lidar can only emit a
-    uniform elevation fan at one azimuth per column, and this block adds no
-    noise model, so six real behaviours are absent:
+    Angles are in the sensor's own frame, which is exactly the JT128 convention
+    and the gpu_lidar convention alike: Z = spin axis, elevation measured from
+    the XY plane, azimuth swept about Z. The fan spans -5.5..+89.5 deg so that
+    every channel of the correction file (-4.96 .. +88.53 deg on our unit) and
+    of the design table (-4.43 .. +88.99) has a dense ray within half a step
+    (0.19 deg vertical, 0.2 deg horizontal: a few millimetres at 1 m). The
+    emulator fits these angles from the cloud itself, so changing them here
+    needs no matching edit elsewhere. 20 Hz = the adopted 1200 RPM spin
+    (ayg_lidar/config/jt128.yaml `speed: 1200`).
 
-      1. Channel elevations are UNEVEN (0.88 deg spacing near the horizon, 0.66
-         higher up, 0.70 mean over channels 1-85). A uniform fan misplaces
-         channels by up to 2.58 deg (ch 85: uniform 57.36 vs real 54.78), which
-         is ~9 cm of ground error at 2 m.
-      2. Each channel has its own AZIMUTH offset: +/-~18 deg over channels 1-85
-         (-17.16 to +17.92 deg, so the real scan column is skewed ~35 deg wide,
-         ~88 columns at 0.4 deg), growing toward the pole where azimuth becomes
-         ill-conditioned (design table spans -57.28 deg, ch 120, to +117.30 deg,
-         ch 128; manual Appendix A). The 128 channels do not lie in one
-         vertical plane.
-      3. NEAR-FIELD CHANNEL DROPOUT: below 0.35 m only 63 of 128 channels fire,
-         and 0.35-0.5 m only 68. This lidar sits ~0.33 m above ground, so the
-         terrain directly beneath and around the feet - the footstep-relevant
-         region - is really sensed at ~49% vertical resolution.
-      4. Range is REFLECTIVITY-limited: 60 m instrumented but 40 m at 10%
-         reflectivity, so dark terrain drops out. A ray-cast never does.
-      5. BLIND CONE at the pole: the topmost in-space channel (+88.99 deg)
-         leaves a 1.01 deg half-angle cone about the spin axis unswept
-         (1.47 deg on this unit, whose calibration measures -4.96 to +88.53).
-         The fan uses the design endpoints, so the per-unit span and the
-         uneven near-pole crowding are not reproduced.
-      6. NO RANGE-NOISE MODEL: real returns carry ~2.2 mm sigma gaussian noise,
-         4 mm range quantization, ~1.8% spike returns and ~1.5% dropout (bench
-         measured). gz supports gaussian range noise, but this block stays a
-         noise-free integration-test approximation.
-
-    Also note the topmost channels nearly degenerate here: at +88.99 deg the
-    ray is 1 deg off the spin axis, so every azimuth column of a top channel
-    returns almost the same point.
-
-    The authoritative geometry is the per-unit ANGLE CORRECTION FILE, which the
-    driver already fetches over PTC (ayg_lidar/config/jt128.yaml,
-    use_ptc_connected: true). Isaac Lab's ray-caster takes arbitrary ray
-    directions and CAN reproduce the exact pattern, so the faithful sensor
-    belongs in cf_lab; this block is an approximation for integration testing
-    only and should not be used to judge sim-to-real behaviour.
+    Still absent after emulation: the 20 mm rotating optical-centre offset
+    (rays leave this sensor's origin), reflectivity-limited range (irrelevant
+    at the 0.8 m map range) and intra-frame motion smear (measured at 0.03 of
+    a map cell in sim). Reflectivity/intensity is not modelled at all.
   -->
   <xacro:if value="${sim}">
     <gazebo reference="lidar_link">
-      <sensor name="jt128" type="gpu_lidar">
-        <update_rate>10</update_rate>
+      <sensor name="jt128_dense" type="gpu_lidar">
+        <update_rate>20</update_rate>
         <!-- gz-sim publishes a gpu_lidar as TWO topics: `<topic>` carrying a
-             LaserScan, and `<topic>/points` carrying a PointCloudPacked. Naming
-             the sensor `lidar` therefore yields /lidar/points for the cloud,
-             matching what the real hesai/livox driver stamps (see ayg_lidar).
-             Naming it `lidar/points` would give /lidar/points/points. -->
-        <topic>lidar</topic>
+             LaserScan, and `<topic>/points` carrying a PointCloudPacked. The
+             cloud therefore lands on /lidar/gz/points, which ayg_bridge.yaml
+             bridges for the emulator; /lidar/points is the emulator's. -->
+        <topic>lidar/gz</topic>
         <gz_frame_id>lidar_link</gz_frame_id>
         <lidar>
           <scan>
             <horizontal>
-              <samples>900</samples>
+              <samples>450</samples>
               <resolution>1</resolution>
               <min_angle>${-M_PI}</min_angle>
               <max_angle>${M_PI}</max_angle>
             </horizontal>
             <vertical>
-              <samples>128</samples>
+              <samples>256</samples>
               <resolution>1</resolution>
-              <!-- In-space ch 1 / ch 128 design elevations (-0.077318 /
-                   +1.553169 rad); the datasheet's -4.4 / +90.5 deg are
-                   vertical-plane projections, see the note above. -->
-              <min_angle>${-4.43 * M_PI / 180.0}</min_angle>
-              <max_angle>${88.99 * M_PI / 180.0}</max_angle>
+              <min_angle>${-5.5 * M_PI / 180.0}</min_angle>
+              <max_angle>${89.5 * M_PI / 180.0}</max_angle>
             </vertical>
           </scan>
           <range>
-            <min>0.1</min>
+            <!-- 0.05 m = the emulator's / ayg_height_map's minimum accepted
+                 range, so returns off the robot's own legs are kept and reach
+                 the deploy self filter as they do on the robot. -->
+            <min>0.05</min>
             <max>60.0</max>
-            <resolution>0.01</resolution>
+            <resolution>0.001</resolution>
           </range>
         </lidar>
         <always_on>1</always_on>
