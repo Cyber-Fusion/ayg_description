@@ -220,8 +220,11 @@
     In-space channel elevations span -4.43 deg (ch 1) to +88.99 deg (ch 128);
     the datasheet's 95 deg FOV / "-4.4 to +90.5" / Figure 4's 90.46 are
     projections onto the vertical plane, not in-space elevations (manual 1.4,
-    1.5 note 2, Appendix A header). 900 x 128 = 115 200 points per rotation at
-    10 Hz, matching the real single-return rate (manual 1.5).
+    1.5 note 2, Appendix A header). 450 x 128 = 57 600 points per rotation at
+    20 Hz, the robot's rate (ayg_lidar's jt128_node.yaml: spin_rpm 1200; the real
+    unit's clouds hold about 57 700 points), the same single-return point rate as
+    900 x 128 at 10 Hz (manual 1.5). At 10 Hz the costmap's companions, which take
+    every second cloud, reached navigation at 5 Hz instead of the robot's 10.
 
     HOW THIS DIFFERS FROM THE REAL SENSOR - gz gpu_lidar can only emit a
     uniform elevation fan at one azimuth per column, and this block adds no
@@ -267,7 +270,7 @@
   <xacro:if value="${sim}">
     <gazebo reference="lidar_link">
       <sensor name="jt128" type="gpu_lidar">
-        <update_rate>10</update_rate>
+        <update_rate>20</update_rate>
         <!-- gz-sim publishes a gpu_lidar as TWO topics: `<topic>` carrying a
              LaserScan, and `<topic>/points` carrying a PointCloudPacked. Naming
              the sensor `lidar` therefore yields /lidar/points for the cloud,
@@ -278,7 +281,7 @@
         <lidar>
           <scan>
             <horizontal>
-              <samples>900</samples>
+              <samples>450</samples>
               <resolution>1</resolution>
               <min_angle>${-M_PI}</min_angle>
               <max_angle>${M_PI}</max_angle>
