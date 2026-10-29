@@ -217,7 +217,9 @@
 
     Angles are in the sensor's own frame, which is exactly the JT128 convention:
     Z = spin axis, elevation measured from the XY plane, azimuth swept about Z.
-    In-space channel elevations span -4.43 deg (ch 1) to +88.99 deg (ch 128);
+    In-space channel elevations span -4.43 deg (ch 1) to +88.99 deg (ch 128) by design;
+    the robot's unit spans -3.95 to +89.10 deg, and the fan below takes the unit's ends
+    (see THE FAN'S ENDS);
     the datasheet's 95 deg FOV / "-4.4 to +90.5" / Figure 4's 90.46 are
     projections onto the vertical plane, not in-space elevations (manual 1.4,
     1.5 note 2, Appendix A header). 450 x 128 = 57 600 points per rotation at
@@ -233,7 +235,10 @@
       1. Channel elevations are UNEVEN (0.88 deg spacing near the horizon, 0.66
          higher up, 0.70 mean over channels 1-85). A uniform fan misplaces
          channels by up to 2.58 deg (ch 85: uniform 57.36 vs real 54.78), which
-         is ~9 cm of ground error at 2 m.
+         is ~9 cm of ground error at 2 m. On this unit (0.26 to 1.68 deg
+         apart), the uniform fan between its own ends misplaces the lowest 32
+         channels, the rim that sees beside the body, by up to 2.0 deg, and any
+         channel by up to 4.8 deg.
       2. Each channel has its own AZIMUTH offset: +/-~18 deg over channels 1-85
          (-17.16 to +17.92 deg, so the real scan column is skewed ~35 deg wide,
          ~88 columns at 0.4 deg), growing toward the pole where azimuth becomes
@@ -246,19 +251,28 @@
          region - is really sensed at ~49% vertical resolution.
       4. Range is REFLECTIVITY-limited: 60 m instrumented but 40 m at 10%
          reflectivity, so dark terrain drops out. A ray-cast never does.
-      5. BLIND CONE at the pole: the topmost in-space channel (+88.99 deg)
-         leaves a 1.01 deg half-angle cone about the spin axis unswept
-         (1.47 deg on this unit, whose calibration measures -4.96 to +88.53).
-         The fan uses the design endpoints, so the per-unit span and the
-         uneven near-pole crowding are not reproduced.
+      5. BLIND CONE at the pole: the topmost in-space channel (+89.10 deg on this
+         unit) leaves a 0.90 deg half-angle cone about the spin axis unswept.
+         The fan takes the unit's ends, so the span is the unit's; the uneven
+         near-pole crowding is not reproduced.
       6. NO RANGE-NOISE MODEL: real returns carry ~2.2 mm sigma gaussian noise,
          4 mm range quantization, ~1.8% spike returns and ~1.5% dropout (bench
          measured). gz supports gaussian range noise, but this block stays a
          noise-free integration-test approximation.
 
-    Also note the topmost channels nearly degenerate here: at +88.99 deg the
-    ray is 1 deg off the spin axis, so every azimuth column of a top channel
+    Also note the topmost channels nearly degenerate here: at +89.10 deg the
+    ray is 0.9 deg off the spin axis, so every azimuth column of a top channel
     returns almost the same point.
+
+    THE FAN'S ENDS are the unit's, measured from its clouds: each channel's
+    median elevation in /lidar/points_raw (lidar_link, what the driver emits
+    after its PTC angle correction), the same in two recordings of the robot
+    (21 October 2026, and 200 clouds of another): -3.95 deg (ch 1) to +89.10 deg
+    (ch 128). The lowest channel is the field's edge, where beside the body
+    the sensor stops seeing: at bearings 85 to 95 deg from ahead the robot's
+    clouds leave 26 to 84 % of the obstacle band unobserved, the design's
+    -4.43 fan 4 to 55 % (Ayg research/navigation, the sim's side pass). Same
+    sample count, so the same rendering cost.
 
     The authoritative geometry is the per-unit ANGLE CORRECTION FILE, which the
     driver already fetches over PTC (ayg_lidar/config/jt128.yaml,
@@ -289,11 +303,11 @@
             <vertical>
               <samples>128</samples>
               <resolution>1</resolution>
-              <!-- In-space ch 1 / ch 128 design elevations (-0.077318 /
-                   +1.553169 rad); the datasheet's -4.4 / +90.5 deg are
-                   vertical-plane projections, see the note above. -->
-              <min_angle>${-4.43 * M_PI / 180.0}</min_angle>
-              <max_angle>${88.99 * M_PI / 180.0}</max_angle>
+              <!-- In-space ch 1 / ch 128 elevations of the robot's unit (THE FAN'S
+                   ENDS above; the design's -4.43 / +88.99 deg); the datasheet's
+                   -4.4 / +90.5 deg are vertical-plane projections. -->
+              <min_angle>${-3.95 * M_PI / 180.0}</min_angle>
+              <max_angle>${89.10 * M_PI / 180.0}</max_angle>
             </vertical>
           </scan>
           <range>
