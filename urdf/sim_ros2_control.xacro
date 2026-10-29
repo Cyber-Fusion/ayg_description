@@ -29,16 +29,12 @@
         <hardware>
             <plugin>${system_plugin}</plugin>
             <xacro:if value="${sim_backend == 'mujoco'}">
-                <param name="mujoco_model_path">$(find ayg_description)/mujoco/$(arg version)/ayg.xml</param>
+                <param name="mujoco_model_path">$(find ayg_description)/mujoco/ayg.xml</param>
             </xacro:if>
         </hardware>
 
-        <!-- initial_configuration poses (lying_down / standing) are per-version:
-             the 1.2 and 1.3 leg geometries need different joint values to reach
-             the same named pose (see each version's file for the derivation).
-             Filename substitution on $(arg version), same convention and same
-             reason as the ayg$(arg version).xacro dispatch in ayg.xacro. -->
-        <xacro:include filename="$(find ayg_description)/urdf/$(arg version)/initial_configuration.xacro" />
+        <!-- initial_configuration poses (lying_down / standing). -->
+        <xacro:include filename="$(find ayg_description)/urdf/initial_configuration.xacro" />
 
         <sensor name="imu_sensor">
             <state_interface name="orientation.x"/>
@@ -60,10 +56,7 @@
         <xacro:if value="${controller == 'default'}">
             <gazebo>
                 <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-                    <!-- ayg_control#306 split this config per-version; $(arg version)
-                         text substitution, same convention as the dispatch sites above
-                         (do NOT read this back through a ${...} property). -->
-                    <parameters>$(find ayg_control)/config/$(arg version)/gazebo/ayg_sw_controllers.yaml</parameters>
+                    <parameters>$(find ayg_control)/config/gazebo/ayg_sw_controllers.yaml</parameters>
                 </plugin>
             </gazebo>
         </xacro:if>
