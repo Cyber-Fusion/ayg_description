@@ -306,6 +306,37 @@
         <visualize>false</visualize>
       </sensor>
     </gazebo>
+
+    <!--
+      The JT128's own IMU, as GLIM reads it on the robot (ayg_lidar's jt128_node: /lidar/imu,
+      sensor_msgs/Imu in lidar_link, 200 Hz, m/s^2 and rad/s, no rotation between the IMU and the
+      cloud per Hesai, so GLIM's T_lidar_imu is the identity). Gazebo reports specific force
+      (gravity included) in the sensor's frame, as the real one; its orientation, which the JT128
+      does not give, GLIM ignores. The noise is GLIM's own assumption (config_sensors.json: acc
+      0.05, gyro 0.02) as a first value: the JT128's is unmeasured. The origin offset of the
+      manual's Figure 5 is not modelled, as GLIM's identity extrinsic does not model it.
+      Bridged to /lidar/imu by ayg_gazebo's ayg_bridge.yaml.
+    -->
+    <gazebo reference="lidar_link">
+      <sensor name="jt128_imu" type="imu">
+        <always_on>1</always_on>
+        <update_rate>200</update_rate>
+        <topic>lidar/imu</topic>
+        <gz_frame_id>lidar_link</gz_frame_id>
+        <imu>
+          <angular_velocity>
+            <x><noise type="gaussian"><mean>0.0</mean><stddev>0.02</stddev></noise></x>
+            <y><noise type="gaussian"><mean>0.0</mean><stddev>0.02</stddev></noise></y>
+            <z><noise type="gaussian"><mean>0.0</mean><stddev>0.02</stddev></noise></z>
+          </angular_velocity>
+          <linear_acceleration>
+            <x><noise type="gaussian"><mean>0.0</mean><stddev>0.05</stddev></noise></x>
+            <y><noise type="gaussian"><mean>0.0</mean><stddev>0.05</stddev></noise></y>
+            <z><noise type="gaussian"><mean>0.0</mean><stddev>0.05</stddev></noise></z>
+          </linear_acceleration>
+        </imu>
+      </sensor>
+    </gazebo>
   </xacro:if>
 
   </xacro:if>
