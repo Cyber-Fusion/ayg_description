@@ -22,9 +22,9 @@
   <xacro:arg name="use_csp" default="false" />
 
   <!-- Robstride MIT gains the hardware interface applies until a controller
-       claims the kp/kd command interfaces (none of the shipped ones does, so in
-       practice these ARE the gains). kp=0 leaves the motors enabled but
-       torque-free, which is how the joints are moved by hand for calibration:
+       claims the kp/kd command interfaces (the robot's ayg_pid_controller does,
+       and sets its own). kp=0 leaves the motors enabled but torque-free, which is
+       how the joints are moved by hand for calibration:
        robstride_hardware/launch/quadruped.launch.py free_joints:=true. -->
   <xacro:arg name="default_kp" default="40.0" />
   <xacro:arg name="default_kd" default="1.0" />
