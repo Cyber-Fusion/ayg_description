@@ -18,8 +18,6 @@
 
   <xacro:arg name="initial_configuration" default="lying_down" />
   <xacro:property name="initial_configuration" value="$(arg initial_configuration)" />
-  <xacro:arg name="controller" default="default" />
-  <xacro:property name="controller" default="$(arg controller)" />
 
   <xacro:arg name="use_csp" default="false" />
 

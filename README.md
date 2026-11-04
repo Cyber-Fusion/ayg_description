@@ -1,7 +1,5 @@
 # Ayg Robot Description (URDF)
 
-For the USD description, see the [`usd`](https://github.com/Cyber-Fusion/ayg_description/tree/usd) branch.
-
 ## Overview
 
 This package contains Ayg's robot description (URDF) developed by [Cyber-Fusion](https://github.com/Cyber-Fusion).
@@ -33,7 +31,9 @@ The `.xacro` file accepts the following arguments:
 - `payload_mass`: kg carried on Base (default: `0.0`), for testing a policy under load in simulation.
 - `sim`: `Bool` (default: `False`). If `True`, the URDF is augmented with Gazebo (not Gazebo Classic) tags for the robot's sensors and actuators.
 - `initial_configuration`: {`lying_down`, `standing`} (default: `lying_down`). Sets the initial configuration of the robot in Gazebo (requires `sim` to be `True`).
-- `controller`: {`default`, `ddb`} (default: `default`). Sets the controller to be used in Gazebo (requires `sim` to be `True`). These controllers are from the [main repo](https://github.com/Cyber-Fusion/Ayg).
+- `sim_backend`: {`gazebo`, `mujoco`} (default: `gazebo`). The simulator the `sim` block targets: Gazebo's ros2_control plugin and sensors, or the MuJoCo system with `mujoco/ayg.xml` (requires `sim` to be `True`). Gazebo loads its controllers from the [main repo](https://github.com/Cyber-Fusion/Ayg)'s `ayg_control`.
+- `use_csp`: `Bool` (default: `False`). Selects the debug hardware interface `RobstrideSystemDual` (MIT mode in walking, Robstride's CSP position mode in the other phases) instead of `RobstrideSystem` (requires `sim` to be `False`).
+- `default_kp`, `default_kd`: the MIT gains the hardware interface applies until a controller claims the gain interfaces (defaults: `40.0`, `1.0`; requires `sim` to be `False`). `default_kp:=0` leaves the motors torque-free, for moving the joints by hand during calibration.
 
 The pure `.urdf` file is committed (`urdf/ayg.urdf`) and can be regenerated with:
 ```shell

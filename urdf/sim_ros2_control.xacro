@@ -53,21 +53,11 @@
     <!-- Gazebo-specific plugins -->
     <xacro:if value="${sim_backend == 'gazebo'}">
 
-        <xacro:if value="${controller == 'default'}">
-            <gazebo>
-                <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-                    <parameters>$(find ayg_control)/config/gazebo/ayg_sw_controllers.yaml</parameters>
-                </plugin>
-            </gazebo>
-        </xacro:if>
-
-        <xacro:if value="${controller == 'ddb'}">
-            <gazebo>
-                <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
-                    <parameters>$(find robot_control_ddb)/config/gazebo/ayg_control.yaml</parameters>
-                </plugin>
-            </gazebo>
-        </xacro:if>
+        <gazebo>
+            <plugin filename="libgz_ros2_control-system.so" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+                <parameters>$(find ayg_control)/config/gazebo/ayg_sw_controllers.yaml</parameters>
+            </plugin>
+        </gazebo>
 
         <gazebo>
             <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
