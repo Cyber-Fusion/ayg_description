@@ -1,28 +1,22 @@
 <mujoco model="ayg">
   <!--
-    Ayg 1.3, kept in step with urdf/ayg.xacro + urdf/legs.xacro + urdf/lidar.xacro
+    Ayg, kept in step with urdf/ayg.xacro + urdf/legs.xacro + urdf/lidar.xacro
     (SolidWorks export CF-AYG-1.3-00-000-URDF-7). Masses, CoMs, inertias, joint
     origins, limits and collision primitives are the same numbers as the URDF; see
     those files for the derivations.
 
-    Two fixes carried in alongside the 1.3 numbers:
-      * the previous revision declared a `Foot.STL` asset that has never existed in
-        meshes/, so the model could not load. Feet are primitives here, as in the
-        URDF, where the export's own foot inertia is exactly a solid cylinder
-        r=0.032 L=0.031.
-      * the head was a visual-only geom on Base whose 0.727 kg was therefore
-        absent from the model. It is now a child body with its own inertial, so
-        the total is the real 23.809 kg.
+    Feet are primitives, as in the URDF, where the export's own foot inertia is
+    exactly a solid cylinder r=0.032 L=0.031. The head is a child body with its
+    own inertial, so the total is the real 23.809 kg.
 
     The shank is one mesh for all four legs (the export's RF/RH shanks are the LF
     part translated -0.031164 in y, not mirrored), so the right-side visual geoms
     carry that pos offset.
 
-    Hind legs no longer carry the pi yaw the 1.2 model used. It only ever existed
-    so front and hind could share a hip mesh; the export ships four, and dropping
-    it changes no joint value (the thigh frame was Base-aligned either way).
+    Hind legs carry no pi yaw: the export ships a hip mesh per leg, and the thigh
+    frame is Base-aligned.
   -->
-  <compiler angle="radian" meshdir="../../meshes/1.3"/>
+  <compiler angle="radian" meshdir="../meshes"/>
 
   <option timestep="0.001" iterations="50" solver="Newton" gravity="0 0 -9.81"
           noslip_iterations="5"/>
@@ -54,8 +48,8 @@
     <geom name="floor" type="plane" size="5 5 0.1" material="grid_mat" contype="1" conaffinity="1"
           friction="1.5 0.005 0.001" condim="6" solimp="0.9 0.95 0.001" solref="0.02 1"/>
 
-    <!-- Spawn height clears the zero-joint pose: the 1.3 leg puts the feet 0.4245 m
-         below Base at all-zero joints (was 0.341 m), so 0.40 would start the model
+    <!-- Spawn height clears the zero-joint pose: the leg puts the feet 0.4245 m
+         below Base at all-zero joints, so 0.40 would start the model
          underground. -->
     <body name="Base" pos="0 0 0.46">
       <freejoint name="float_base"/>
