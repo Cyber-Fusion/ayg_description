@@ -97,7 +97,7 @@
         <body name="LF_Thigh" pos="0.065 0.0215 0">
           <inertial pos="-0.024065 0.049498 -0.02468" mass="1.6083"
                     fullinertia="0.004797 0.0083583 0.0043329 0.00038562 -0.0032535 0.00037881"/>
-          <joint name="LF_HFE" axis="0 -1 0" range="-2.0412 3.3693"/>
+          <joint name="LF_HFE" axis="0 -1 0" range="-1.8667 3.1948"/>
           <geom name="LF_Thigh_visual" type="mesh" mesh="L_Thigh" rgba="0.69804 0.69804 0.69804 1"
                 contype="0" conaffinity="0" group="1"/>
           <geom name="LF_Thigh_collision" type="box" size="0.026 0.008 0.085"
@@ -137,7 +137,7 @@
         <body name="RF_Thigh" pos="0.065 -0.0215 0">
           <inertial pos="-0.024065 -0.049498 -0.02468" mass="1.6083"
                     fullinertia="0.004797 0.0083583 0.0043329 -0.00038562 -0.0032535 -0.00037881"/>
-          <joint name="RF_HFE" axis="0 -1 0" range="-2.0412 3.3693"/>
+          <joint name="RF_HFE" axis="0 -1 0" range="-1.8667 3.1948"/>
           <geom name="RF_Thigh_visual" type="mesh" mesh="R_Thigh" rgba="0.69804 0.69804 0.69804 1"
                 contype="0" conaffinity="0" group="1"/>
           <geom name="RF_Thigh_collision" type="box" size="0.026 0.008 0.085"
@@ -177,7 +177,7 @@
         <body name="LH_Thigh" pos="-0.065 0.0215 0">
           <inertial pos="-0.024065 0.049498 -0.02468" mass="1.6083"
                     fullinertia="0.004797 0.0083583 0.0043329 0.00038562 -0.0032535 0.00037881"/>
-          <joint name="LH_HFE" axis="0 -1 0" range="-2.8266 2.5839"/>
+          <joint name="LH_HFE" axis="0 -1 0" range="-2.6521 2.4094"/>
           <geom name="LH_Thigh_visual" type="mesh" mesh="L_Thigh" rgba="0.69804 0.69804 0.69804 1"
                 contype="0" conaffinity="0" group="1"/>
           <geom name="LH_Thigh_collision" type="box" size="0.026 0.008 0.085"
@@ -217,7 +217,7 @@
         <body name="RH_Thigh" pos="-0.065 -0.0215 0">
           <inertial pos="-0.024065 -0.049498 -0.02468" mass="1.6083"
                     fullinertia="0.004797 0.0083583 0.0043329 -0.00038562 -0.0032535 -0.00037881"/>
-          <joint name="RH_HFE" axis="0 -1 0" range="-2.8266 2.5839"/>
+          <joint name="RH_HFE" axis="0 -1 0" range="-2.6521 2.4094"/>
           <geom name="RH_Thigh_visual" type="mesh" mesh="R_Thigh" rgba="0.69804 0.69804 0.69804 1"
                 contype="0" conaffinity="0" group="1"/>
           <geom name="RH_Thigh_collision" type="box" size="0.026 0.008 0.085"

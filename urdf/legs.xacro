@@ -153,13 +153,13 @@
       <child link="${side}${FH}_Thigh" />
       <axis xyz="0 -1 0" />
       <!-- Export limits negated and swapped for the -y axis:
-           front  (-3.3693, 2.0412) -> (-2.0412, 3.3693)
-           hind   (-2.5839, 2.8266) -> (-2.8266, 2.5839) -->
+           front  (-3.1948, 1.8667) -> (-1.8667, 3.1948)
+           hind   (-2.4094, 2.6521) -> (-2.6521, 2.4094) -->
       <xacro:if value="${FH == 'F'}">
-        <limit lower="-2.0412" upper="3.3693" effort="${effort_lim}" velocity="${velocity_lim}" />
+        <limit lower="-1.8667" upper="3.1948" effort="${effort_lim}" velocity="${velocity_lim}" />
       </xacro:if>
       <xacro:unless value="${FH == 'F'}">
-        <limit lower="-2.8266" upper="2.5839" effort="${effort_lim}" velocity="${velocity_lim}" />
+        <limit lower="-2.6521" upper="2.4094" effort="${effort_lim}" velocity="${velocity_lim}" />
       </xacro:unless>
     </joint>
 
