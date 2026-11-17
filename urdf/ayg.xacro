@@ -29,8 +29,12 @@
   <xacro:arg name="default_kp" default="40.0" />
   <xacro:arg name="default_kd" default="1.0" />
 
-  <xacro:property name="effort_lim" value="50.0" />
-  <xacro:property name="velocity_lim" value="10.0" />
+  <!-- Every joint's effort (N m) and velocity (rad/s) limit. The defaults are the
+       robot's; a simulation of a motion past them (a flip) passes its own. -->
+  <xacro:arg name="effort_lim" default="50.0" />
+  <xacro:arg name="velocity_lim" default="10.0" />
+  <xacro:property name="effort_lim" value="$(arg effort_lim)" />
+  <xacro:property name="velocity_lim" value="$(arg velocity_lim)" />
   <xacro:property name="PI" value="3.1415926535897931" />
 
   <xacro:if value="${sim}">
